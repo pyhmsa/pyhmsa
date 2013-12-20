@@ -1,0 +1,126 @@
+#!/usr/bin/env python
+""" """
+
+# Script information for the file.
+__author__ = "Philippe T. Pinard"
+__email__ = "philippe.pinard@gmail.com"
+__version__ = "0.1"
+__copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
+__license__ = "GPL v3"
+
+# Standard library modules.
+import unittest
+import logging
+
+# Third party modules.
+
+# Local modules.
+from pyhmsa.core.condition.probe import _Probe, ProbeEM, ProbeTEM
+
+# Globals and constants variables.
+from pyhmsa.core.condition.probe import GUN_TYPE_LAB6, LENS_MODE_IMAGE
+
+class Test_Probe(unittest.TestCase):
+
+    def setUp(self):
+        unittest.TestCase.setUp(self)
+
+        self.probe = _Probe()
+
+    def tearDown(self):
+        unittest.TestCase.tearDown(self)
+
+    def testskeleton(self):
+        self.assertTrue(True)
+
+class TestProbeEM(unittest.TestCase):
+
+    def setUp(self):
+        unittest.TestCase.setUp(self)
+
+        self.probe = ProbeEM(15.0)
+
+    def tearDown(self):
+        unittest.TestCase.tearDown(self)
+
+    def testbeam_voltage(self):
+        self.assertAlmostEqual(15.0, self.probe.beam_voltage.value, 4)
+        self.assertEqual('kV', self.probe.beam_voltage.unit)
+        self.assertRaises(ValueError, self.probe.set_beam_voltage, None)
+
+    def testbeam_current(self):
+        self.probe.beam_current = 47.59
+        self.assertAlmostEqual(47.59, self.probe.beam_current.value, 4)
+        self.assertEqual('nA', self.probe.beam_current.unit)
+    
+    def testgun_type(self):
+        self.probe.gun_type = GUN_TYPE_LAB6
+        self.assertEqual(GUN_TYPE_LAB6, self.probe.gun_type)
+        self.assertRaises(ValueError, self.probe.set_gun_type, 'ABC')
+
+    def testemission_current(self):
+        self.probe.emission_current = 12345
+        self.assertAlmostEqual(12345, self.probe.emission_current.value, 4)
+        self.assertEqual(u'\u00b5A', self.probe.emission_current.unit)
+
+    def testfilament_current(self):
+        self.probe.filament_current = 1.234
+        self.assertAlmostEqual(1.234, self.probe.filament_current.value, 4)
+        self.assertEqual('A', self.probe.filament_current.unit)
+
+    def testextractor_bias(self):
+        self.probe.extractor_bias = 4200
+        self.assertAlmostEqual(4200, self.probe.extractor_bias.value, 4)
+        self.assertEqual('V', self.probe.extractor_bias.unit)
+
+    def testbeam_diameter(self):
+        self.probe.beam_diameter = 12345
+        self.assertAlmostEqual(12345, self.probe.beam_diameter.value, 4)
+        self.assertEqual(u'\u00b5m', self.probe.beam_diameter.unit)
+
+    def testchamber_pressure(self):
+        self.probe.chamber_pressure = 3.14e-6
+        self.assertAlmostEqual(3.14e-6, self.probe.chamber_pressure.value, 10)
+        self.assertEqual('Pa', self.probe.chamber_pressure.unit)
+
+    def testgun_pressure(self):
+        self.probe.gun_pressure = 3.14e-10
+        self.assertAlmostEqual(3.14e-10, self.probe.gun_pressure.value, 14)
+        self.assertEqual('Pa', self.probe.gun_pressure.unit)
+
+    def testscan_magnification(self):
+        self.probe.scan_magnification = 2500
+        self.assertAlmostEqual(2500, self.probe.scan_magnification, 4)
+
+    def testworking_distance(self):
+        self.probe.working_distance = 10.0
+        self.assertAlmostEqual(10.0, self.probe.working_distance.value, 4)
+        self.assertEqual('mm', self.probe.working_distance.unit)
+
+class TestProbeTEM(unittest.TestCase):
+
+    def setUp(self):
+        unittest.TestCase.setUp(self)
+
+        self.probe = ProbeTEM(15.0, LENS_MODE_IMAGE)
+
+    def tearDown(self):
+        unittest.TestCase.tearDown(self)
+
+    def testlens_mode(self):
+        self.assertEqual(LENS_MODE_IMAGE, self.probe.lens_mode)
+        self.assertRaises(ValueError, self.probe.set_lens_mode, None)
+        self.assertRaises(ValueError, self.probe.set_lens_mode, 'ABC')
+
+    def testcamera_magnification(self):
+        self.probe.camera_magnification = 2
+        self.assertAlmostEqual(2.0, self.probe.camera_magnification, 4)
+
+    def testconvergence_angle(self):
+        self.probe.convergence_angle = 1.5
+        self.assertAlmostEqual(1.5, self.probe.convergence_angle.value, 4)
+        self.assertEqual('mrad', self.probe.convergence_angle.unit)
+
+if __name__ == '__main__': #pragma: no cover
+    logging.getLogger().setLevel(logging.DEBUG)
+    unittest.main()
