@@ -24,7 +24,8 @@ __license__ = "GPL v3"
 
 # Local modules.
 from pyhmsa.type.unit import validate_unit
-from pyhmsa.core.condition import _Condition, extract_numerical_value
+from pyhmsa.type.numerical import extract_value
+from pyhmsa.core.condition import _Condition
 
 # Globals and constants variables.
 SIGNAL_TYPE_EDS = 'EDS'
@@ -99,7 +100,7 @@ class PulseHeightAnalyser(object):
         :arg value: bias
         :arg unit: unit
         """
-        self._bias = extract_numerical_value(value, unit)
+        self._bias = extract_value(value, unit)
 
     bias = property(get_bias, set_bias, doc='Bias')
 
@@ -137,7 +138,7 @@ class PulseHeightAnalyser(object):
         :arg value: base level
         :arg unit: unit
         """
-        self._base_level = extract_numerical_value(value, unit)
+        self._base_level = extract_value(value, unit)
 
     base_level = property(get_base_level, set_base_level, doc='Base level')
 
@@ -157,7 +158,7 @@ class PulseHeightAnalyser(object):
         :arg value: window
         :arg unit: unit
         """
-        self._window = extract_numerical_value(value, unit)
+        self._window = extract_value(value, unit)
 
     window = property(get_window, set_window, doc='Window')
 
@@ -228,7 +229,7 @@ class WindowLayer(object):
         """
         if value is None:
             raise ValueError('Thickness is required')
-        self._thickness = extract_numerical_value(value, unit)
+        self._thickness = extract_value(value, unit)
 
     thickness = property(get_thickness, set_thickness, doc='Thickness')
 
@@ -415,7 +416,7 @@ class _Detector(_Condition):
         :arg value: elevation angle
         :arg unit: unit
         """
-        self._elevation = extract_numerical_value(value, unit)
+        self._elevation = extract_value(value, unit)
 
     elevation = property(get_elevation, set_elevation, doc='Elevation angle')
 
@@ -435,7 +436,7 @@ class _Detector(_Condition):
         :arg value: azimuth angle
         :arg unit: unit
         """
-        self._azimuth = extract_numerical_value(value, unit)
+        self._azimuth = extract_value(value, unit)
 
     azimuth = property(get_azimuth, set_azimuth, doc='Azimuth angle')
 
@@ -455,7 +456,7 @@ class _Detector(_Condition):
         :arg value: distance
         :arg unit: unit
         """
-        self._distance = extract_numerical_value(value, unit)
+        self._distance = extract_value(value, unit)
 
     distance = property(get_distance, set_distance, doc='Distance')
 
@@ -475,7 +476,7 @@ class _Detector(_Condition):
         :arg value: area
         :arg unit: unit
         """
-        self._area = extract_numerical_value(value, unit)
+        self._area = extract_value(value, unit)
 
     area = property(get_area, set_area, doc='Area')
 
@@ -495,7 +496,7 @@ class _Detector(_Condition):
         :arg value: solid angle
         :arg unit: unit
         """
-        self._solid_angle = extract_numerical_value(value, unit)
+        self._solid_angle = extract_value(value, unit)
 
     solid_angle = property(get_solid_angle, set_solid_angle, doc='Solid angle')
 
@@ -515,7 +516,7 @@ class _Detector(_Condition):
         :arg value: semi-angle
         :arg unit: unit
         """
-        self._semi_angle = extract_numerical_value(value, unit)
+        self._semi_angle = extract_value(value, unit)
 
     semi_angle = property(get_semi_angle, set_semi_angle, doc='Semi-angle')
 
@@ -535,7 +536,7 @@ class _Detector(_Condition):
         :arg value: temperature
         :arg unit: unit
         """
-        self._temperature = extract_numerical_value(value, unit)
+        self._temperature = extract_value(value, unit)
 
     temperature = property(get_temperature, set_temperature, doc='Temperature')
 
@@ -636,7 +637,7 @@ class DetectorCamera(_Detector):
         :arg value: exposure time
         :arg unit: unit
         """
-        self._exposure_time = extract_numerical_value(value, unit)
+        self._exposure_time = extract_value(value, unit)
 
     exposure_time = property(get_exposure_time, set_exposure_time,
                              doc='Exposure time')
@@ -676,7 +677,7 @@ class DetectorCamera(_Detector):
         :arg value: focal length
         :arg unit: unit
         """
-        self._focal_length = extract_numerical_value(value, unit)
+        self._focal_length = extract_value(value, unit)
 
     focal_length = property(get_focal_length, set_focal_length,
                             doc='Focal length')
@@ -847,7 +848,7 @@ class DetectorSpectrometerCL(DetectorSpectrometer):
         :arg value: grating spacing
         :arg unit: unit
         """
-        self._grating_d = extract_numerical_value(value, unit)
+        self._grating_d = extract_value(value, unit)
 
     grating_d = property(get_grating_d, set_grating_d,
                             doc='Grating spacing')
@@ -945,7 +946,7 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
         :arg value: crystal 2d-spacing
         :arg unit: unit
         """
-        self._crystal_2d = extract_numerical_value(value, unit)
+        self._crystal_2d = extract_value(value, unit)
 
     crystal_2d = property(get_crystal_2d, set_crystal_2d,
                           doc='Crystal 2d-spacing')
@@ -966,7 +967,7 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
         :arg value: Rowland circle diameter
         :arg unit: unit
         """
-        self._rowland_circle_diameter = extract_numerical_value(value, unit)
+        self._rowland_circle_diameter = extract_value(value, unit)
 
     rowland_circle_diameter = property(get_rowland_circle_diameter,
                                        set_rowland_circle_diameter,
@@ -1099,7 +1100,7 @@ class DetectorSpectrometerXEDS(DetectorSpectrometer):
         :arg value: nominal throughput
         :arg unit: unit
         """
-        self._nominal_throughput = extract_numerical_value(value, unit)
+        self._nominal_throughput = extract_value(value, unit)
 
     nominal_throughput = property(get_nominal_throughput,
                                   set_nominal_throughput,
@@ -1121,7 +1122,7 @@ class DetectorSpectrometerXEDS(DetectorSpectrometer):
         :arg value: time constant
         :arg unit: unit
         """
-        self._time_constant = extract_numerical_value(value, unit)
+        self._time_constant = extract_value(value, unit)
 
     time_constant = property(get_time_constant, set_time_constant,
                              doc='Time constant')
@@ -1142,7 +1143,7 @@ class DetectorSpectrometerXEDS(DetectorSpectrometer):
         :arg value: strobe rate
         :arg unit: unit
         """
-        self._strobe_rate = extract_numerical_value(value, unit)
+        self._strobe_rate = extract_value(value, unit)
 
     strobe_rate = property(get_strobe_rate, set_strobe_rate,
                              doc='Strobe rate')

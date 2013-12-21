@@ -27,8 +27,9 @@ except ImportError: # Python 2.7 # pragma: no cover
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import _Condition, extract_numerical_value
+from pyhmsa.core.condition import _Condition
 from pyhmsa.type.unit import validate_unit
+from pyhmsa.type.numerical import extract_value
 
 # Globals and constants variables.
 _COMPOSITION_UNITS = frozenset(['atoms', 'mol%', 'vol%', 'wt%',
@@ -65,7 +66,7 @@ class SpecimenPosition(_Condition):
         :arg value: x coordinate
         :arg unit: unit
         """
-        self._x = extract_numerical_value(value, unit)
+        self._x = extract_value(value, unit)
 
     def get_x(self):
         """
@@ -86,7 +87,7 @@ class SpecimenPosition(_Condition):
         :arg value: y coordinate
         :arg unit: unit
         """
-        self._y = extract_numerical_value(value, unit)
+        self._y = extract_value(value, unit)
 
     def get_y(self):
         """
@@ -107,7 +108,7 @@ class SpecimenPosition(_Condition):
         :arg value: z coordinate
         :arg unit: unit
         """
-        self._z = extract_numerical_value(value, unit)
+        self._z = extract_value(value, unit)
 
     def get_z(self):
         """
@@ -128,7 +129,7 @@ class SpecimenPosition(_Condition):
         :arg value: rotation
         :arg unit: unit
         """
-        self._r = extract_numerical_value(value, unit)
+        self._r = extract_value(value, unit)
 
     set_rotation = set_r
 
@@ -154,7 +155,7 @@ class SpecimenPosition(_Condition):
         :arg value: tilt
         :arg unit: unit
         """
-        self._t = extract_numerical_value(value, unit)
+        self._t = extract_value(value, unit)
 
     set_tilt = set_t
 
@@ -327,7 +328,7 @@ class Specimen(_Condition):
         :arg value: temperature
         :arg unit: unit
         """
-        self._temperature = extract_numerical_value(value, unit)
+        self._temperature = extract_value(value, unit)
 
     temperature = property(get_temperature, set_temperature, doc='Temperature')
 
@@ -379,7 +380,7 @@ class SpecimenLayer(object):
         :arg value: thickness
         :arg unit: unit
         """
-        self._thickness = extract_numerical_value(value, unit)
+        self._thickness = extract_value(value, unit)
 
     def is_bulk(self):
         """

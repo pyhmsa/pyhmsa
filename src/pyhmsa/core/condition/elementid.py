@@ -23,7 +23,8 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import _Condition, extract_numerical_value
+from pyhmsa.core.condition import _Condition
+from pyhmsa.type.numerical import extract_value
 
 # Globals and constants variables.
 
@@ -143,6 +144,6 @@ class ElementIDXray(ElementID):
         :arg value: energy
         :arg unit: unit
         """
-        self._energy = extract_numerical_value(value, unit)
+        self._energy = extract_value(value, unit)
 
     energy = property(get_energy, set_energy, doc='Energy of x-ray line')

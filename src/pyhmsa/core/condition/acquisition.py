@@ -21,9 +21,11 @@ __license__ = "GPL v3"
 # Standard library modules.
 
 # Third party modules.
+import numpy as np
 
 # Local modules.
-from pyhmsa.core.condition import _Condition, extract_numerical_value, flatten
+from pyhmsa.core.condition import _Condition, flatten
+from pyhmsa.type.numerical import extract_value
 
 # Globals and constants variables.
 RASTER_MODE_STAGE = 'Stage'
@@ -80,7 +82,7 @@ class _Acquisition(_Condition):
         :arg value: dwell time
         :arg unit: unit (default: ``s``)
         """
-        self._dwell_time = extract_numerical_value(value, unit)
+        self._dwell_time = extract_value(value, unit)
 
     dwell_time = property(get_dwell_time, set_dwell_time,
                           doc="Uniform real time taken for each individual measurement")
@@ -103,7 +105,7 @@ class _Acquisition(_Condition):
         :arg value: total time
         :arg unit: unit (default: ``s``)
         """
-        self._total_time = extract_numerical_value(value, unit)
+        self._total_time = extract_value(value, unit)
 
     total_time = property(get_total_time, set_total_time,
                           doc='Total real time taken to collect all measurements')
@@ -126,7 +128,7 @@ class _Acquisition(_Condition):
         :arg value: live dwell time
         :arg unit: unit (default: ``s``)
         """
-        self._dwell_time_live = extract_numerical_value(value, unit)
+        self._dwell_time_live = extract_value(value, unit)
 
     dwell_time_live = property(get_dwell_time_live, set_dwell_time_live,
                                doc='Analogous detector live time for each individual measurement')
@@ -207,7 +209,7 @@ class AcquisitionMultipoint(_Acquisition):
         """
         Returns the number of specimen positions defined.
         """
-        return len(self._positions)
+        return np.uint32(len(self._positions))
 
     point_count = property(get_point_count, doc='Number of specimen positions')
 
@@ -315,7 +317,7 @@ class AcquisitionRasterLinescan(_AcquisitionRaster):
         """
         if value is None:
             raise ValueError("Step count is required")
-        self._step_count = value
+        self._step_count = np.uint32(value)
 
     step_count = property(get_step_count, set_step_count,
                           doc='Number of steps')
@@ -336,7 +338,7 @@ class AcquisitionRasterLinescan(_AcquisitionRaster):
         :arg value: step size
         :arg unit: unit (default: ``\u00b5mm``)
         """
-        self._step_size = extract_numerical_value(value, unit)
+        self._step_size = extract_value(value, unit)
 
     step_size = property(get_step_size, set_step_size,
                          doc='Dimension of each step')
@@ -438,7 +440,7 @@ class AcquisitionRasterXY(_AcquisitionRaster):
         """
         if value is None:
             raise ValueError("Step count x is required")
-        self._step_count_x = value
+        self._step_count_x = np.uint32(value)
 
     step_count_x = property(get_step_count_x, set_step_count_x,
                             doc='Number of steps in x direction')
@@ -459,7 +461,7 @@ class AcquisitionRasterXY(_AcquisitionRaster):
         """
         if value is None:
             raise ValueError("Step count y is required")
-        self._step_count_y = value
+        self._step_count_y = np.uint32(value)
 
     step_count_y = property(get_step_count_y, set_step_count_y,
                             doc='Number of steps in y direction')
@@ -480,7 +482,7 @@ class AcquisitionRasterXY(_AcquisitionRaster):
         :arg value: step size
         :arg unit: unit (default: ``\u00b5mm``)
         """
-        self._step_size_x = extract_numerical_value(value, unit)
+        self._step_size_x = extract_value(value, unit)
 
     step_size_x = property(get_step_size_x, set_step_size_x,
                            doc='Dimension of each step in the x direction')
@@ -501,7 +503,7 @@ class AcquisitionRasterXY(_AcquisitionRaster):
         :arg value: step size
         :arg unit: unit (default: ``\u00b5mm``)
         """
-        self._step_size_y = extract_numerical_value(value, unit)
+        self._step_size_y = extract_value(value, unit)
 
     step_size_y = property(get_step_size_y, set_step_size_y,
                            doc='Dimension of each step in the y direction')
@@ -520,6 +522,8 @@ class AcquisitionRasterXY(_AcquisitionRaster):
         
         :arg value: frame count
         """
+        if value is not None:
+            value = np.uint32(value)
         self._frame_count = value
 
     frame_count = property(get_frame_count, set_frame_count,
@@ -614,7 +618,7 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
         """
         if value is None:
             raise ValueError("Step count x is required")
-        self._step_count_x = value
+        self._step_count_x = np.uint32(value)
 
     step_count_x = property(get_step_count_x, set_step_count_x,
                             doc='Number of steps in x direction')
@@ -635,7 +639,7 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
         """
         if value is None:
             raise ValueError("Step count y is required")
-        self._step_count_y = value
+        self._step_count_y = np.uint32(value)
 
     step_count_y = property(get_step_count_y, set_step_count_y,
                             doc='Number of steps in y direction')
@@ -656,7 +660,7 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
         """
         if value is None:
             raise ValueError("Step count z is required")
-        self._step_count_z = value
+        self._step_count_z = np.uint32(value)
 
     step_count_z = property(get_step_count_z, set_step_count_z,
                             doc='Number of steps in z direction')
@@ -677,7 +681,7 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
         :arg value: step size
         :arg unit: unit (default: ``\u00b5mm``)
         """
-        self._step_size_x = extract_numerical_value(value, unit)
+        self._step_size_x = extract_value(value, unit)
 
     step_size_x = property(get_step_size_x, set_step_size_x,
                            doc='Dimension of each step in the x direction')
@@ -698,7 +702,7 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
         :arg value: step size
         :arg unit: unit (default: ``\u00b5mm``)
         """
-        self._step_size_y = extract_numerical_value(value, unit)
+        self._step_size_y = extract_value(value, unit)
 
     step_size_y = property(get_step_size_y, set_step_size_y,
                            doc='Dimension of each step in the y direction')
@@ -719,7 +723,7 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
         :arg value: step size
         :arg unit: unit (default: ``\u00b5mm``)
         """
-        self._step_size_z = extract_numerical_value(value, unit)
+        self._step_size_z = extract_value(value, unit)
 
     step_size_z = property(get_step_size_z, set_step_size_z,
                            doc='Dimension of each step in the z direction')

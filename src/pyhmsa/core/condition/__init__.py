@@ -33,16 +33,6 @@ from pyhmsa.type.identifier import validate_identifier
 
 # Globals and constants variables.
 
-def extract_numerical_value(val, unit):
-    if isinstance(val, tuple):
-        if len(val) == 2:
-            unit = val[1] or unit
-            val = val[0]
-        else:
-            raise ValueError("Too many arguments")
-
-    return NumericalValue(val, unit)
-
 def flatten(items, ignore_types=(str, bytes)):
     for x in items:
         if isinstance(x, Iterable) and not isinstance(x, ignore_types):

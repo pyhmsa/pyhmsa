@@ -23,7 +23,8 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import _Condition, extract_numerical_value
+from pyhmsa.core.condition import _Condition
+from pyhmsa.type.numerical import extract_value
 
 # Globals and constants variables.
 
@@ -106,7 +107,7 @@ class ProbeEM(_Probe):
         :arg value: beam voltage
         :arg unit: unit
         """
-        nv = extract_numerical_value(value, unit)
+        nv = extract_value(value, unit)
         if nv.value is None:
             raise ValueError('Beam voltage is required')
         self._beam_voltage = nv
@@ -130,7 +131,7 @@ class ProbeEM(_Probe):
         :arg value: beam current
         :arg unit: unit
         """
-        self._beam_current = extract_numerical_value(value, unit)
+        self._beam_current = extract_value(value, unit)
 
     beam_current = property(get_beam_current, set_beam_current,
                             doc='Beam current')
@@ -175,7 +176,7 @@ class ProbeEM(_Probe):
         :arg value: emission current
         :arg unit: unit
         """
-        self._emission_current = extract_numerical_value(value, unit)
+        self._emission_current = extract_value(value, unit)
 
     emission_current = property(get_emission_current, set_emission_current,
                                 doc='Emission current')
@@ -196,7 +197,7 @@ class ProbeEM(_Probe):
         :arg value: filament current
         :arg unit: unit
         """
-        self._filament_current = extract_numerical_value(value, unit)
+        self._filament_current = extract_value(value, unit)
 
     filament_current = property(get_filament_current, set_filament_current,
                                 doc='Filament current')
@@ -217,7 +218,7 @@ class ProbeEM(_Probe):
         :arg value: extractor bias
         :arg unit: unit
         """
-        self._extractor_bias = extract_numerical_value(value, unit)
+        self._extractor_bias = extract_value(value, unit)
 
     extractor_bias = property(get_extractor_bias, set_extractor_bias,
                               doc='Extractor bias')
@@ -238,7 +239,7 @@ class ProbeEM(_Probe):
         :arg value: beam diameter
         :arg unit: unit
         """
-        self._beam_diameter = extract_numerical_value(value, unit)
+        self._beam_diameter = extract_value(value, unit)
 
     beam_diameter = property(get_beam_diameter, set_beam_diameter,
                              doc='Beam diameter')
@@ -259,7 +260,7 @@ class ProbeEM(_Probe):
         :arg value: chamber pressure
         :arg unit: unit
         """
-        self._chamber_pressure = extract_numerical_value(value, unit)
+        self._chamber_pressure = extract_value(value, unit)
 
     chamber_pressure = property(get_chamber_pressure, set_chamber_pressure,
                                 doc='Chamber pressure')
@@ -280,7 +281,7 @@ class ProbeEM(_Probe):
         :arg value: gun pressure
         :arg unit: unit
         """
-        self._gun_pressure = extract_numerical_value(value, unit)
+        self._gun_pressure = extract_value(value, unit)
 
     gun_pressure = property(get_gun_pressure, set_gun_pressure,
                             doc='Gun pressure')
@@ -320,7 +321,7 @@ class ProbeEM(_Probe):
         :arg value: working distance
         :arg unit: unit
         """
-        self._working_distance = extract_numerical_value(value, unit)
+        self._working_distance = extract_value(value, unit)
 
     working_distance = property(get_working_distance, set_working_distance,
                                 doc='Working distance')
@@ -420,7 +421,7 @@ class ProbeTEM(ProbeEM):
         :arg value: convergence angle
         :arg unit: unit
         """
-        self._convergence_angle = extract_numerical_value(value, unit)
+        self._convergence_angle = extract_value(value, unit)
 
     convergence_angle = property(get_convergence_angle, set_convergence_angle,
                                  doc='Semi-angle of incident beam.')

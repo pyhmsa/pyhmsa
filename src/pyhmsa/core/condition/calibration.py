@@ -24,6 +24,7 @@ __license__ = "GPL v3"
 
 # Local modules.
 from pyhmsa.type.unit import validate_unit
+from pyhmsa.type.numerical import extract_value
 
 # Globals and constants variables.
 
@@ -87,7 +88,7 @@ class CalibrationConstant(_Calibration):
 
         if value is None:
             raise ValueError('Value is required')
-        self._value = value
+        self._value = extract_value(value)
 
     def get_value(self):
         """
@@ -119,11 +120,11 @@ class CalibrationLinear(_Calibration):
 
         if gain is None:
             raise ValueError('Gain is required')
-        self._gain = gain
+        self._gain = extract_value(gain)
 
         if offset is None:
             raise ValueError('Offset is required')
-        self._offset = offset
+        self._offset = extract_value(offset)
 
     def get_gain(self):
         """
@@ -166,7 +167,7 @@ class CalibrationPolynomial(_Calibration):
             raise ValueError('Coefficients are required')
         if not coefficients:
             raise ValueError('At least one coefficient must be given')
-        self._coefficients = tuple(coefficients)
+        self._coefficients = extract_value(coefficients)
     
     def get_coefficients(self):
         """
@@ -200,7 +201,7 @@ class CalibrationExplicit(_Calibration):
             raise ValueError('Values are required')
         if not values:
             raise ValueError('At least one value must be given')
-        self._values = tuple(values)
+        self._values = extract_value(values)
 
     def get_values(self):
         """

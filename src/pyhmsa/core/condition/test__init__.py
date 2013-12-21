@@ -15,35 +15,9 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import extract_numerical_value, Conditions, _Condition
+from pyhmsa.core.condition import Conditions, _Condition
 
 # Globals and constants variables.
-
-class TestModule(unittest.TestCase):
-
-    def setUp(self):
-        unittest.TestCase.setUp(self)
-
-    def tearDown(self):
-        unittest.TestCase.tearDown(self)
-
-    def testextract_value_unit(self):
-        x = extract_numerical_value(5.0, 's')
-        self.assertAlmostEqual(5.0, x.value, 4)
-        self.assertEqual('s', x.unit)
-
-        x = extract_numerical_value((5.0, 's'), 'ms')
-        self.assertAlmostEqual(5.0, x.value, 4)
-        self.assertEqual('s', x.unit)
-        
-        x = extract_numerical_value((5.0, None), 'ms')
-        self.assertAlmostEqual(5.0, x.value, 4)
-        self.assertEqual('ms', x.unit)
-        
-        x = extract_numerical_value(None, 'ms')
-        self.assertIsNone(x.value)
-        
-        self.assertRaises(ValueError, extract_numerical_value, (5.0, 's', 'ms'), 'ks')
 
 class TestConditions(unittest.TestCase):
 

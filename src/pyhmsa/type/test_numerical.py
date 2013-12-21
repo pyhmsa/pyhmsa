@@ -16,9 +16,47 @@ import logging
 import numpy as np
 
 # Local modules.
-from pyhmsa.type.numerical import NumericalValue
+from pyhmsa.type.numerical import NumericalValue, extract_value
 
 # Globals and constants variables.
+
+class TestModule(unittest.TestCase):
+
+    def setUp(self):
+        unittest.TestCase.setUp(self)
+
+    def tearDown(self):
+        unittest.TestCase.tearDown(self)
+
+    def testextract_value(self):
+        # Numerical value
+        x = extract_value(5.0, 's')
+        self.assertAlmostEqual(5.0, x.value, 4)
+        self.assertEqual('s', x.unit)
+
+        x = extract_value((5.0, 's'), 'ms')
+        self.assertAlmostEqual(5.0, x.value, 4)
+        self.assertEqual('s', x.unit)
+
+        x = extract_value((5.0, None), 'ms')
+        self.assertAlmostEqual(5.0, x.value, 4)
+        self.assertEqual('ms', x.unit)
+
+        x = extract_value(None, 'ms')
+        self.assertIsNone(x.value)
+
+        self.assertRaises(ValueError, extract_value, (5.0, 's', 'ms'), 'ks')
+
+        # Numpy type
+        x = extract_value(5.0)
+        self.assertAlmostEqual(5.0, x, 4)
+        self.assertTrue(hasattr(x, 'dtype'))
+
+        x = extract_value(np.uint32(9))
+        self.assertEqual(9, x)
+        self.assertEqual(np.uint32, x.dtype.type)
+
+        self.assertRaises(ValueError, extract_value, np.int8(5.0))
 
 class TestNumericalValue(unittest.TestCase):
 
