@@ -56,7 +56,7 @@ class TestPulseHeightAnalyser(unittest.TestCase):
         self.assertEqual('V', self.pha.window.unit, 4)
 
     def testmode(self):
-        self.assertEqual(PHA_MODE_DIFFERENTIAL, self.pha.mode, 4)
+        self.assertEqual(PHA_MODE_DIFFERENTIAL, self.pha.mode)
 
         self.assertRaises(ValueError, self.pha.set_mode, 'ABC')
 

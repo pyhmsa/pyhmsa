@@ -118,7 +118,7 @@ class PulseHeightAnalyser(object):
         
         :arg value: gain
         """
-        self._gain = value
+        self._gain = extract_value(value)
 
     gain = property(get_gain, set_gain, doc='Gain')
 
@@ -597,7 +597,7 @@ class DetectorCamera(_Detector):
         """
         if value is None:
             raise ValueError('Pixel count along the horizontal axis is required')
-        self._pixel_count_u = value
+        self._pixel_count_u = extract_value(value)
 
     pixel_count_u = property(get_pixel_count_u, set_pixel_count_u,
                              doc='Number of pixels along the horizontal axis')
@@ -616,7 +616,7 @@ class DetectorCamera(_Detector):
         """
         if value is None:
             raise ValueError('Pixel count along the vertical axis is required')
-        self._pixel_count_v = value
+        self._pixel_count_v = extract_value(value)
 
     pixel_count_v = property(get_pixel_count_v, set_pixel_count_v,
                              doc='Number of pixels along the vertical axis')
@@ -656,7 +656,7 @@ class DetectorCamera(_Detector):
         
         :arg value: magnification
         """
-        self._magnification = value
+        self._magnification = extract_value(value)
 
     magnification = property(get_magnification, set_magnification,
                              doc='Magnification')
@@ -736,7 +736,7 @@ class DetectorSpectrometer(_Detector):
         """
         if value is None:
             raise ValueError('Channel count is required')
-        self._channel_count = value
+        self._channel_count = extract_value(value)
 
     channel_count = property(get_channel_count, set_channel_count,
                              doc='Number of channels')
@@ -907,7 +907,11 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
         self.dispersion_element = dispersion_element
         self.crystal_2d = crystal_2d
         self.rowland_circle_diameter = rowland_circle_diameter
+        if pulse_height_analyser is None:
+            pulse_height_analyser = PulseHeightAnalyser()
         self.pulse_height_analyser = pulse_height_analyser
+        if window is None:
+            window = Window()
         self.window = window
 
     def get_dispersion_element(self):

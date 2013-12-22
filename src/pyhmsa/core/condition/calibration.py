@@ -165,7 +165,7 @@ class CalibrationPolynomial(_Calibration):
 
         if coefficients is None:
             raise ValueError('Coefficients are required')
-        if not coefficients:
+        if len(coefficients) == 0:
             raise ValueError('At least one coefficient must be given')
         self._coefficients = extract_value(coefficients)
     
@@ -199,7 +199,7 @@ class CalibrationExplicit(_Calibration):
 
         if values is None:
             raise ValueError('Values are required')
-        if not values:
+        if len(values) == 0:
             raise ValueError('At least one value must be given')
         self._values = extract_value(values)
 
