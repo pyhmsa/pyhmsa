@@ -300,7 +300,7 @@ class ProbeEM(_Probe):
         
         :arg value: scan magnification
         """
-        self._scan_magnification = value
+        self._scan_magnification = extract_value(value)
 
     scan_magnification = property(get_scan_magnification, set_scan_magnification,
                                   doc='Scan magnification')
@@ -400,7 +400,7 @@ class ProbeTEM(ProbeEM):
         
         :arg value: camera magnification
         """
-        self._camera_magnification = value
+        self._camera_magnification = extract_value(value)
 
     camera_magnification = property(get_camera_magnification, set_camera_magnification,
                                   doc='Camera magnification')

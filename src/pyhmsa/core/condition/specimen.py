@@ -25,6 +25,7 @@ except ImportError: # Python 2.7 # pragma: no cover
     from UserDict import UserDict
 
 # Third party modules.
+import numpy as np
 
 # Local modules.
 from pyhmsa.core.condition import _Condition
@@ -196,7 +197,7 @@ class Composition(UserDict):
             raise ValueError('Atomic number cannot be less than hydrogen')
         if key > 118:
             raise ValueError('Atomic number cannot be greater than Uuo')
-        UserDict.__setitem__(self, int(key), float(item))
+        UserDict.__setitem__(self, np.uint8(key), extract_value(item))
     
     def get_unit(self):
         """
@@ -456,3 +457,19 @@ class SpecimenMultilayer(Specimen):
         return self._layers
 
     layers = property(get_layers, doc='Modifiable list of layers')
+    
+    def append_layer(self, name=None, thickness=None, formula=None, composition=None):
+        """
+        Utility function to create a layer.
+        
+        :arg name: name (optional)
+        :arg thickness: thickness, bulk layer if ``None`` (optional)
+        :arg formula: formula
+        :arg composition: composition
+        
+        :return: created layer
+        :rtype: :class:`.SpecimenLayer`
+        """
+        layer = SpecimenLayer(name, thickness, formula, composition)
+        self.layers.append(layer)
+        return layer

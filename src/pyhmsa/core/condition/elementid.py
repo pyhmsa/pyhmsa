@@ -21,6 +21,7 @@ __license__ = "GPL v3"
 # Standard library modules.
 
 # Third party modules.
+import numpy as np
 
 # Local modules.
 from pyhmsa.core.condition import _Condition
@@ -79,7 +80,7 @@ class ElementID(_Condition):
             raise ValueError('Atomic number cannot be less than hydrogen')
         if z > 118:
             raise ValueError('Atomic number cannot be greater than Uuo')
-        self._z = int(z)
+        self._z = np.uint8(z)
 
     set_atomic_number = set_z
 

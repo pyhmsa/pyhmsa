@@ -45,13 +45,13 @@ class TestElementIDXray(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.element = ElementIDXray(11, r'M\u03b1')
+        self.element = ElementIDXray(11, u'M\u03b1')
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
 
     def testline(self):
-        self.assertEqual(r'M\u03b1', self.element.line)
+        self.assertEqual(u'M\u03b1', self.element.line)
         self.assertRaises(ValueError, self.element.set_line, None)
 
     def testenergy(self):

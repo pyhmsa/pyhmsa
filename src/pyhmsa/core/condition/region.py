@@ -24,6 +24,7 @@ __license__ = "GPL v3"
 
 # Local modules.
 from pyhmsa.core.condition import _Condition
+from pyhmsa.type.numerical import extract_value
 
 # Globals and constants variables.
 
@@ -73,5 +74,5 @@ class RegionOfInterest(_Condition):
             raise ValueError('Start channel must be greater than 0')
         if start > end:
             raise ValueError('Start channel greater than end channel')
-        self._start_channel = start
-        self._end_channel = end
+        self._start_channel = extract_value(start)
+        self._end_channel = extract_value(end)

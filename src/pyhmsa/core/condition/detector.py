@@ -1066,6 +1066,8 @@ class DetectorSpectrometerXEDS(DetectorSpectrometer):
         self.nominal_throughput = nominal_throughput
         self.time_constant = time_constant
         self.strobe_rate = strobe_rate
+        if window is None:
+            window = Window()
         self.window = window
 
     def get_technology(self):
