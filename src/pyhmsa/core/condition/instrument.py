@@ -24,10 +24,15 @@ __license__ = "GPL v3"
 
 # Local modules.
 from pyhmsa.core.condition import _Condition
+from pyhmsa.util.parameter import TextAttribute
 
 # Globals and constants variables.
 
 class Instrument(_Condition):
+
+    manufacturer = TextAttribute(True, 'Manufacturer', 'manufacturer')
+    model = TextAttribute(True, 'Model', 'model')
+    serial_number = TextAttribute(False, 'SerialNumber', 'serial number')
 
     def __init__(self, manufacturer, model, serial_number=None):
         """
@@ -42,57 +47,3 @@ class Instrument(_Condition):
         self.manufacturer = manufacturer
         self.model = model
         self.serial_number = serial_number
-
-    def get_manufacturer(self):
-        """
-        Returns the manufacturer.
-        """
-        return self._manufacturer
-
-    def set_manufacturer(self, value):
-        """
-        Sets the manufacturer.
-        
-        :arg value: manufacturer
-        """
-        if value is None:
-            raise ValueError('Manufacturer is required')
-        self._manufacturer = value
-
-    manufacturer = property(get_manufacturer, set_manufacturer,
-                           doc='Manufacturer')
-
-    def get_model(self):
-        """
-        Returns the model.
-        """
-        return self._model
-
-    def set_model(self, value):
-        """
-        Sets the model.
-        
-        :arg value: model
-        """
-        if value is None:
-            raise ValueError('Model is required')
-        self._model = value
-
-    model = property(get_model, set_model, doc='Model')
-
-    def get_serial_number(self):
-        """
-        Returns the serial number.
-        """
-        return self._serial_number
-
-    def set_serial_number(self, value):
-        """
-        Sets the serial number.
-        
-        :arg value: serial number
-        """
-        self._serial_number = value
-
-    serial_number = property(get_serial_number, set_serial_number,
-                           doc='Serial number')

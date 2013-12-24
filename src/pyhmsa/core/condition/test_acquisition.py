@@ -18,7 +18,7 @@ import logging
 from pyhmsa.core.condition.acquisition import \
     (_Acquisition, AcquisitionPoint, AcquisitionMultipoint,
      _AcquisitionRaster, AcquisitionRasterLinescan,
-     AcquisitionRasterXY, AcquisitionRasterXYZ
+    AcquisitionRasterXY, AcquisitionRasterXYZ
      )
 from pyhmsa.core.condition.specimen import SpecimenPosition
 
@@ -38,47 +38,47 @@ class Test_Acquisition(unittest.TestCase):
         unittest.TestCase.tearDown(self)
 
     def testdwell_time(self):
-        self.assertAlmostEqual(5.0, self.acq.dwell_time[0], 4)
-        self.assertEqual('s', self.acq.dwell_time[1])
-        self.assertAlmostEqual(5.0, self.acq.get_dwell_time()[0], 4)
-        self.assertEqual('s', self.acq.get_dwell_time()[1])
+        self.assertAlmostEqual(5.0, self.acq.dwell_time, 4)
+        self.assertEqual('s', self.acq.dwell_time.unit)
+        self.assertAlmostEqual(5.0, self.acq.get_dwell_time(), 4)
+        self.assertEqual('s', self.acq.get_dwell_time().unit)
 
         self.acq.set_dwell_time(10.0, 'ms')
-        self.assertAlmostEqual(10.0, self.acq.dwell_time[0], 4)
-        self.assertEqual('ms', self.acq.dwell_time[1])
-        self.assertAlmostEqual(10.0, self.acq.get_dwell_time()[0], 4)
-        self.assertEqual('ms', self.acq.get_dwell_time()[1])
+        self.assertAlmostEqual(10.0, self.acq.dwell_time, 4)
+        self.assertEqual('ms', self.acq.dwell_time.unit)
+        self.assertAlmostEqual(10.0, self.acq.get_dwell_time(), 4)
+        self.assertEqual('ms', self.acq.get_dwell_time().unit)
 
         self.acq.dwell_time = 15.0
-        self.assertAlmostEqual(15.0, self.acq.dwell_time[0], 4)
-        self.assertEqual('s', self.acq.dwell_time[1])
-        self.assertAlmostEqual(15.0, self.acq.get_dwell_time()[0], 4)
-        self.assertEqual('s', self.acq.get_dwell_time()[1])
+        self.assertAlmostEqual(15.0, self.acq.dwell_time, 4)
+        self.assertEqual('s', self.acq.dwell_time.unit)
+        self.assertAlmostEqual(15.0, self.acq.get_dwell_time(), 4)
+        self.assertEqual('s', self.acq.get_dwell_time().unit)
 
         self.acq.dwell_time = (15.0, 'ms')
-        self.assertAlmostEqual(15.0, self.acq.dwell_time[0], 4)
-        self.assertEqual('ms', self.acq.dwell_time[1])
-        self.assertAlmostEqual(15.0, self.acq.get_dwell_time()[0], 4)
-        self.assertEqual('ms', self.acq.get_dwell_time()[1])
+        self.assertAlmostEqual(15.0, self.acq.dwell_time, 4)
+        self.assertEqual('ms', self.acq.dwell_time.unit)
+        self.assertAlmostEqual(15.0, self.acq.get_dwell_time(), 4)
+        self.assertEqual('ms', self.acq.get_dwell_time().unit)
 
         self.acq.dwell_time = (15.0, None)
-        self.assertAlmostEqual(15.0, self.acq.dwell_time[0], 4)
-        self.assertEqual('s', self.acq.dwell_time[1])
-        self.assertAlmostEqual(15.0, self.acq.get_dwell_time()[0], 4)
-        self.assertEqual('s', self.acq.get_dwell_time()[1])
+        self.assertAlmostEqual(15.0, self.acq.dwell_time, 4)
+        self.assertEqual('s', self.acq.dwell_time.unit)
+        self.assertAlmostEqual(15.0, self.acq.get_dwell_time(), 4)
+        self.assertEqual('s', self.acq.get_dwell_time().unit)
 
     def testtotal_time(self):
         self.assertFalse(self.acq.total_time)
 
         self.acq.set_total_time(6.0, 'ns')
-        self.assertAlmostEqual(6.0, self.acq.total_time.value, 4)
+        self.assertAlmostEqual(6.0, self.acq.total_time, 4)
         self.assertEqual('ns', self.acq.total_time.unit)
 
     def testdwell_time_live(self):
         self.assertFalse(self.acq.dwell_time_live)
 
         self.acq.set_dwell_time_live(7.0, 'ms')
-        self.assertAlmostEqual(7.0, self.acq.dwell_time_live.value, 4)
+        self.assertAlmostEqual(7.0, self.acq.dwell_time_live, 4)
         self.assertEqual('ms', self.acq.dwell_time_live.unit)
 
 class TestAcquisitionPosition(unittest.TestCase):
@@ -93,9 +93,9 @@ class TestAcquisitionPosition(unittest.TestCase):
         unittest.TestCase.tearDown(self)
 
     def testposition(self):
-        self.assertAlmostEqual(5.0, self.acq.position.x.value, 4)
-        self.assertAlmostEqual(5.0, self.acq.position.y.value, 4)
-        self.assertAlmostEqual(11.0, self.acq.position.z.value, 4)
+        self.assertAlmostEqual(5.0, self.acq.position.x, 4)
+        self.assertAlmostEqual(5.0, self.acq.position.y, 4)
+        self.assertAlmostEqual(11.0, self.acq.position.z, 4)
 
         self.assertRaises(ValueError, self.acq.set_position, None)
 
@@ -113,15 +113,14 @@ class TestAcquisitionMultipoint(unittest.TestCase):
 
     def testpositions(self):
         self.assertEqual(2, len(self.acq.positions))
-        self.assertEqual(2, self.acq.point_count)
 
-        self.assertAlmostEqual(5.0, self.acq.positions[0].x.value, 4)
-        self.assertAlmostEqual(5.0, self.acq.positions[0].y.value, 4)
-        self.assertAlmostEqual(11.0, self.acq.positions[0].z.value, 4)
+        self.assertAlmostEqual(5.0, self.acq.positions[0].x, 4)
+        self.assertAlmostEqual(5.0, self.acq.positions[0].y, 4)
+        self.assertAlmostEqual(11.0, self.acq.positions[0].z, 4)
 
-        self.assertAlmostEqual(6.0, self.acq.positions[1].x.value, 4)
-        self.assertAlmostEqual(6.0, self.acq.positions[1].y.value, 4)
-        self.assertAlmostEqual(11.0, self.acq.positions[1].z.value, 4)
+        self.assertAlmostEqual(6.0, self.acq.positions[1].x, 4)
+        self.assertAlmostEqual(6.0, self.acq.positions[1].y, 4)
+        self.assertAlmostEqual(11.0, self.acq.positions[1].z, 4)
 
 class Test_AcquisitionRaster(unittest.TestCase):
 
@@ -155,29 +154,29 @@ class TestAcquisitionRasterLinescan(unittest.TestCase):
 
     def teststep_size(self):
         self.assertTrue(self.acq.step_size)
-        self.assertAlmostEqual(0.5, self.acq.step_size.value, 4)
+        self.assertAlmostEqual(0.5, self.acq.step_size, 4)
         self.assertEqual('nm', self.acq.step_size.unit)
 
     def teststart_position(self):
         self.assertFalse(self.acq.position_start)
 
         self.acq.position_start = SpecimenPosition(y=1.0)
-        self.assertAlmostEqual(1.0, self.acq.position_start.y.value, 4)
+        self.assertAlmostEqual(1.0, self.acq.position_start.y, 4)
         self.assertEqual('mm', self.acq.position_start.y.unit)
 
         self.assertEqual(1, len(self.acq.positions))
-        self.assertAlmostEqual(1.0, self.acq.positions[POSITION_LOCATION_START].y.value, 4)
+        self.assertAlmostEqual(1.0, self.acq.positions[POSITION_LOCATION_START].y, 4)
         self.assertEqual('mm', self.acq.positions[POSITION_LOCATION_START].y.unit)
 
     def testend_position(self):
         self.assertFalse(self.acq.position_end)
 
         self.acq.position_end = SpecimenPosition(y=2.0)
-        self.assertAlmostEqual(2.0, self.acq.position_end.y.value, 4)
+        self.assertAlmostEqual(2.0, self.acq.position_end.y, 4)
         self.assertEqual('mm', self.acq.position_end.y.unit)
 
         self.assertEqual(1, len(self.acq.positions))
-        self.assertAlmostEqual(2.0, self.acq.positions[POSITION_LOCATION_END].y.value, 4)
+        self.assertAlmostEqual(2.0, self.acq.positions[POSITION_LOCATION_END].y, 4)
         self.assertEqual('mm', self.acq.positions[POSITION_LOCATION_END].y.unit)
 
 class TestAcquisitionRasterXY(unittest.TestCase):
@@ -195,17 +194,17 @@ class TestAcquisitionRasterXY(unittest.TestCase):
 
         position = SpecimenPosition(0.5)
         self.acq.set_position(position, POSITION_LOCATION_CENTER)
-        self.assertAlmostEqual(0.5, self.acq.get_position().x[0], 4)
+        self.assertAlmostEqual(0.5, self.acq.get_position().x, 4)
         self.assertIn(POSITION_LOCATION_CENTER, self.acq.get_positions())
 
         position = SpecimenPosition(0.4)
         self.acq.position = position
-        self.assertAlmostEqual(0.4, self.acq.position.x[0], 4)
+        self.assertAlmostEqual(0.4, self.acq.position.x, 4)
         self.assertIn(POSITION_LOCATION_START, self.acq.positions)
 
         position = SpecimenPosition(0.3)
         self.acq.position = (position, POSITION_LOCATION_CENTER)
-        self.assertAlmostEqual(0.3, self.acq.position.x[0], 4)
+        self.assertAlmostEqual(0.3, self.acq.position.x, 4)
         self.assertIn(POSITION_LOCATION_CENTER, self.acq.positions)
 
     def teststep_count_x(self):
@@ -222,14 +221,14 @@ class TestAcquisitionRasterXY(unittest.TestCase):
         self.assertFalse(self.acq.step_size_x)
 
         self.acq.set_step_size_x(5.0, 'pm')
-        self.assertAlmostEqual(5, self.acq.step_size_x.value, 4)
+        self.assertAlmostEqual(5, self.acq.step_size_x, 4)
         self.assertEqual('pm', self.acq.step_size_x.unit)
 
     def teststep_size_y(self):
         self.assertFalse(self.acq.step_size_y)
 
         self.acq.set_step_size_y(5.0, 'pm')
-        self.assertAlmostEqual(5, self.acq.step_size_y.value, 4)
+        self.assertAlmostEqual(5, self.acq.step_size_y, 4)
         self.assertEqual('pm', self.acq.step_size_y.unit)
 
     def testframe_count(self):
@@ -253,7 +252,7 @@ class TestAcquisitionRasterXYZ(unittest.TestCase):
 
         position = SpecimenPosition(0.5)
         self.acq.set_position(position, POSITION_LOCATION_CENTER)
-        self.assertAlmostEqual(0.5, self.acq.get_position().x[0], 4)
+        self.assertAlmostEqual(0.5, self.acq.get_position().x, 4)
         self.assertIn(POSITION_LOCATION_CENTER, self.acq.get_positions())
 
     def teststep_count_x(self):
@@ -275,21 +274,21 @@ class TestAcquisitionRasterXYZ(unittest.TestCase):
         self.assertFalse(self.acq.step_size_x)
 
         self.acq.set_step_size_x(5.0, 'pm')
-        self.assertAlmostEqual(5, self.acq.step_size_x.value, 4)
+        self.assertAlmostEqual(5, self.acq.step_size_x, 4)
         self.assertEqual('pm', self.acq.step_size_x.unit)
 
     def teststep_size_y(self):
         self.assertFalse(self.acq.step_size_y)
 
         self.acq.set_step_size_y(5.0, 'pm')
-        self.assertAlmostEqual(5, self.acq.step_size_y.value, 4)
+        self.assertAlmostEqual(5, self.acq.step_size_y, 4)
         self.assertEqual('pm', self.acq.step_size_y.unit)
 
     def teststep_size_z(self):
         self.assertFalse(self.acq.step_size_z)
 
         self.acq.set_step_size_z(5.0, 'pm')
-        self.assertAlmostEqual(5, self.acq.step_size_z.value, 4)
+        self.assertAlmostEqual(5, self.acq.step_size_z, 4)
         self.assertEqual('pm', self.acq.step_size_z.unit)
 
     def testraster_mode_z(self):

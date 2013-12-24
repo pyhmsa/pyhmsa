@@ -25,176 +25,68 @@ import xml.etree.ElementTree as etree
 
 # Local modules.
 from pyhmsa.core.condition.calibration import \
-    (_Calibration, CalibrationConstant, CalibrationLinear,
+    (CalibrationConstant, CalibrationLinear,
      CalibrationPolynomial, CalibrationExplicit)
 from pyhmsa.io.xml.handler import _XMLHandler
-from pyhmsa.io.xml.handlers.type.numerical import NumericalXMLHandler
 
 # Globals and constants variables.
 
-class _CalibrationXMLHandler(_XMLHandler):
-
-    def __init__(self):
-        _XMLHandler.__init__(self)
-        self._handler_numerical = NumericalXMLHandler()
+class CalibrationConstantXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
-        return element.tag == 'Calibration'
+        return element.tag == 'Calibration' and element.get('Class') == 'Constant'
 
     def from_xml(self, element):
-        kwargs = {}
-
-        subelement = element.find('Quantity')
-        kwargs['quantity'] = subelement.text
-
-        subelement = element.find('Unit')
-        kwargs['unit'] = subelement.text
-
-        return _Calibration(**kwargs)
+        return self._parse_parameter(element, CalibrationConstant)
 
     def can_convert(self, obj):
-        return isinstance(obj, _Calibration)
-
-    def to_xml(self, obj):
-        element = etree.Element('Calibration')
-
-        subelement = etree.Element('Quantity')
-        subelement.text = obj.quantity
-        element.append(subelement)
-
-        subelement = etree.Element('Unit')
-        subelement.text = obj.unit
-        element.append(subelement)
-
-        return element
-
-class CalibrationConstantXMLHandler(_CalibrationXMLHandler):
-
-    def can_parse(self, element):
-        if not _CalibrationXMLHandler.can_parse(self, element):
-            return False
-        return element.get('Class') == 'Constant'
-
-    def from_xml(self, element):
-        kwargs = {}
-
-        subelement = element.find('Value')
-        kwargs['value'] = self._handler_numerical.from_xml(subelement)
-
-        parent = _CalibrationXMLHandler.from_xml(self, element)
-        return CalibrationConstant(parent.quantity, parent.unit, **kwargs)
-
-    def can_convert(self, obj):
-        if not _CalibrationXMLHandler.can_convert(self, obj):
-            return False
         return isinstance(obj, CalibrationConstant)
 
     def to_xml(self, obj):
-        element = _CalibrationXMLHandler.to_xml(self, obj)
-        element.set('Class', 'Constant')
+        element = etree.Element('Calibration', {'Class': 'Constant'})
+        return self._convert_parameter(obj, element)
 
-        subelement = self._handler_numerical.to_xml(obj.value)
-        subelement.tag = 'Value'
-        element.append(subelement)
-
-        return element
-
-class CalibrationLinearXMLHandler(_CalibrationXMLHandler):
+class CalibrationLinearXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
-        if not _CalibrationXMLHandler.can_parse(self, element):
-            return False
-        return element.get('Class') == 'Linear'
+        return element.tag == 'Calibration' and element.get('Class') == 'Linear'
 
     def from_xml(self, element):
-        kwargs = {}
-
-        subelement = element.find('Gain')
-        kwargs['gain'] = self._handler_numerical.from_xml(subelement)
-
-        subelement = element.find('Offset')
-        kwargs['offset'] = self._handler_numerical.from_xml(subelement)
-
-        parent = _CalibrationXMLHandler.from_xml(self, element)
-        return CalibrationLinear(parent.quantity, parent.unit, **kwargs)
+        return self._parse_parameter(element, CalibrationLinear)
 
     def can_convert(self, obj):
-        if not _CalibrationXMLHandler.can_convert(self, obj):
-            return False
         return isinstance(obj, CalibrationLinear)
 
     def to_xml(self, obj):
-        element = _CalibrationXMLHandler.to_xml(self, obj)
-        element.set('Class', 'Linear')
+        element = etree.Element('Calibration', {'Class': 'Linear'})
+        return self._convert_parameter(obj, element)
 
-        subelement = self._handler_numerical.to_xml(obj.gain)
-        subelement.tag = 'Gain'
-        element.append(subelement)
-
-        subelement = self._handler_numerical.to_xml(obj.offset)
-        subelement.tag = 'Offset'
-        element.append(subelement)
-
-        return element
-
-class CalibrationPolynomialXMLHandler(_CalibrationXMLHandler):
+class CalibrationPolynomialXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
-        if not _CalibrationXMLHandler.can_parse(self, element):
-            return False
-        return element.get('Class') == 'Polynomial'
+        return element.tag == 'Calibration' and element.get('Class') == 'Polynomial'
 
     def from_xml(self, element):
-        kwargs = {}
-
-        subelement = element.find('Coefficients')
-        kwargs['coefficients'] = self._handler_numerical.from_xml(subelement)
-
-        parent = _CalibrationXMLHandler.from_xml(self, element)
-        return CalibrationPolynomial(parent.quantity, parent.unit, **kwargs)
+        return self._parse_parameter(element, CalibrationPolynomial)
 
     def can_convert(self, obj):
-        if not _CalibrationXMLHandler.can_convert(self, obj):
-            return False
         return isinstance(obj, CalibrationPolynomial)
 
     def to_xml(self, obj):
-        element = _CalibrationXMLHandler.to_xml(self, obj)
-        element.set('Class', 'Polynomial')
+        element = etree.Element('Calibration', {'Class': 'Polynomial'})
+        return self._convert_parameter(obj, element)
 
-        subelement = self._handler_numerical.to_xml(obj.coefficients)
-        subelement.tag = 'Coefficients'
-        element.append(subelement)
-
-        return element
-
-class CalibrationExplicitXMLHandler(_CalibrationXMLHandler):
+class CalibrationExplicitXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
-        if not _CalibrationXMLHandler.can_parse(self, element):
-            return False
-        return element.get('Class') == 'Explicit'
+        return element.tag == 'Calibration' and element.get('Class') == 'Explicit'
 
     def from_xml(self, element):
-        kwargs = {}
-
-        subelement = element.find('Values')
-        kwargs['values'] = self._handler_numerical.from_xml(subelement)
-
-        parent = _CalibrationXMLHandler.from_xml(self, element)
-        return CalibrationExplicit(parent.quantity, parent.unit, **kwargs)
+        return self._parse_parameter(element, CalibrationExplicit)
 
     def can_convert(self, obj):
-        if not _CalibrationXMLHandler.can_convert(self, obj):
-            return False
         return isinstance(obj, CalibrationExplicit)
 
     def to_xml(self, obj):
-        element = _CalibrationXMLHandler.to_xml(self, obj)
-        element.set('Class', 'Explicit')
-
-        subelement = self._handler_numerical.to_xml(obj.values)
-        subelement.tag = 'Values'
-        element.append(subelement)
-
-        return element
+        element = etree.Element('Calibration', {'Class': 'Explicit'})
+        return self._convert_parameter(obj, element)

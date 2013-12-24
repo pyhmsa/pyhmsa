@@ -18,54 +18,16 @@ from io import StringIO
 
 # Local modules.
 from pyhmsa.io.xml.handlers.condition.acquisition import \
-    (_AcquisitionXMLHandler, AcquisitionPointXMLHandler,
-     AcquisitionMultipointXMLHandler, _AcquisitionRasterXMLHandler,
+    (AcquisitionPointXMLHandler, AcquisitionMultipointXMLHandler,
      AcquisitionRasterLinescanXMLHandler, AcquisitionRasterXYXMLHandler,
      AcquisitionRasterXYZXMLHandler)
 from pyhmsa.core.condition.acquisition import \
-    (_Acquisition, AcquisitionPoint, AcquisitionMultipoint, _AcquisitionRaster,
+    (AcquisitionPoint, AcquisitionMultipoint,
      AcquisitionRasterLinescan, AcquisitionRasterXY, AcquisitionRasterXYZ)
 from pyhmsa.core.condition.specimen import SpecimenPosition
 
 # Globals and constants variables.
 from pyhmsa.core.condition.acquisition import RASTER_MODE_STAGE, RASTER_MODE_Z_FIB
-
-class Test_AcquisitionXMLHandler(unittest.TestCase):
-
-    def setUp(self):
-        unittest.TestCase.setUp(self)
-
-        self.h = _AcquisitionXMLHandler()
-        
-        self.obj = _Acquisition(35.0, 14400.0, 36.0)
-
-        source = StringIO('<Acquisition><DwellTime Unit="s" DataType="float">35.0</DwellTime><TotalTime Unit="s" DataType="float">14400.0</TotalTime><DwellTime_Live Unit="s" DataType="float">36.0</DwellTime_Live></Acquisition>')
-        self.element = etree.parse(source).getroot()
-
-    def tearDown(self):
-        unittest.TestCase.tearDown(self)
-
-    def testcan_parse(self):
-        self.assertTrue(self.h.can_parse(self.element))
-    
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
-        self.assertAlmostEqual(35.0, obj.dwell_time.value, 4)
-        self.assertEqual('s', obj.dwell_time.unit)
-        self.assertAlmostEqual(14400.0, obj.total_time.value, 4)
-        self.assertEqual('s', obj.total_time.unit)
-        self.assertAlmostEqual(36.0, obj.dwell_time_live.value, 4)
-        self.assertEqual('s', obj.dwell_time_live.unit)
-
-    def testcan_convert(self):
-        self.assertTrue(self.h.can_convert(self.obj))
-
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
-        self.assertEqual('Acquisition', element.tag)
-        self.assertEqual('35.0', element.find('DwellTime').text)
-        self.assertEqual('14400.0', element.find('TotalTime').text)
-        self.assertEqual('36.0', element.find('DwellTime_Live').text)
 
 class TestAcquisitionPointXMLHandler(unittest.TestCase):
 
@@ -75,9 +37,9 @@ class TestAcquisitionPointXMLHandler(unittest.TestCase):
         self.h = AcquisitionPointXMLHandler()
 
         position = SpecimenPosition(0.0, 0.0, 10.0, 90.0, 70.0)
-        self.obj = AcquisitionPoint(position)
+        self.obj = AcquisitionPoint(position, 35.0, 14400.0, 36.0)
 
-        source = StringIO('<Acquisition Class="Point"><SpecimenPosition><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z><R Unit="°" DataType="float">90.0</R><T Unit="°" DataType="float">70.0</T></SpecimenPosition></Acquisition>')
+        source = StringIO('<Acquisition Class="Point"><DwellTime Unit="s" DataType="float">35.0</DwellTime><TotalTime Unit="s" DataType="float">14400.0</TotalTime><DwellTime_Live Unit="s" DataType="float">36.0</DwellTime_Live><SpecimenPosition><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z><R Unit="°" DataType="float">90.0</R><T Unit="°" DataType="float">70.0</T></SpecimenPosition></Acquisition>')
         self.element = etree.parse(source).getroot()
 
     def tearDown(self):
@@ -90,16 +52,24 @@ class TestAcquisitionPointXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
+
+        self.assertAlmostEqual(35.0, obj.dwell_time, 4)
+        self.assertEqual('s', obj.dwell_time.unit)
+        self.assertAlmostEqual(14400.0, obj.total_time, 4)
+        self.assertEqual('s', obj.total_time.unit)
+        self.assertAlmostEqual(36.0, obj.dwell_time_live, 4)
+        self.assertEqual('s', obj.dwell_time_live.unit)
+
         position = obj.position
-        self.assertAlmostEqual(0.0, position.x.value, 4)
+        self.assertAlmostEqual(0.0, position.x, 4)
         self.assertEqual('mm', position.x.unit)
-        self.assertAlmostEqual(0.0, position.y.value, 4)
+        self.assertAlmostEqual(0.0, position.y, 4)
         self.assertEqual('mm', position.y.unit)
-        self.assertAlmostEqual(10.0, position.z.value, 4)
+        self.assertAlmostEqual(10.0, position.z, 4)
         self.assertEqual('mm', position.z.unit)
-        self.assertAlmostEqual(90.0, position.r.value, 4)
+        self.assertAlmostEqual(90.0, position.r, 4)
         self.assertEqual(u'\u00b0', position.r.unit)
-        self.assertAlmostEqual(70.0, position.t.value, 4)
+        self.assertAlmostEqual(70.0, position.t, 4)
         self.assertEqual(u'\u00b0', position.t.unit)
 
     def testcan_convert(self):
@@ -110,12 +80,17 @@ class TestAcquisitionPointXMLHandler(unittest.TestCase):
         element = self.h.to_xml(self.obj)
         self.assertEqual('Acquisition', element.tag)
         self.assertEqual('Point', element.attrib['Class'])
+
+        self.assertEqual('35.0', element.find('DwellTime').text)
+        self.assertEqual('14400.0', element.find('TotalTime').text)
+        self.assertEqual('36.0', element.find('DwellTime_Live').text)
+
         self.assertEqual('0.0', element.find('SpecimenPosition').find('X').text)
         self.assertEqual('0.0', element.find('SpecimenPosition').find('Y').text)
         self.assertEqual('10.0', element.find('SpecimenPosition').find('Z').text)
         self.assertEqual('90.0', element.find('SpecimenPosition').find('R').text)
         self.assertEqual('70.0', element.find('SpecimenPosition').find('T').text)
-
+#
 class TestAcquisitionMultipointXMLHandler(unittest.TestCase):
 
     def setUp(self):
@@ -140,26 +115,26 @@ class TestAcquisitionMultipointXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
-        self.assertAlmostEqual(0.0, obj.positions[0].x.value, 4)
+        self.assertAlmostEqual(0.0, obj.positions[0].x, 4)
         self.assertEqual('mm', obj.positions[0].x.unit)
-        self.assertAlmostEqual(0.0, obj.positions[0].y.value, 4)
+        self.assertAlmostEqual(0.0, obj.positions[0].y, 4)
         self.assertEqual('mm', obj.positions[0].y.unit)
-        self.assertAlmostEqual(10.0, obj.positions[0].z.value, 4)
+        self.assertAlmostEqual(10.0, obj.positions[0].z, 4)
         self.assertEqual('mm', obj.positions[0].z.unit)
-        self.assertAlmostEqual(90.0, obj.positions[0].r.value, 4)
+        self.assertAlmostEqual(90.0, obj.positions[0].r, 4)
         self.assertEqual(u'\u00b0', obj.positions[0].r.unit)
-        self.assertAlmostEqual(70.0, obj.positions[0].t.value, 4)
+        self.assertAlmostEqual(70.0, obj.positions[0].t, 4)
         self.assertEqual(u'\u00b0', obj.positions[0].t.unit)
 
-        self.assertAlmostEqual(1.0, obj.positions[1].x.value, 4)
+        self.assertAlmostEqual(1.0, obj.positions[1].x, 4)
         self.assertEqual('mm', obj.positions[1].x.unit)
-        self.assertAlmostEqual(1.0, obj.positions[1].y.value, 4)
+        self.assertAlmostEqual(1.0, obj.positions[1].y, 4)
         self.assertEqual('mm', obj.positions[1].y.unit)
-        self.assertAlmostEqual(11.0, obj.positions[1].z.value, 4)
+        self.assertAlmostEqual(11.0, obj.positions[1].z, 4)
         self.assertEqual('mm', obj.positions[1].z.unit)
-        self.assertAlmostEqual(91.0, obj.positions[1].r.value, 4)
+        self.assertAlmostEqual(91.0, obj.positions[1].r, 4)
         self.assertEqual(u'\u00b0', obj.positions[1].r.unit)
-        self.assertAlmostEqual(71.0, obj.positions[1].t.value, 4)
+        self.assertAlmostEqual(71.0, obj.positions[1].t, 4)
         self.assertEqual(u'\u00b0', obj.positions[1].t.unit)
 
     def testcan_convert(self):
@@ -181,16 +156,19 @@ class TestAcquisitionMultipointXMLHandler(unittest.TestCase):
         self.assertEqual('91.0', element.find('Positions').findall('SpecimenPosition')[1].find('R').text)
         self.assertEqual('71.0', element.find('Positions').findall('SpecimenPosition')[1].find('T').text)
 
-class Test_AcquisitionRasterXMLHandler(unittest.TestCase):
+class TestAcquisitionRasterLinescanXMLHandler(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = _AcquisitionRasterXMLHandler()
+        self.h = AcquisitionRasterLinescanXMLHandler()
 
-        self.obj = _AcquisitionRaster(RASTER_MODE_STAGE)
+        position_start = SpecimenPosition(0.0, 0.0, 10.0)
+        position_end = SpecimenPosition(10.24, 0.0, 10.0)
+        self.obj = AcquisitionRasterLinescan(1024, 10.0, position_start,
+                                             position_end, RASTER_MODE_STAGE)
 
-        source = StringIO('<Acquisition Class="Raster"><RasterMode>Stage</RasterMode></Acquisition>')
+        source = StringIO(u'<Acquisition Class="Raster/Linescan"><RasterMode>Stage</RasterMode><StepCount DataType="uint32">1024</StepCount><StepSize Unit="\u00b5m" DataType="float">10.</StepSize><SpecimenPosition Name="Start"><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z></SpecimenPosition><SpecimenPosition Name="End"><X Unit="mm" DataType="float">10.24</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z></SpecimenPosition></Acquisition>')
         self.element = etree.parse(source).getroot()
 
     def tearDown(self):
@@ -204,55 +182,20 @@ class Test_AcquisitionRasterXMLHandler(unittest.TestCase):
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
         self.assertEqual(RASTER_MODE_STAGE, obj.raster_mode)
-
-    def testcan_convert(self):
-        self.assertTrue(self.h.can_convert(self.obj))
-        self.assertFalse(self.h.can_convert(object()))
-
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
-        self.assertEqual('Acquisition', element.tag)
-        self.assertEqual('Raster', element.attrib['Class'])
-        self.assertEqual('Stage', element.find('RasterMode').text)
-
-class TestAcquisitionRasterLinescanXMLHandler(unittest.TestCase):
-
-    def setUp(self):
-        unittest.TestCase.setUp(self)
-
-        self.h = AcquisitionRasterLinescanXMLHandler()
-
-        position_start = SpecimenPosition(0.0, 0.0, 10.0)
-        position_end = SpecimenPosition(10.24, 0.0, 10.0)
-        self.obj = AcquisitionRasterLinescan(1024, 10.0, position_start, position_end)
-
-        source = StringIO(u'<Acquisition Class="Raster/Linescan"><StepCount DataType="uint32">1024</StepCount><StepSize Unit="\u00b5m" DataType="float">10.</StepSize><SpecimenPosition Name="Start"><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z></SpecimenPosition><SpecimenPosition Name="End"><X Unit="mm" DataType="float">10.24</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z></SpecimenPosition></Acquisition>')
-        self.element = etree.parse(source).getroot()
-
-    def tearDown(self):
-        unittest.TestCase.tearDown(self)
-
-    def testcan_parse(self):
-        self.assertTrue(self.h.can_parse(self.element))
-        self.assertFalse(self.h.can_parse(etree.Element('Acquisition')))
-        self.assertFalse(self.h.can_parse(etree.Element('Abc')))
-
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
         self.assertEqual(1024, obj.step_count)
-        self.assertAlmostEqual(10.0, obj.step_size.value, 4)
+        self.assertAlmostEqual(10.0, obj.step_size, 4)
         self.assertEqual('\u00b5m', obj.step_size.unit)
-        self.assertAlmostEqual(0.0, obj.position_start.x.value, 4)
+        self.assertAlmostEqual(0.0, obj.position_start.x, 4)
         self.assertEqual('mm', obj.position_start.x.unit)
-        self.assertAlmostEqual(0.0, obj.position_start.y.value, 4)
+        self.assertAlmostEqual(0.0, obj.position_start.y, 4)
         self.assertEqual('mm', obj.position_start.y.unit)
-        self.assertAlmostEqual(10.0, obj.position_start.z.value, 4)
+        self.assertAlmostEqual(10.0, obj.position_start.z, 4)
         self.assertEqual('mm', obj.position_start.z.unit)
-        self.assertAlmostEqual(10.24, obj.position_end.x.value, 4)
+        self.assertAlmostEqual(10.24, obj.position_end.x, 4)
         self.assertEqual('mm', obj.position_end.x.unit)
-        self.assertAlmostEqual(0.0, obj.position_end.y.value, 4)
+        self.assertAlmostEqual(0.0, obj.position_end.y, 4)
         self.assertEqual('mm', obj.position_end.y.unit)
-        self.assertAlmostEqual(10.0, obj.position_end.z.value, 4)
+        self.assertAlmostEqual(10.0, obj.position_end.z, 4)
         self.assertEqual('mm', obj.position_end.z.unit)
 
     def testcan_convert(self):
@@ -263,6 +206,7 @@ class TestAcquisitionRasterLinescanXMLHandler(unittest.TestCase):
         element = self.h.to_xml(self.obj)
         self.assertEqual('Acquisition', element.tag)
         self.assertEqual('Raster/Linescan', element.attrib['Class'])
+        self.assertEqual('Stage', element.find('RasterMode').text)
         self.assertEqual('1024', element.find('StepCount').text)
         self.assertEqual('10.0', element.find('StepSize').text)
         self.assertEqual(2, len(element.findall('SpecimenPosition')))
@@ -291,9 +235,9 @@ class TestAcquisitionRasterXYXMLHandler(unittest.TestCase):
         obj = self.h.from_xml(self.element)
         self.assertEqual(158, obj.step_count_x)
         self.assertEqual(98, obj.step_count_y)
-        self.assertAlmostEqual(1.0, obj.step_size_x.value, 4)
+        self.assertAlmostEqual(1.0, obj.step_size_x, 4)
         self.assertEqual('\u00b5m', obj.step_size_x.unit)
-        self.assertAlmostEqual(2.0, obj.step_size_y.value, 4)
+        self.assertAlmostEqual(2.0, obj.step_size_y, 4)
         self.assertEqual('\u00b5m', obj.step_size_y.unit)
         self.assertEqual(40, obj.frame_count)
 
@@ -337,11 +281,11 @@ class TestAcquisitionRasterXYZXMLHandler(unittest.TestCase):
         self.assertEqual(158, obj.step_count_x)
         self.assertEqual(98, obj.step_count_y)
         self.assertEqual(185, obj.step_count_z)
-        self.assertAlmostEqual(1.0, obj.step_size_x.value, 4)
+        self.assertAlmostEqual(1.0, obj.step_size_x, 4)
         self.assertEqual('\u00b5m', obj.step_size_x.unit)
-        self.assertAlmostEqual(2.0, obj.step_size_y.value, 4)
+        self.assertAlmostEqual(2.0, obj.step_size_y, 4)
         self.assertEqual('\u00b5m', obj.step_size_y.unit)
-        self.assertAlmostEqual(3.0, obj.step_size_z.value, 4)
+        self.assertAlmostEqual(3.0, obj.step_size_z, 4)
         self.assertEqual('\u00b5m', obj.step_size_z.unit)
         self.assertEqual(RASTER_MODE_Z_FIB, obj.raster_mode_z)
 

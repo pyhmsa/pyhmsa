@@ -26,42 +26,44 @@ import xml.etree.ElementTree as etree
 # Local modules.
 from pyhmsa.core.condition.region import RegionOfInterest
 from pyhmsa.io.xml.handler import _XMLHandler
-from pyhmsa.io.xml.handlers.type.numerical import NumericalXMLHandler
 
 # Globals and constants variables.
 
 class RegionOfInterestXMLHandler(_XMLHandler):
 
-    def __init__(self):
-        _XMLHandler.__init__(self)
-        self._handler_numerical = NumericalXMLHandler()
-
     def can_parse(self, element):
         return element.tag == 'RegionOfInterest'
 
     def from_xml(self, element):
-        kwargs = {}
+        obj = self._parse_parameter(element, RegionOfInterest)
 
         subelement = element.find('StartChannel')
-        kwargs['start_channel'] = self._handler_numerical.from_xml(subelement)
+        if subelement is None:
+            raise ValueError('Element StartChannel is missing')
+        start = self._parse_numerical_attribute(subelement)
 
         subelement = element.find('EndChannel')
-        kwargs['end_channel'] = self._handler_numerical.from_xml(subelement)
+        if subelement is None:
+            raise ValueError('Element EndChannel is missing')
+        end = self._parse_numerical_attribute(subelement)
 
-        return RegionOfInterest(**kwargs)
+        obj.channels = (start, end)
+        return obj
 
     def can_convert(self, obj):
         return isinstance(obj, RegionOfInterest)
 
     def to_xml(self, obj):
-        element = etree.Element('RegionOfInterest')
+        element = self._convert_parameter(obj, etree.Element('RegionOfInterest'))
 
-        subelement = self._handler_numerical.to_xml(obj.start_channel)
-        subelement.tag = 'StartChannel'
+        value = obj.start_channel
+        attrib = type('MockAttribute', (object,), {'xmlname': 'StartChannel'})
+        subelement = self._convert_numerical_attribute(value, attrib)
         element.append(subelement)
 
-        subelement = self._handler_numerical.to_xml(obj.end_channel)
-        subelement.tag = 'EndChannel'
+        value = obj.end_channel
+        attrib = type('MockAttribute', (object,), {'xmlname': 'EndChannel'})
+        subelement = self._convert_numerical_attribute(value, attrib)
         element.append(subelement)
 
         return element

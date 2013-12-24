@@ -16,7 +16,7 @@ import logging
 import numpy as np
 
 # Local modules.
-from pyhmsa.type.numerical import NumericalValue, extract_value
+from pyhmsa.type.numerical import convert_value, validate_dtype
 
 # Globals and constants variables.
 
@@ -28,77 +28,56 @@ class TestModule(unittest.TestCase):
     def tearDown(self):
         unittest.TestCase.tearDown(self)
 
-    def testextract_value(self):
+    def validate_dtype(self):
+        self.assertTrue(validate_dtype(np.uint8))
+        self.assertTrue(validate_dtype(np.dtype(np.uint8)))
+        self.assertTrue(validate_dtype(np.uint8(9)))
+
+        self.assertRaises(ValueError, validate_dtype, 'abc')
+        self.assertRaises(ValueError, validate_dtype, np.float128)
+
+    def testconvert_value(self):
         # Numerical value
-        x = extract_value(5.0, 's')
-        self.assertAlmostEqual(5.0, x.value, 4)
+        x = convert_value(5.0, 's')
+        self.assertAlmostEqual(5.0, x, 4)
         self.assertEqual('s', x.unit)
 
-        x = extract_value((5.0, 's'), 'ms')
-        self.assertAlmostEqual(5.0, x.value, 4)
-        self.assertEqual('s', x.unit)
+        x = convert_value(None, 'ms')
+        self.assertIsNone(x)
 
-        x = extract_value((5.0, None), 'ms')
-        self.assertAlmostEqual(5.0, x.value, 4)
-        self.assertEqual('ms', x.unit)
+        x = convert_value([5.0, 6.0, 7.0], 'A')
+        self.assertEqual(3, len(x))
+        self.assertAlmostEqual(5.0, x[0], 4)
+        self.assertAlmostEqual(6.0, x[1], 4)
+        self.assertAlmostEqual(7.0, x[2], 4)
+        self.assertEqual('A', x.unit)
 
-        x = extract_value(None, 'ms')
-        self.assertIsNone(x.value)
+        x = convert_value(x)
+        self.assertEqual(3, len(x))
+        self.assertAlmostEqual(5.0, x[0], 4)
+        self.assertAlmostEqual(6.0, x[1], 4)
+        self.assertAlmostEqual(7.0, x[2], 4)
+        self.assertEqual('A', x.unit)
 
-        self.assertRaises(ValueError, extract_value, (5.0, 's', 'ms'), 'ks')
+        x = convert_value(x, 'nm')
+        self.assertEqual(3, len(x))
+        self.assertAlmostEqual(5.0, x[0], 4)
+        self.assertAlmostEqual(6.0, x[1], 4)
+        self.assertAlmostEqual(7.0, x[2], 4)
+        self.assertEqual('A', x.unit)
+
+        self.assertRaises(ValueError, convert_value, (5.0, 's', 'ms'), 'ks')
 
         # Numpy type
-        x = extract_value(5.0)
+        x = convert_value(5.0)
         self.assertAlmostEqual(5.0, x, 4)
         self.assertTrue(hasattr(x, 'dtype'))
 
-        x = extract_value(np.uint32(9))
+        x = convert_value(np.uint32(9))
         self.assertEqual(9, x)
         self.assertEqual(np.uint32, x.dtype.type)
 
-        self.assertRaises(ValueError, extract_value, np.int8(5.0))
-
-class TestNumericalValue(unittest.TestCase):
-
-    def setUp(self):
-        unittest.TestCase.setUp(self)
-
-        self.v1 = NumericalValue(5.0, 'm')
-        self.v2 = NumericalValue(6, 's')
-        self.v3 = NumericalValue([5.0, 6.0, 7.0], 'A')
-        self.v4 = NumericalValue(None, 's')
-
-    def tearDown(self):
-        unittest.TestCase.tearDown(self)
-
-    def testskeleton(self):
-        self.assertAlmostEqual(5.0, self.v1.value, 4)
-        self.assertAlmostEqual(5.0, self.v1[0], 4)
-        self.assertEqual('m', self.v1.unit)
-        self.assertEqual('m', self.v1[1])
-        self.assertEqual(np.array([5.0])[0].dtype, self.v1.value.dtype)
-
-        self.assertEqual(6, self.v2.value, 4)
-        self.assertEqual(6, self.v2[0], 4)
-        self.assertEqual('s', self.v2.unit)
-        self.assertEqual('s', self.v2[1])
-        self.assertEqual(np.array([6])[0].dtype, self.v2.value.dtype)
-
-        self.assertEqual(3, len(self.v3.value))
-        self.assertAlmostEqual(5.0, self.v3.value[0], 4)
-        self.assertAlmostEqual(6.0, self.v3.value[1], 4)
-        self.assertAlmostEqual(7.0, self.v3.value[2], 4)
-        self.assertEqual('A', self.v3.unit)
-        self.assertEqual(np.array([5.0])[0].dtype, self.v3.value.dtype)
-
-        self.assertIsNone(self.v4.value)
-        self.assertEqual('s', self.v4.unit)
-        self.assertFalse(bool(self.v4))
-
-        self.assertTrue(bool(NumericalValue(0.0, 's')))
-
-        self.assertRaises(ValueError, NumericalValue, 5.0, 'Wb')
-        self.assertRaises(ValueError, NumericalValue, np.float16(4.0), 'm')
+        self.assertRaises(ValueError, convert_value, np.int8(5.0))
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

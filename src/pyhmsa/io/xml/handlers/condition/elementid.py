@@ -26,76 +26,38 @@ import xml.etree.ElementTree as etree
 # Local modules.
 from pyhmsa.core.condition.elementid import ElementID, ElementIDXray
 from pyhmsa.io.xml.handler import _XMLHandler
-from pyhmsa.io.xml.handlers.type.numerical import NumericalXMLHandler
 
 # Globals and constants variables.
 
 class ElementIDXMLHandler(_XMLHandler):
 
-    def __init__(self):
-        _XMLHandler.__init__(self)
-        self._handler_numerical = NumericalXMLHandler()
-
     def can_parse(self, element):
         return element.tag == 'ElementID'
 
     def from_xml(self, element):
-        kwargs = {}
-
-        subelement = element.find('Element')
-        kwargs['z'] = self._handler_numerical.from_xml(subelement)
-
-        return ElementID(**kwargs)
+        return self._parse_parameter(element, ElementID)
 
     def can_convert(self, obj):
         return isinstance(obj, ElementID)
 
     def to_xml(self, obj):
-        element = etree.Element('ElementID')
-
-        subelement = self._handler_numerical.to_xml(obj.z)
-        subelement.tag = 'Element'
-        subelement.set('Symbol', obj.symbol)
-        element.append(subelement)
-
+        element = self._convert_parameter(obj, etree.Element('ElementID'))
+        element.find('Element').set('Symbol', obj.symbol) # manually add symbol
         return element
 
-class ElementIDXrayXMLHandler(ElementIDXMLHandler):
+class ElementIDXrayXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
-        if not ElementIDXMLHandler.can_parse(self, element):
-            return False
-        return element.get('Class') == 'X-ray'
+        return element.tag == 'ElementID' and element.get('Class') == 'X-ray'
 
     def from_xml(self, element):
-        kwargs = {}
-
-        subelement = element.find('Line')
-        kwargs['line'] = subelement.text
-        
-        subelement = element.find('Energy')
-        if subelement is not None:
-            kwargs['energy'] = self._handler_numerical.from_xml(subelement)
-
-        parent = ElementIDXMLHandler.from_xml(self, element)
-        return ElementIDXray(parent.z, **kwargs)
+        return self._parse_parameter(element, ElementIDXray)
 
     def can_convert(self, obj):
-        if not ElementIDXMLHandler.can_convert(self, obj):
-            return False
         return isinstance(obj, ElementIDXray)
 
     def to_xml(self, obj):
-        element = ElementIDXMLHandler.to_xml(self, obj)
-        element.set('Class', 'X-ray')
-
-        subelement = etree.Element('Line')
-        subelement.text = obj.line
-        element.append(subelement)
-
-        if obj.energy:
-            subelement = self._handler_numerical.to_xml(obj.energy)
-            subelement.tag = 'Energy'
-            element.append(subelement)
-
+        element = etree.Element('ElementID', {'Class': 'X-ray'})
+        element = self._convert_parameter(obj, element)
+        element.find('Element').set('Symbol', obj.symbol) # manually add symbol
         return element

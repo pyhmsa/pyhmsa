@@ -88,7 +88,6 @@ class TestCalibrationPolynomial(unittest.TestCase):
         self.assertAlmostEqual(-0.018, self.cal.coefficients[3], 4)
 
         self.assertRaises(ValueError, CalibrationPolynomial, 'Energy', 'eV', None)
-        self.assertRaises(ValueError, CalibrationPolynomial, 'Energy', 'eV', [])
 
 class TestCalibrationExplicit(unittest.TestCase):
 
@@ -108,7 +107,6 @@ class TestCalibrationExplicit(unittest.TestCase):
         self.assertAlmostEqual(-0.018, self.cal.values[3], 4)
 
         self.assertRaises(ValueError, CalibrationExplicit, 'Energy', 'eV', None)
-        self.assertRaises(ValueError, CalibrationExplicit, 'Energy', 'eV', [])
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

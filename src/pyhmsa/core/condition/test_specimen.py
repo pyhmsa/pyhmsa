@@ -34,52 +34,45 @@ class TestSpecimenPosition(unittest.TestCase):
         self.assertFalse(self.position.x)
 
         self.position.set_x(4.0, 'm')
-        self.assertAlmostEqual(4.0, self.position.x.value, 4)
+        self.assertAlmostEqual(4.0, self.position.x, 4)
         self.assertEqual('m', self.position.x.unit)
 
     def testy(self):
         self.assertTrue(self.position.y)
 
         self.position.set_y(4.0, 'mm')
-        self.assertAlmostEqual(4.0, self.position.y.value, 4)
+        self.assertAlmostEqual(4.0, self.position.y, 4)
         self.assertEqual('mm', self.position.y.unit)
 
     def testz(self):
         self.assertFalse(self.position.z)
 
         self.position.set_z(4.0, 'nm')
-        self.assertAlmostEqual(4.0, self.position.z.value, 4)
+        self.assertAlmostEqual(4.0, self.position.z, 4)
         self.assertEqual('nm', self.position.z.unit)
 
     def testr(self):
         self.assertTrue(self.position.r)
-        self.assertTrue(self.position.rotation)
 
         self.position.set_r(4.0, 'rad')
-        self.assertAlmostEqual(4.0, self.position.r.value, 4)
-        self.assertAlmostEqual(4.0, self.position.rotation.value, 4)
+        self.assertAlmostEqual(4.0, self.position.r, 4)
         self.assertEqual('rad', self.position.r.unit)
-        self.assertEqual('rad', self.position.rotation.unit)
 
     def testt(self):
         self.assertFalse(self.position.t)
-        self.assertFalse(self.position.tilt)
 
         self.position.set_t(4.0, 'rad')
-        self.assertAlmostEqual(4.0, self.position.t.value, 4)
-        self.assertAlmostEqual(4.0, self.position.tilt.value, 4)
+        self.assertAlmostEqual(4.0, self.position.t, 4)
         self.assertEqual('rad', self.position.t.unit)
-        self.assertEqual('rad', self.position.tilt.unit)
 
 class TestComposition(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.comp = Composition('atoms')
-        self.comp[11] = 3
+        self.comp = Composition('atoms', {11: 3})
         self.comp[13] = 1
-        self.comp[9] = 6
+        self.comp.update({9: 6})
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -134,7 +127,7 @@ class TestSpecimen(unittest.TestCase):
 
     def testtemperature(self):
         self.spc.temperature = -20.0
-        self.assertAlmostEqual(-20.0, self.spc.temperature.value, 4)
+        self.assertAlmostEqual(-20.0, self.spc.temperature, 4)
         self.assertEqual(u'\u00b0\u0043', self.spc.temperature.unit)
 
 class TestSpecimenLayer(unittest.TestCase):
@@ -155,7 +148,7 @@ class TestSpecimenLayer(unittest.TestCase):
         self.assertTrue(self.layer.is_bulk())
 
         self.layer.thickness = 50.0
-        self.assertAlmostEqual(50.0, self.layer.thickness.value, 4)
+        self.assertAlmostEqual(50.0, self.layer.thickness, 4)
         self.assertEqual('nm', self.layer.thickness.unit)
         self.assertFalse(self.layer.is_bulk())
 

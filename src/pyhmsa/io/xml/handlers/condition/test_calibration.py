@@ -18,46 +18,13 @@ from io import StringIO
 
 # Local modules.
 from pyhmsa.core.condition.calibration import \
-    (_Calibration, CalibrationConstant, CalibrationLinear,
+    (CalibrationConstant, CalibrationLinear,
      CalibrationPolynomial, CalibrationExplicit)
 from pyhmsa.io.xml.handlers.condition.calibration import \
-    (_CalibrationXMLHandler, CalibrationConstantXMLHandler,
-     CalibrationLinearXMLHandler, CalibrationPolynomialXMLHandler,
-     CalibrationExplicitXMLHandler)
+    (CalibrationConstantXMLHandler, CalibrationLinearXMLHandler,
+     CalibrationPolynomialXMLHandler, CalibrationExplicitXMLHandler)
 
 # Globals and constants variables.
-
-class Test_CalibrationXMLHandler(unittest.TestCase):
-
-    def setUp(self):
-        unittest.TestCase.setUp(self)
-
-        self.h = _CalibrationXMLHandler()
-
-        self.obj = _Calibration('Energy', 'eV')
-
-        source = StringIO('<Calibration><Quantity>Energy</Quantity><Unit>eV</Unit></Calibration>')
-        self.element = etree.parse(source).getroot()
-
-    def tearDown(self):
-        unittest.TestCase.tearDown(self)
-
-    def testcan_parse(self):
-        self.assertTrue(self.h.can_parse(self.element))
-
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
-        self.assertEqual('Energy', obj.quantity)
-        self.assertEqual('eV', obj.unit)
-
-    def testcan_convert(self):
-        self.assertTrue(self.h.can_convert(self.obj))
-
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
-        self.assertEqual('Calibration', element.tag)
-        self.assertEqual('Energy', element.find('Quantity').text)
-        self.assertEqual('eV', element.find('Unit').text)
 
 class TestCalibrationConstantXMLHandler(unittest.TestCase):
 
@@ -81,6 +48,8 @@ class TestCalibrationConstantXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
+        self.assertEqual('Energy', obj.quantity)
+        self.assertEqual('eV', obj.unit)
         self.assertAlmostEqual(-237.098251, obj.value, 6)
 
     def testcan_convert(self):
@@ -91,6 +60,8 @@ class TestCalibrationConstantXMLHandler(unittest.TestCase):
         element = self.h.to_xml(self.obj)
         self.assertEqual('Calibration', element.tag)
         self.assertEqual('Constant', element.get('Class'))
+        self.assertEqual('Energy', element.find('Quantity').text)
+        self.assertEqual('eV', element.find('Unit').text)
         self.assertEqual('-237.098251', element.find('Value').text)
 
 class TestCalibrationLinearXMLHandler(unittest.TestCase):
@@ -115,6 +86,8 @@ class TestCalibrationLinearXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
+        self.assertEqual('Energy', obj.quantity)
+        self.assertEqual('eV', obj.unit)
         self.assertAlmostEqual(2.49985, obj.gain, 6)
         self.assertAlmostEqual(-237.098251, obj.offset, 6)
 
@@ -126,6 +99,8 @@ class TestCalibrationLinearXMLHandler(unittest.TestCase):
         element = self.h.to_xml(self.obj)
         self.assertEqual('Calibration', element.tag)
         self.assertEqual('Linear', element.get('Class'))
+        self.assertEqual('Energy', element.find('Quantity').text)
+        self.assertEqual('eV', element.find('Unit').text)
         self.assertEqual('2.49985', element.find('Gain').text)
         self.assertEqual('-237.098251', element.find('Offset').text)
 
@@ -151,6 +126,8 @@ class TestCalibrationPolynomialXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
+        self.assertEqual('Energy', obj.quantity)
+        self.assertEqual('eV', obj.unit)
         self.assertEqual(4, len(obj.coefficients))
         self.assertAlmostEqual(-2.225, obj.coefficients[0], 4)
         self.assertAlmostEqual(0.677, obj.coefficients[1], 4)
@@ -165,6 +142,8 @@ class TestCalibrationPolynomialXMLHandler(unittest.TestCase):
         element = self.h.to_xml(self.obj)
         self.assertEqual('Calibration', element.tag)
         self.assertEqual('Polynomial', element.get('Class'))
+        self.assertEqual('Energy', element.find('Quantity').text)
+        self.assertEqual('eV', element.find('Unit').text)
         self.assertEqual('-2.225,0.677,0.134,-0.018', element.find('Coefficients').text)
         self.assertEqual('4', element.find('Coefficients').get('Count'))
 
@@ -190,6 +169,8 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
+        self.assertEqual('Energy', obj.quantity)
+        self.assertEqual('eV', obj.unit)
         self.assertEqual(4, len(obj.values))
         self.assertAlmostEqual(-2.225, obj.values[0], 4)
         self.assertAlmostEqual(0.677, obj.values[1], 4)
@@ -204,6 +185,8 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
         element = self.h.to_xml(self.obj)
         self.assertEqual('Calibration', element.tag)
         self.assertEqual('Explicit', element.get('Class'))
+        self.assertEqual('Energy', element.find('Quantity').text)
+        self.assertEqual('eV', element.find('Unit').text)
         self.assertEqual('-2.225,0.677,0.134,-0.018', element.find('Values').text)
 
 if __name__ == '__main__': #pragma: no cover

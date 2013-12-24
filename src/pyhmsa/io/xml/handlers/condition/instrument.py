@@ -35,37 +35,10 @@ class InstrumentXMLHandler(_XMLHandler):
         return element.tag == 'Instrument'
 
     def from_xml(self, element):
-        kwargs = {}
-
-        subelement = element.find('Manufacturer')
-        kwargs['manufacturer'] = subelement.text
-
-        subelement = element.find('Model')
-        kwargs['model'] = subelement.text
-
-        subelement = element.find('SerialNumber')
-        if subelement is not None:
-            kwargs['serial_number'] = subelement.text
-
-        return Instrument(**kwargs)
+        return self._parse_parameter(element, Instrument)
 
     def can_convert(self, obj):
         return isinstance(obj, Instrument)
 
     def to_xml(self, obj):
-        element = etree.Element('Instrument')
-
-        subelement = etree.Element('Manufacturer')
-        subelement.text = obj.manufacturer
-        element.append(subelement)
-
-        subelement = etree.Element('Model')
-        subelement.text = obj.model
-        element.append(subelement)
-
-        if obj.serial_number:
-            subelement = etree.Element('SerialNumber')
-            subelement.text = obj.serial_number
-            element.append(subelement)
-
-        return element
+        return self._convert_parameter(obj, etree.Element('Instrument'))

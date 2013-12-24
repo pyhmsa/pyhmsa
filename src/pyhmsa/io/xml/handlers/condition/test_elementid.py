@@ -43,7 +43,7 @@ class TestElementIDXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
-        self.assertEqual(11, obj.z)
+        self.assertEqual(11, obj.atomic_number)
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
@@ -52,6 +52,7 @@ class TestElementIDXMLHandler(unittest.TestCase):
         element = self.h.to_xml(self.obj)
         self.assertEqual('ElementID', element.tag)
         self.assertEqual('11', element.find('Element').text)
+        self.assertEqual('Na', element.find('Element').get('Symbol'))
 
 class TestElementIDXrayXMLHandler(unittest.TestCase):
 
@@ -75,8 +76,9 @@ class TestElementIDXrayXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
+        self.assertEqual(11, obj.atomic_number)
         self.assertEqual(u'M\u03b1', obj.line)
-        self.assertAlmostEqual(1234.0, obj.energy.value, 4)
+        self.assertAlmostEqual(1234.0, obj.energy, 4)
         self.assertEqual('eV', obj.energy.unit)
 
     def testcan_convert(self):
@@ -86,6 +88,9 @@ class TestElementIDXrayXMLHandler(unittest.TestCase):
     def testto_xml(self):
         element = self.h.to_xml(self.obj)
         self.assertEqual('ElementID', element.tag)
+        self.assertEqual('X-ray', element.get('Class'))
+        self.assertEqual('11', element.find('Element').text)
+        self.assertEqual('Na', element.find('Element').get('Symbol'))
         self.assertEqual(u'M\u03b1', element.find('Line').text)
         self.assertEqual('1234.0', element.find('Energy').text)
 

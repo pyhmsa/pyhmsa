@@ -45,6 +45,14 @@ class TestRegionOfInterestXMLHandler(unittest.TestCase):
         self.assertEqual(556, obj.start_channel)
         self.assertEqual(636, obj.end_channel)
 
+        source = StringIO('<RegionOfInterest><EndChannel DataType="uint32">636</EndChannel></RegionOfInterest>')
+        element = etree.parse(source).getroot()
+        self.assertRaises(ValueError, self.h.from_xml, element)
+
+        source = StringIO('<RegionOfInterest><StartChannel DataType="uint32">556</StartChannel></RegionOfInterest>')
+        element = etree.parse(source).getroot()
+        self.assertRaises(ValueError, self.h.from_xml, element)
+
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
 

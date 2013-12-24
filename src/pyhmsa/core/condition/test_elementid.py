@@ -30,12 +30,11 @@ class TestElementID(unittest.TestCase):
         unittest.TestCase.tearDown(self)
 
     def testz(self):
-        self.assertEqual(11, self.element.z)
         self.assertEqual(11, self.element.atomic_number)
 
-        self.assertRaises(ValueError, self.element.set_z, -1)
-        self.assertRaises(ValueError, self.element.set_z, 119)
-        self.assertRaises(ValueError, self.element.set_z, None)
+        self.assertRaises(ValueError, self.element.set_atomic_number, -1)
+        self.assertRaises(ValueError, self.element.set_atomic_number, 119)
+        self.assertRaises(ValueError, self.element.set_atomic_number, None)
 
     def testsymbol(self):
         self.assertEqual('Na', self.element.symbol)
@@ -56,7 +55,7 @@ class TestElementIDXray(unittest.TestCase):
 
     def testenergy(self):
         self.element.energy = 1234
-        self.assertAlmostEqual(1234, self.element.energy.value, 4)
+        self.assertAlmostEqual(1234, self.element.energy, 4)
         self.assertEqual('eV', self.element.energy.unit)
 
 if __name__ == '__main__': #pragma: no cover

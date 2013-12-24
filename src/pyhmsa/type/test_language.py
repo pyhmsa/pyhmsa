@@ -15,29 +15,28 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.region import RegionOfInterest
+from pyhmsa.type.language import langstr
 
 # Globals and constants variables.
 
-class TestRegionOfInterest(unittest.TestCase):
+class Testlangstr(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.roi = RegionOfInterest(556, 636)
+        self.s1 = langstr('Test1', {'en-US': 'TEST', 'en-CA': 'test'})
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
 
     def testskeleton(self):
-        self.assertEqual(556, self.roi.start_channel)
-        self.assertEqual(636, self.roi.end_channel)
+        self.assertEqual('Test1', self.s1)
+        self.assertEqual(2, len(self.s1.alternatives))
+        self.assertEqual('TEST', self.s1.alternatives['en-US'])
+        self.assertEqual('test', self.s1.alternatives['en-CA'])
 
-    def testset_channels(self):
-        self.assertRaises(ValueError, self.roi.set_channels, None, 636)
-        self.assertRaises(ValueError, self.roi.set_channels, 556, None)
-        self.assertRaises(ValueError, self.roi.set_channels, -1, 636)
-        self.assertRaises(ValueError, self.roi.set_channels, 636, 556)
+        self.assertRaises(ValueError, langstr, 'Test1', {'blah': 'abc'})
+        self.assertRaises(ValueError, langstr, 'Test1', {'en-blah': 'abc'})
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

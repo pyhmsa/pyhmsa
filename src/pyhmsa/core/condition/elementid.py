@@ -21,11 +21,11 @@ __license__ = "GPL v3"
 # Standard library modules.
 
 # Third party modules.
-import numpy as np
 
 # Local modules.
 from pyhmsa.core.condition import _Condition
-from pyhmsa.type.numerical import extract_value
+from pyhmsa.util.parameter import \
+    NumericalAttribute, TextAttribute, AtomicNumberAttribute
 
 # Globals and constants variables.
 
@@ -49,7 +49,9 @@ _SYMBOLS = [
 
 class ElementID(_Condition):
     
-    def __init__(self, z):
+    atomic_number = AtomicNumberAttribute(True, 'Element', "atomic number")
+
+    def __init__(self, atomic_number):
         """
         Defines and elemental identification, as may be useful for region of 
         interest images, XAFS spectral maps, and the like.
@@ -58,93 +60,31 @@ class ElementID(_Condition):
         """
         _Condition.__init__(self)
 
-        self.z = z
-
-    def get_z(self):
-        """
-        Returns the atomic number.
-        """
-        return self._z
-
-    get_atomic_number = get_z
-
-    def set_z(self, z):
-        """
-        Sets the atomic number.
-        
-        :arg z: atomic number
-        """
-        if z is None:
-            raise ValueError('Atomic number is required')
-        if z < 1:
-            raise ValueError('Atomic number cannot be less than hydrogen')
-        if z > 118:
-            raise ValueError('Atomic number cannot be greater than Uuo')
-        self._z = np.uint8(z)
-
-    set_atomic_number = set_z
-
-    z = property(get_z, set_z, doc='Atomic number')
-    atomic_number = z
+        self.atomic_number = atomic_number
 
     def get_symbol(self):
         """
         Returns the symbol.
         """
-        return _SYMBOLS[self.z - 1]
+        return _SYMBOLS[self.atomic_number - 1]
 
     symbol = property(get_symbol, doc='Symbol')
 
 class ElementIDXray(ElementID):
     
-    def __init__(self, z, line, energy=None):
+    line = TextAttribute(True, 'Line', 'x-ray line')
+    energy = NumericalAttribute('eV', False, 'Energy', 'energy of x-ray line')
+
+    def __init__(self, atomic_number, line, energy=None):
         """
         Defines and elemental identification based on an x-ray peak, as may be 
         useful for region of interest images and the like.
         
-        :arg z: atomic number (required)
+        :arg atomic_number: atomic number (required)
         :arg line: x-ray line (required)
         :arg energy: energy of x-ray line (optional)
         """
-        ElementID.__init__(self, z)
+        ElementID.__init__(self, atomic_number)
 
         self.line = line
         self.energy = energy
-
-    def get_line(self):
-        """
-        Returns x-ray line.
-        """
-        return self._line
-    
-    def set_line(self, value):
-        """
-        Sets x-ray line.
-        
-        :arg value: x-ray line
-        """
-        if value is None:
-            raise ValueError('X-ray line is required')
-        self._line = value
-
-    line = property(get_line, set_line, doc='X-ray line')
-
-    def get_energy(self):
-        """
-        Returns the energy of the x-ray line.
-        
-        :return: energy and its unit
-        :rtype: :class:`.NumericalValue`
-        """
-        return self._energy
-    
-    def set_energy(self, value, unit='eV'):
-        """
-        Sets the energy of the x-ray line.
-        
-        :arg value: energy
-        :arg unit: unit
-        """
-        self._energy = extract_value(value, unit)
-
-    energy = property(get_energy, set_energy, doc='Energy of x-ray line')

@@ -24,12 +24,14 @@ __license__ = "GPL v3"
 
 # Local modules.
 from pyhmsa.core.condition import _Condition
-from pyhmsa.type.numerical import extract_value
+from pyhmsa.util.parameter import NumericalRangeAttribute
 
 # Globals and constants variables.
 
 class RegionOfInterest(_Condition):
     
+    channels = NumericalRangeAttribute(None, 0, required=True, doc='Channel range')
+
     def __init__(self, start_channel, end_channel):
         """
         Defines a region of a spectrum (or other one-dimensional datum), 
@@ -41,13 +43,13 @@ class RegionOfInterest(_Condition):
         """
         _Condition.__init__(self)
 
-        self.set_channel(start_channel, end_channel)
+        self.channels = (start_channel, end_channel)
 
     def get_start_channel(self):
         """
         Returns the start channel.
         """
-        return self._start_channel
+        return self.channels[0]
 
     start_channel = property(get_start_channel, doc='Start channel')
 
@@ -55,24 +57,6 @@ class RegionOfInterest(_Condition):
         """
         Returns the end channel.
         """
-        return self._end_channel
+        return self.channels[1]
 
     end_channel = property(get_end_channel, doc='End channel')
-
-    def set_channel(self, start, end):
-        """
-        Sets the start and end channel.
-        
-        :arg start: start channel
-        :arg end: end channel
-        """
-        if start is None:
-            raise ValueError('Start channel required')
-        if end is None:
-            raise ValueError('End channel required')
-        if start < 0:
-            raise ValueError('Start channel must be greater than 0')
-        if start > end:
-            raise ValueError('Start channel greater than end channel')
-        self._start_channel = extract_value(start)
-        self._end_channel = extract_value(end)

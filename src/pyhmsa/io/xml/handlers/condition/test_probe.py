@@ -18,40 +18,11 @@ from io import StringIO
 
 # Local modules.
 from pyhmsa.io.xml.handlers.condition.probe import \
-    _ProbeXMLHandler, ProbeEMXMLHandler, ProbeTEMXMLHandler
-from pyhmsa.core.condition.probe import _Probe, ProbeEM, ProbeTEM
+    ProbeEMXMLHandler, ProbeTEMXMLHandler
+from pyhmsa.core.condition.probe import ProbeEM, ProbeTEM
 
 # Globals and constants variables.
 from pyhmsa.core.condition.probe import GUN_TYPE_LAB6, LENS_MODE_IMAGE
-
-class Test_ProbeXMLHandler(unittest.TestCase):
-
-    def setUp(self):
-        unittest.TestCase.setUp(self)
-
-        self.h = _ProbeXMLHandler()
-
-        self.obj = _Probe()
-
-        source = StringIO('<Probe></Probe>')
-        self.element = etree.parse(source).getroot()
-
-    def tearDown(self):
-        unittest.TestCase.tearDown(self)
-
-    def testcan_parse(self):
-        self.assertTrue(self.h.can_parse(self.element))
-
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
-        self.assertIsInstance(obj, _Probe)
-
-    def testcan_convert(self):
-        self.assertTrue(self.h.can_convert(self.obj))
-
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
-        self.assertEqual('Probe', element.tag)
 
 class TestProbeEMXMLHandler(unittest.TestCase):
 
@@ -76,25 +47,25 @@ class TestProbeEMXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
-        self.assertAlmostEqual(15.0, obj.beam_voltage.value, 4)
+        self.assertAlmostEqual(15.0, obj.beam_voltage, 4)
         self.assertEqual('kV', obj.beam_voltage.unit)
-        self.assertAlmostEqual(47.59, obj.beam_current.value, 4)
+        self.assertAlmostEqual(47.59, obj.beam_current, 4)
         self.assertEqual('nA', obj.beam_current.unit)
         self.assertEqual(GUN_TYPE_LAB6, obj.gun_type)
-        self.assertAlmostEqual(12345.0, obj.emission_current.value, 4)
+        self.assertAlmostEqual(12345.0, obj.emission_current, 4)
         self.assertEqual(u'\u00b5A', obj.emission_current.unit)
-        self.assertAlmostEqual(1.234, obj.filament_current.value, 4)
+        self.assertAlmostEqual(1.234, obj.filament_current, 4)
         self.assertEqual('A', obj.filament_current.unit)
-        self.assertAlmostEqual(4200.0, obj.extractor_bias.value, 4)
+        self.assertAlmostEqual(4200.0, obj.extractor_bias, 4)
         self.assertEqual('V', obj.extractor_bias.unit)
-        self.assertAlmostEqual(12345.0, obj.beam_diameter.value, 4)
+        self.assertAlmostEqual(12345.0, obj.beam_diameter, 4)
         self.assertEqual('nm', obj.beam_diameter.unit)
-        self.assertAlmostEqual(3.14e-6, obj.chamber_pressure.value, 10)
+        self.assertAlmostEqual(3.14e-6, obj.chamber_pressure, 10)
         self.assertEqual('Pa', obj.chamber_pressure.unit)
-        self.assertAlmostEqual(3.14e-10, obj.gun_pressure.value, 14)
+        self.assertAlmostEqual(3.14e-10, obj.gun_pressure, 14)
         self.assertEqual('Pa', obj.gun_pressure.unit)
         self.assertAlmostEqual(2500.0, obj.scan_magnification, 4)
-        self.assertAlmostEqual(10.0, obj.working_distance.value, 4)
+        self.assertAlmostEqual(10.0, obj.working_distance, 4)
         self.assertEqual('mm', obj.working_distance.unit)
 
     def testcan_convert(self):
@@ -142,7 +113,7 @@ class TestProbeTEMXMLHandler(unittest.TestCase):
         obj = self.h.from_xml(self.element)
         self.assertEqual(LENS_MODE_IMAGE, obj.lens_mode)
         self.assertAlmostEqual(2.0, obj.camera_magnification, 4)
-        self.assertAlmostEqual(1.5, obj.convergence_angle.value, 4)
+        self.assertAlmostEqual(1.5, obj.convergence_angle, 4)
         self.assertEqual('mrad', obj.convergence_angle.unit)
 
     def testcan_convert(self):

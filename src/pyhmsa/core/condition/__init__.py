@@ -21,26 +21,18 @@ __license__ = "GPL v3"
 # Standard library modules.
 try:
     from collections import UserDict
-except ImportError: # Python 2.7 # pragma: no cover
+except ImportError: # pragma: no cover
     from UserDict import UserDict
-from collections import Iterable
 
 # Third party modules.
 
 # Local modules.
-from pyhmsa.type.numerical import NumericalValue
+from pyhmsa.util.parameter import Parameter
 from pyhmsa.type.identifier import validate_identifier
 
 # Globals and constants variables.
 
-def flatten(items, ignore_types=(str, bytes)):
-    for x in items:
-        if isinstance(x, Iterable) and not isinstance(x, ignore_types):
-            yield from flatten(x)
-        else:
-            yield x
-
-class _Condition(object):
+class _Condition(Parameter):
     pass
 
 class Conditions(UserDict):

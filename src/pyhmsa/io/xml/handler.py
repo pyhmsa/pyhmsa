@@ -19,25 +19,172 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
+import xml.etree.ElementTree as etree
 
 # Third party modules.
+import numpy as np
 
 # Local modules.
+from pyhmsa.type.numerical import convert_value
+from pyhmsa.type.language import langstr
+from pyhmsa.util.parameter import \
+    NumericalAttribute, TextAttribute, ObjectAttribute
 
 # Globals and constants variables.
+DTYPES_LOOKUP_FROM_XML = {'byte': np.uint8,
+                          'int16': np.int16,
+                          'uint16': np.uint16,
+                          'int32': np.int32,
+                          'uint32': np.uint32,
+                          'int64': np.int64,
+                          'float': np.float32,
+                          'double': np.float64}
+
+DTYPES_LOOKUP_TO_XML = {np.uint8: 'byte',
+                        np.int16: 'int16',
+                        np.uint16: 'uint16',
+                        np.int32: 'int32',
+                        np.uint32: 'uint32',
+                        np.int64: 'int64',
+                        np.float32: 'float',
+                        np.float64: 'double'}
 
 class _XMLHandler(object):
 
+    def __init__(self):
+        self._parsers = {NumericalAttribute: self._parse_numerical_attribute,
+                         TextAttribute: self._parse_text_attribute,
+                         ObjectAttribute: self._parse_object_attribute,
+                         }
+        self._converters = {NumericalAttribute: self._convert_numerical_attribute,
+                            TextAttribute: self._convert_text_attribute,
+                            ObjectAttribute: self._convert_object_attribute,
+                            }
+
+    def _find_method(self, lookup, attrib):
+        attrib_class = attrib.__class__
+        method = lookup.get(attrib_class, None)
+        if method is not None:
+            return method
+
+        for base_class in attrib_class.__bases__:
+            method = lookup.get(base_class, None)
+            if method is not None:
+                return method
+
+        raise ValueError('No class was found for %s' % attrib_class.__name__)
+    
     def can_parse(self, element):
         return False
+    
+    def _parse_parameter(self, element, klass):
+        obj = klass.__new__(klass)
+
+        for name, attrib in klass.__attributes__.items():
+            if attrib.xmlname is None: # skip, undefined way to load
+                continue
+
+            subelement = element.find(attrib.xmlname)
+            if subelement is None:
+                if attrib.is_required():
+                    raise ValueError('Element %s is missing' % attrib.xmlname)
+                else:
+                    value = None
+            else:
+                method = self._find_method(self._parsers, attrib)
+                value = method(subelement, attrib)
+            setattr(obj, name, value)
+
+        return obj
+
+    def _parse_numerical_attribute(self, element, attrib=None):
+        datatype = element.attrib['DataType']
+        if datatype.startswith('array:'):
+            dtype = DTYPES_LOOKUP_FROM_XML[datatype[6:]]
+            value = np.array(list(map(float, element.text.split(','))), dtype=dtype)
+            assert len(value) == int(element.attrib['Count'])
+        else:
+            dtype = DTYPES_LOOKUP_FROM_XML[datatype]
+            value = dtype(float(element.text))
+
+        unit = element.attrib.get('Unit')
+
+        return convert_value(value, unit)
+    
+    def _parse_text_attribute(self, element, attrib=None):
+        attribs = list(filter(lambda s: s.startswith('alt-lang-'), element.keys()))
+        if any(attribs):
+            alternatives = {}
+            for attrib in attribs:
+                language_tag = attrib[9:]
+                altvalue = element.get(attrib)
+                alternatives[language_tag] = altvalue
+            return langstr(element.text, alternatives)
+        else:
+            return element.text
+    
+    def _parse_object_attribute(self, element, attrib=None):
+        return self._parse_parameter(element, attrib.type_)
 
     def from_xml(self, element):
-        raise NotImplementedError
+        raise NotImplementedError # pragma: no cover
 
     def can_convert(self, obj):
         return False
+    
+    def _convert_parameter(self, obj, element=None):
+        if element is None:
+            element = etree.Element('Unknown')
+
+        for name, attrib in obj.__class__.__attributes__.items():
+            if attrib.xmlname is None: # skip, undefined way to convert
+                continue
+
+            value = getattr(obj, name, None)
+            if value is None:
+                if attrib.is_required():
+                    raise ValueError('Value for %s is required' % name)
+                else:
+                    continue
+            
+            method = self._find_method(self._converters, attrib)
+            subelement = method(value, attrib)
+            element.append(subelement)
+
+        return element
+    
+    def _convert_numerical_attribute(self, value, attrib):
+        element = etree.Element(attrib.xmlname)
+
+        if hasattr(value, 'unit'):
+            element.attrib['Unit'] = value.unit
+
+        datatype = DTYPES_LOOKUP_TO_XML[value.dtype.type]
+
+        value = value.tolist()
+        if np.isscalar(value):
+            element.text = str(value)
+        else:
+            element.text = ','.join(map(str, value))
+            element.attrib['Count'] = str(len(value))
+            datatype = 'array:' + datatype
+
+        element.attrib['DataType'] = datatype
+
+        return element
+    
+    def _convert_text_attribute(self, value, attrib):
+        element = etree.Element(attrib.xmlname)
+        element.text = str(value)
+
+        if isinstance(value, langstr):
+            for language_tag, altvalue in value.alternatives.items():
+                element.set('alt-lang-' + language_tag, altvalue)
+
+        return element
+    
+    def _convert_object_attribute(self, value, attrib):
+        return self._convert_parameter(value, etree.Element(attrib.xmlname))
 
     def to_xml(self, obj):
-        raise NotImplementedError
-
-
+        raise NotImplementedError # pragma: no cover

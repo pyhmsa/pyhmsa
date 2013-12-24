@@ -23,13 +23,16 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.type.unit import validate_unit
-from pyhmsa.type.numerical import extract_value
+from pyhmsa.util.parameter import \
+    Parameter, TextAttribute, NumericalAttribute, UnitAttribute
 
 # Globals and constants variables.
 
-class _Calibration(object):
+class _Calibration(Parameter):
     
+    quantity = TextAttribute(True, 'Quantity', 'physical quantity')
+    unit = UnitAttribute(None, True, 'Unit', 'unit')
+
     def __init__(self, quantity, unit):
         """
         Describes the calibration of a set of measurement ordinals with respect 
@@ -37,42 +40,16 @@ class _Calibration(object):
         to energy, or steps in a WDS peak scan to position, angle, wavelength 
         or energy.
         
-        :arg quantity: physical quantity (required)
+        :arg quantity: physical quantity such as "Energy", "Wavelength", 
+            "Position", etc. (required)
         :arg unit: unit (required)
         """
-        if quantity is None:
-            raise ValueError('Quantity is required')
-        self._quantity = quantity
-
-        if unit is None:
-            raise ValueError('Unit is required')
-        validate_unit(unit)
-        self._unit = unit
-
-    def get_quantity(self):
-        """
-        Returns the quantity, the physical quantity of the calibration object, 
-        such as "Energy", "Wavelength", "Position", etc.
-        
-        :return: quantity
-        :rtype: :class:`str`
-        """
-        return self._quantity
-
-    quantity = property(get_quantity, doc='Physical quantity')
-
-    def get_unit(self):
-        """
-        Returns the unit.
-        
-        :return: unit
-        :rtype: :class:`str` 
-        """
-        return self._unit
-
-    unit = property(get_unit, doc='Unit')
+        self.quantity = quantity
+        self.unit = unit
 
 class CalibrationConstant(_Calibration):
+
+    value = NumericalAttribute(None, True, "Value", "constant value")
 
     def __init__(self, quantity, unit, value):
         """
@@ -85,22 +62,13 @@ class CalibrationConstant(_Calibration):
         :arg value: value (required)
         """
         _Calibration.__init__(self, quantity, unit)
-
-        if value is None:
-            raise ValueError('Value is required')
-        self._value = extract_value(value)
-
-    def get_value(self):
-        """
-        Returns the constant value.
         
-        :return: value
-        """
-        return self._value
-
-    value = property(get_value, doc='Value')
+        self.value = value
 
 class CalibrationLinear(_Calibration):
+
+    gain = NumericalAttribute(None, True, "Gain", "gain")
+    offset = NumericalAttribute(None, True, "Offset", "offset")
 
     def __init__(self, quantity, unit, gain, offset):
         """
@@ -118,37 +86,12 @@ class CalibrationLinear(_Calibration):
         """
         _Calibration.__init__(self, quantity, unit)
 
-        if gain is None:
-            raise ValueError('Gain is required')
-        self._gain = extract_value(gain)
-
-        if offset is None:
-            raise ValueError('Offset is required')
-        self._offset = extract_value(offset)
-
-    def get_gain(self):
-        """
-        Returns the gain.
-        
-        :return: gain
-        """
-        return self._gain
-
-    gain = property(get_gain, doc='Gain')
-
-    def get_offset(self):
-        """
-        Returns the offset, the calibration value (energy, wavelength, 
-        position, etc.) corresponding to the first measurement ordinal.
-        
-        :return: offset
-        """
-        return self._offset
-
-    offset = property(get_offset,
-                      doc='Calibration value corresponding to the first measurement ordinal')
+        self.gain = gain
+        self.offset = offset
 
 class CalibrationPolynomial(_Calibration):
+
+    coefficients = NumericalAttribute(None, True, 'Coefficients', 'polynomial coefficients')
 
     def __init__(self, quantity, unit, coefficients):
         """
@@ -163,24 +106,11 @@ class CalibrationPolynomial(_Calibration):
         """
         _Calibration.__init__(self, quantity, unit)
 
-        if coefficients is None:
-            raise ValueError('Coefficients are required')
-        if len(coefficients) == 0:
-            raise ValueError('At least one coefficient must be given')
-        self._coefficients = extract_value(coefficients)
+        self.coefficients = coefficients
     
-    def get_coefficients(self):
-        """
-        Returns the polynomial coefficients.
-        
-        :return: coefficients
-        :rtype: :class:`tuple`
-        """
-        return self._coefficients
-
-    coefficients = property(get_coefficients, doc='Polynomial coefficients')
-
 class CalibrationExplicit(_Calibration):
+
+    values = NumericalAttribute(None, True, "Values", "explicit values")
 
     def __init__(self, quantity, unit, values):
         """
@@ -197,19 +127,4 @@ class CalibrationExplicit(_Calibration):
         """
         _Calibration.__init__(self, quantity, unit)
 
-        if values is None:
-            raise ValueError('Values are required')
-        if len(values) == 0:
-            raise ValueError('At least one value must be given')
-        self._values = extract_value(values)
-
-    def get_values(self):
-        """
-        Returns the explicit values.
-        
-        :return: values
-        :rtype: :class:`tuple`
-        """
-        return self._values
-
-    values = property(get_values, doc='Explicit values')
+        self.values = values

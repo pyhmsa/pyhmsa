@@ -45,15 +45,15 @@ class TestSpecimenPositionXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
-        self.assertAlmostEqual(0.0, obj.x.value, 4)
+        self.assertAlmostEqual(0.0, obj.x, 4)
         self.assertEqual('mm', obj.x.unit)
-        self.assertAlmostEqual(0.0, obj.y.value, 4)
+        self.assertAlmostEqual(0.0, obj.y, 4)
         self.assertEqual('mm', obj.y.unit)
-        self.assertAlmostEqual(10.0, obj.z.value, 4)
+        self.assertAlmostEqual(10.0, obj.z, 4)
         self.assertEqual('mm', obj.z.unit)
-        self.assertAlmostEqual(90.0, obj.r.value, 4)
+        self.assertAlmostEqual(90.0, obj.r, 4)
         self.assertEqual(u'\u00b0', obj.r.unit)
-        self.assertAlmostEqual(70.0, obj.t.value, 4)
+        self.assertAlmostEqual(70.0, obj.t, 4)
         self.assertEqual(u'\u00b0', obj.t.unit)
 
     def testcan_convert(self):
@@ -145,7 +145,7 @@ class TestSpecimenXMLHandler(unittest.TestCase):
         self.assertAlmostEqual(3.0, obj.composition[11], 4)
         self.assertAlmostEqual(1.0, obj.composition[13], 4)
         self.assertAlmostEqual(6.0, obj.composition[9], 4)
-        self.assertAlmostEqual(-20.0, obj.temperature.value, 4)
+        self.assertAlmostEqual(-20.0, obj.temperature, 4)
         self.assertEqual(u'\u00b0\u0043', obj.temperature.unit)
 
     def testcan_convert(self):
@@ -194,7 +194,7 @@ class TestSpecimenMultilayerXMLHandler(unittest.TestCase):
         self.assertEqual('Na3AlF6', obj.formula)
         self.assertEqual(1, len(obj.layers))
         self.assertEqual('Carbon coat', obj.layers[0].name)
-        self.assertAlmostEqual(50.0, obj.layers[0].thickness.value, 4)
+        self.assertAlmostEqual(50.0, obj.layers[0].thickness, 4)
         self.assertEqual('nm', obj.layers[0].thickness.unit)
         self.assertEqual('C', obj.layers[0].formula)
         self.assertAlmostEqual(50.0, obj.layers[0].composition[6], 4)

@@ -19,8 +19,6 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
-from collections import namedtuple, Iterable
-from numbers import Integral, Real
 
 # Third party modules.
 import numpy as np
@@ -30,45 +28,62 @@ from pyhmsa.type.unit import validate_unit
 
 # Globals and constants variables.
 
-_SUPPORTED_DTYPES = frozenset([np.dtype(np.uint8), np.dtype(np.int16),
-                               np.dtype(np.uint16), np.dtype(np.int32),
-                               np.dtype(np.uint32), np.dtype(np.int64),
-                               np.dtype(np.float32), np.dtype(np.float64)])
+_SUPPORTED_DTYPES = frozenset(map(np.dtype, [np.uint8, np.int16, np.uint16,
+                                             np.int32, np.uint32, np.int64,
+                                             np.float32, np.float64]))
 
-def _convert_python_to_numpy(value):
-    if value is not None:
-        if isinstance(value, Iterable):
-            value = np.array(value)
-        elif isinstance(value, (Integral, Real)):
-            value = np.array([value])[0]
-
-        if value.dtype not in _SUPPORTED_DTYPES:
-            raise ValueError('Unsupported data type: %s' % value.dtype.name)
-
-    return value
-
-def extract_value(val, unit=None):
-    if unit is None:
-        return _convert_python_to_numpy(val)
+def validate_dtype(arg):
+    if isinstance(arg, np.dtype):
+        dtype = arg
+    elif hasattr(arg, 'dtype'):
+        dtype = arg.dtype
     else:
-        if isinstance(val, tuple):
-            if len(val) == 2:
-                unit = val[1] or unit
-                val = val[0]
-            else:
-                raise ValueError("Too many arguments")
+        raise ValueError('Cannot find dtype of argument')
 
-        return NumericalValue(val, unit)
+    if dtype not in _SUPPORTED_DTYPES:
+        raise ValueError('Unsupported data type: %s' % dtype.name)
 
-class NumericalValue(namedtuple('Unit', ['value', 'unit'])):
+    return True
+
+class arrayunit(np.ndarray):
     
-    def __new__(cls, value, unit):
-        value = _convert_python_to_numpy(value)
+    def __new__(cls, shape, dtype=float, buffer=None, offset=0,
+                 strides=None, order=None, unit=None):
+        obj = np.ndarray.__new__(cls, shape, dtype, buffer, offset, strides,
+                                 order)
+        obj._unit = unit
+        return obj
+
+    def __array_finalize__(self, obj):
+        if obj is None:
+            return
+        self._unit = getattr(obj, '_unit', None)
+    
+    def __array_wrap__(self, out_arr, context=None):
+        ret_arr = np.ndarray.__array_wrap__(self, out_arr, context)
+        return np.array(ret_arr) # Cast as regular array
+    
+    def __str__(self):
+        if self._unit is not None:
+            return np.ndarray.__str__(self) + ' ' + self.unit
+        else:
+            return np.ndarray.__str__(self)
+
+    @property
+    def unit(self):
+        return self._unit
+
+def convert_value(value, unit=None):
+    if value is None:
+        return None
+
+    if not isinstance(value, arrayunit):
+        value = np.asarray(value)
+    else:
+        unit = value.unit or unit
+
+    validate_dtype(value)
+    if unit is not None:
         validate_unit(unit)
-        return cls.__bases__[0].__new__(cls, value, unit)
 
-    def __nonzero__(self): # Python 2.x # pragma: no cover
-        return self.value is not None
-
-    def __bool__(self): # Python 3.x # pragma: no cover
-        return self.value is not None
+    return arrayunit(value.shape, value.dtype, value, unit=unit)
