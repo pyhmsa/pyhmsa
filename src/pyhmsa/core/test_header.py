@@ -75,11 +75,7 @@ class TestHeader(unittest.TestCase):
         self.assertEqual(13, self.header.time.hour)
         self.assertEqual(1, self.header.time.minute)
         self.assertEqual(4, self.header.time.second)
-
-    def testtimezone(self):
-        self.header.timezone = 'US/Eastern'
-        self.assertEqual('US/Eastern', str(self.header.timezone))
-    
+#
     def testchecksum(self):
         checksum = Checksum('53AAD59C05D59A40AD746D6928EA6D2D526865FD', 'SHA-1')
         self.header.checksum = checksum

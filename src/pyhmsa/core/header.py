@@ -19,115 +19,55 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
-import datetime
-import time
 
 # Third party modules.
-try:
-    import pytz
-except ImportError: # pragma: no cover
-    pytz = None
 
 # Local modules.
 from pyhmsa.type.checksum import Checksum
 from pyhmsa.type.identifier import validate_identifier
+from pyhmsa.util.parameter import \
+    Parameter, TextAttribute, DateAttribute, TimeAttribute, ObjectAttribute
 
 # Globals and constants variables.
 
-class Header(dict):
+class Header(Parameter):
     
-    def __init__(self):
+    title = TextAttribute(False, 'Title', 'title')
+    author = TextAttribute(False, 'Author', 'author')
+    owner = TextAttribute(False, 'Owner', 'legal owner')
+    date = DateAttribute(False, 'Date', 'date')
+    time = TimeAttribute(False, 'Time', 'time')
+    checksum = ObjectAttribute(Checksum, False, 'Checksum', 'checksum')
+
+    def __init__(self, **kwargs):
         """
         Contains metadata that principally identifies the title of the document, 
         the author/ownership of the data, and the date/time of collection. 
         Header information shall not contain parameters that are required for 
         the interpretation of the experimental data.
         """
-        dict.__init__(self)
+        for key, value in kwargs.items():
+            self[key] = value
 
-    def __setitem__(self, key, item):
-        key = key.title()
+    def __setitem__(self, key, value):
+        key = key.lower()
         validate_identifier(key)
 
-        if item is None:
-            self.pop(key, None)
+        if value is None:
+            self.__dict__.pop(key, None)
             return
 
-        method = getattr(self, 'set_%s' % key.lower(), None)
+        method = getattr(self, 'set_%s' % key, None)
         if method:
-            method(item)
+            method(value)
         else:
-            dict.__setitem__(self, key, item)
+            self.__dict__[key] = value
 
     def __getitem__(self, key):
-        return dict.__getitem__(self, key.title())
-#        except KeyError:
-#            return None
+        return self.__dict__.get(key.lower())
 
-    def get_title(self):
-        return self.get('Title')
+    def __delitem__(self, key):
+        del self.__dict__[key.lower()]
 
-    def set_title(self, value):
-        dict.__setitem__(self, 'Title', value)
-
-    title = property(get_title, set_title)
-
-    def get_author(self):
-        return self.get('Author')
-
-    def set_author(self, value):
-        dict.__setitem__(self, 'Author', value)
-
-    author = property(get_author, set_author)
-
-    def get_owner(self):
-        return self.get('Owner')
-
-    def set_owner(self, value):
-        dict.__setitem__(self, 'Owner', value)
-
-    owner = property(get_owner, set_owner)
-
-    def get_date(self):
-        return self.get('Date')
-
-    def set_date(self, value):
-        if not isinstance(value, datetime.date):
-            dt = datetime.datetime.strptime(value, '%Y-%m-%d')
-            value = datetime.date(dt.year, dt.month, dt.day)
-        dict.__setitem__(self, 'Date', value)
-
-    date = property(get_date, set_date)
-
-    def get_time(self):
-        return self.get('Time')
-
-    def set_time(self, value):
-        if not isinstance(value, datetime.time):
-            dt = datetime.datetime.strptime(value, '%H:%M:%S')
-            tzinfo = self.get('Timezone', pytz.timezone(time.tzname[0]) if pytz else None)
-            value = datetime.time(dt.hour, dt.minute, dt.second, tzinfo=tzinfo)
-        dict.__setitem__(self, 'Time', value)
-        dict.__setitem__(self, 'Timezone', value.tzinfo)
-
-    time = property(get_time, set_time)
-
-    def get_timezone(self):
-        return self.get('Timezone')
-
-    def set_timezone(self, value):
-        if not isinstance(value, datetime.tzinfo) and pytz is not None:
-            value = pytz.timezone(value)
-        dict.__setitem__(self, 'Timezone', value)
-
-    timezone = property(get_timezone, set_timezone)
-
-    def get_checksum(self):
-        return self.get('Checksum')
-
-    def set_checksum(self, value):
-        if not isinstance(value, Checksum):
-            raise ValueError('Only Checksum object are supported')
-        dict.__setitem__(self, 'Checksum', value)
-
-    checksum = property(get_checksum, set_checksum)
+    def __contains__(self, key):
+        return key.lower() in self.__dict__

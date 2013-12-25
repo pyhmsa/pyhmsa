@@ -35,26 +35,28 @@ class HeaderXMLHandler(_XMLHandler):
         return element.tag == 'Header'
 
     def from_xml(self, element):
-        header = Header()
-        
-        for subelement in element:
-            header[subelement.tag] = subelement.text
+        obj = self._parse_parameter(element, Header)
 
-        return header
+        for subelement in element.iter():
+            name = subelement.tag.lower()
+            if hasattr(obj, name):
+                continue # already parsed
+            obj[name] = subelement.text
+
+        return obj
 
     def can_convert(self, obj):
         return isinstance(obj, Header)
 
     def to_xml(self, obj):
-        element = etree.Element('Header')
+        element = self._convert_parameter(obj, etree.Element('Header'))
 
-        for tag, value in obj.items():
-            subelement = etree.Element(tag)
-
-            if tag == 'Date':
-                pass
-            else:
-                subelement.text = str(value)
+        for name, value in obj.__dict__.items():
+            if name in obj.__class__.__dict__:
+                continue # already converted
+            
+            subelement = etree.Element(name.title())
+            subelement.text = str(value)
 
             element.append(subelement)
 

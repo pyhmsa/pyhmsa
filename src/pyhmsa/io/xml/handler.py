@@ -20,6 +20,7 @@ __license__ = "GPL v3"
 
 # Standard library modules.
 import xml.etree.ElementTree as etree
+import datetime
 
 # Third party modules.
 import numpy as np
@@ -28,7 +29,8 @@ import numpy as np
 from pyhmsa.type.numerical import convert_value
 from pyhmsa.type.language import langstr
 from pyhmsa.util.parameter import \
-    NumericalAttribute, TextAttribute, ObjectAttribute
+    (NumericalAttribute, TextAttribute, ObjectAttribute, DateAttribute,
+     TimeAttribute)
 
 # Globals and constants variables.
 DTYPES_LOOKUP_FROM_XML = {'byte': np.uint8,
@@ -55,10 +57,14 @@ class _XMLHandler(object):
         self._parsers = {NumericalAttribute: self._parse_numerical_attribute,
                          TextAttribute: self._parse_text_attribute,
                          ObjectAttribute: self._parse_object_attribute,
+                         DateAttribute: self._parse_date_attribute,
+                         TimeAttribute: self._parse_time_attribute,
                          }
         self._converters = {NumericalAttribute: self._convert_numerical_attribute,
                             TextAttribute: self._convert_text_attribute,
                             ObjectAttribute: self._convert_object_attribute,
+                            DateAttribute: self._convert_date_attribute,
+                            TimeAttribute: self._convert_time_attribute,
                             }
 
     def _find_method(self, lookup, attrib):
@@ -126,6 +132,14 @@ class _XMLHandler(object):
     def _parse_object_attribute(self, element, attrib=None):
         return self._parse_parameter(element, attrib.type_)
 
+    def _parse_date_attribute(self, element, attrib=None):
+        dt = datetime.datetime.strptime(element.text, '%Y-%m-%d')
+        return datetime.date(dt.year, dt.month, dt.day)
+
+    def _parse_time_attribute(self, element, attrib=None):
+        dt = datetime.datetime.strptime(element.text, '%H:%M:%S')
+        return datetime.time(dt.hour, dt.minute, dt.second)
+
     def from_xml(self, element):
         raise NotImplementedError # pragma: no cover
 
@@ -185,6 +199,16 @@ class _XMLHandler(object):
     
     def _convert_object_attribute(self, value, attrib):
         return self._convert_parameter(value, etree.Element(attrib.xmlname))
+
+    def _convert_date_attribute(self, value, attrib):
+        element = etree.Element(attrib.xmlname)
+        element.text = value.strftime('%Y-%m-%d')
+        return element
+
+    def _convert_time_attribute(self, value, attrib):
+        element = etree.Element(attrib.xmlname)
+        element.text = value.strftime('%H:%M:%S')
+        return element
 
     def to_xml(self, obj):
         raise NotImplementedError # pragma: no cover
