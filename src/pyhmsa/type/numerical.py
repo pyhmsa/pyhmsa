@@ -33,9 +33,7 @@ _SUPPORTED_DTYPES = frozenset(map(np.dtype, [np.uint8, np.int16, np.uint16,
                                              np.float32, np.float64]))
 
 def validate_dtype(arg):
-    if isinstance(arg, np.dtype):
-        dtype = arg
-    elif hasattr(arg, 'dtype'):
+    if hasattr(arg, 'dtype'):
         dtype = arg.dtype
     else:
         raise ValueError('Cannot find dtype of argument')
