@@ -20,6 +20,7 @@ __license__ = "GPL v3"
 
 # Standard library modules.
 import inspect
+import datetime
 from collections import OrderedDict
 
 # Third party modules.
@@ -160,9 +161,9 @@ class AtomicNumberAttribute(NumericalAttribute):
     def _validate_value(self, value):
         NumericalAttribute._validate_value(self, value)
 
-        if value < 1:
+        if value is not None and value < 1:
             raise ValueError('Atomic number cannot be less than Hydrogen')
-        if value > 118:
+        if value is not None and value > 118:
             raise ValueError('Atomic number cannot be greater than Uuo')
 
 class UnitAttribute(TextAttribute):
@@ -183,16 +184,14 @@ class UnitAttribute(TextAttribute):
 
 class ObjectAttribute(_Attribute):
 
-    def __init__(self, type_=None, required=False, xmlname=None, doc=None):
+    def __init__(self, type_, required=False, xmlname=None, doc=None):
         _Attribute.__init__(self, required, xmlname, doc)
         self._type = type_
 
     def _validate_value(self, value):
         _Attribute._validate_value(self, value)
         
-        if self._type is not None and \
-                value is not None and \
-                not isinstance(value, self._type):
+        if value is not None and not isinstance(value, self._type):
             raise ValueError('Value must be of type "%s"' % self._type)
 
     @property
@@ -216,13 +215,16 @@ class NumericalRangeAttribute(NumericalAttribute):
     def __init__(self, default_unit=None, minvalue=-np.inf, maxvalue=np.inf,
                   required=False, xmlname=None, doc=None):
         NumericalAttribute.__init__(self, default_unit, required, xmlname, doc)
-        if minvalue > maxvalue:
+        if minvalue > maxvalue: # pragma: no cover
             raise ValueError('Minimum value greater than maximum value')
         self._limitmin = minvalue
         self._limitmax = maxvalue
 
     def _validate_value(self, value):
         NumericalAttribute._validate_value(self, value)
+
+        if value is None:
+            return
 
         try:
             vmin, vmax = value
@@ -235,6 +237,28 @@ class NumericalRangeAttribute(NumericalAttribute):
             raise ValueError("Lower value is smaller than limit")
         if vmax > self._limitmax:
             raise ValueError("Upper value is greater than limit")
+
+    def _new(self, cls, clsname, bases, methods, name):
+        # Change set method to allow two values and unit input
+        methods['set_%s' % name] = \
+            lambda instance, vmin, vmax, unit = None: \
+                self.__set__(instance, ((vmin, vmax), unit or self._default_unit))
+
+class DateAttribute(_Attribute):
+
+    def _prepare_value(self, value):
+        if value is not None and not isinstance(value, datetime.date):
+            dt = datetime.datetime.strptime(value, '%Y-%m-%d')
+            value = datetime.date(dt.year, dt.month, dt.day)
+        return value
+
+class TimeAttribute(_Attribute):
+
+    def _prepare_value(self, value):
+        if value is not None and not isinstance(value, datetime.time):
+            dt = datetime.datetime.strptime(value, '%H:%M:%S')
+            value = datetime.time(dt.hour, dt.minute, dt.second)
+        return value
 
 class ParameterMetaclass(type):
 
@@ -258,19 +282,3 @@ class ParameterMetaclass(type):
         return type.__new__(cls, clsname, bases, methods)
 
 Parameter = ParameterMetaclass('Parameter', (object,), {})
-
-#class Condition(Parameter):
-#
-#    abc = NumericalAttribute('Abc', 'm', True, 'Abc def')
-#    hkl = TextAttribute('Hkl')
-#
-#c = Condition()
-#c.abc = (5.0, 'nm')
-#print(c.abc, c.get_abc())
-#c.set_abc(6.0, 'A')
-#print(c.abc, c.get_abc())
-#
-#c.hkl = 'Yu'
-#print(c.hkl, c.get_hkl())
-#c.set_hkl('safda')
-#print(c.hkl, c.get_hkl())
