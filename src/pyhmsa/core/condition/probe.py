@@ -46,6 +46,8 @@ _LENS_MODES = frozenset([LENS_MODE_IMAGE, LENS_MODE_DIFFR, LENS_MODE_SCIMG,
 
 class _Probe(_Condition):
 
+    TEMPLATE = 'Probe'
+
     def __init__(self):
         """
         Describes the type and conditions of the analytical probe used to 
@@ -56,6 +58,8 @@ class _Probe(_Condition):
     
 class ProbeEM(_Probe):
     
+    CLASS = 'EM'
+
     beam_voltage = NumericalAttribute('kV', True, 'BeamVoltage', 'beam voltage')
     beam_current = NumericalAttribute('nA', False, 'BeamCurrent', 'beam current')
     gun_type = EnumAttribute(_GUN_TYPES, False, 'GunType', 'type of gun')
@@ -104,6 +108,8 @@ class ProbeEM(_Probe):
         self.working_distance = working_distance
 
 class ProbeTEM(ProbeEM):
+
+    CLASS = 'TEM'
 
     lens_mode = EnumAttribute(_LENS_MODES, True, 'LensMode', 'lens mode')
     camera_magnification = NumericalAttribute(None, False, 'CameraMagnification', 'camera magnification')

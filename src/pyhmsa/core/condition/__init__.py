@@ -33,10 +33,14 @@ from pyhmsa.type.identifier import validate_identifier
 # Globals and constants variables.
 
 class _Condition(Parameter):
-    pass
+
+    TEMPLATE = None
+    CLASS = None
 
 class Conditions(UserDict):
 
-    def __setitem__(self, key, item):
-        validate_identifier(key)
-        UserDict.__setitem__(self, key, item)
+    def __setitem__(self, identifier, condition):
+        validate_identifier(identifier)
+        if not isinstance(condition, _Condition):
+            raise ValueError("Value is not a condition")
+        UserDict.__setitem__(self, identifier, condition)

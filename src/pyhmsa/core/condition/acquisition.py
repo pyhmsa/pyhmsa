@@ -49,6 +49,8 @@ _POSITION_LOCATIONS = frozenset([POSITION_LOCATION_START,
 
 class _Acquisition(_Condition):
 
+    TEMPLATE = 'Acquisition'
+
     dwell_time = NumericalAttribute('s', False, 'DwellTime', "uniform real time taken for each individual measurement")
     total_time = NumericalAttribute('s', False, 'TotalTime', "total real time taken to collect all measurements")
     dwell_time_live = NumericalAttribute('s', False, 'DwellTime_Live', "analogous detector live time for each individual measurement")
@@ -70,6 +72,8 @@ class _Acquisition(_Condition):
 
 class AcquisitionPoint(_Acquisition):
 
+    CLASS = 'Point'
+
     position = ObjectAttribute(SpecimenPosition, True, "SpecimenPosition",
                                'physical location on (or in) the specimen')
 
@@ -89,6 +93,8 @@ class AcquisitionPoint(_Acquisition):
         self.position = position
 
 class AcquisitionMultipoint(_Acquisition):
+
+    CLASS = 'Multipoint'
 
     positions = FrozenAttribute(list, doc='specimen positions')
 
@@ -111,6 +117,8 @@ class AcquisitionMultipoint(_Acquisition):
 
 class _AcquisitionRaster(_Acquisition):
 
+    CLASS = 'Raster'
+
     raster_mode = EnumAttribute(_RASTER_MODES, False, 'RasterMode', 'mode of rastering')
     positions = FrozenAttribute(dict, doc='defined physical location(s) of the raster')
 
@@ -130,6 +138,8 @@ class _AcquisitionRaster(_Acquisition):
         self.raster_mode = raster_mode
 
 class AcquisitionRasterLinescan(_AcquisitionRaster):
+
+    CLASS = 'Raster/Linescan'
 
     step_count = NumericalAttribute(None, True, 'StepCount', 'number of steps')
     step_size = NumericalAttribute(u'\u00b5m', False, 'StepSize', 'dimension of each step')
@@ -213,6 +223,8 @@ class AcquisitionRasterLinescan(_AcquisitionRaster):
 
 class AcquisitionRasterXY(_AcquisitionRaster):
 
+    CLASS = 'Raster/XY'
+
     step_count_x = NumericalAttribute(None, True, 'XStepCount', 'number of steps in x direction')
     step_count_y = NumericalAttribute(None, True, 'YStepCount', 'number of steps in y direction')
     step_size_x = NumericalAttribute(u'\u00b5m', False, 'XStepSize', 'dimension of each step in x direction')
@@ -286,6 +298,8 @@ class AcquisitionRasterXY(_AcquisitionRaster):
                         doc='Physical location on (or in) the specimen')
 
 class AcquisitionRasterXYZ(_AcquisitionRaster):
+
+    CLASS = 'Raster/XYZ'
 
     step_count_x = NumericalAttribute(None, True, 'XStepCount', 'number of steps in x direction')
     step_count_y = NumericalAttribute(None, True, 'YStepCount', 'number of steps in y direction')

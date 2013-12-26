@@ -30,6 +30,8 @@ from pyhmsa.util.parameter import TextAttribute
 
 class Instrument(_Condition):
 
+    TEMPLATE = 'Instrument'
+
     manufacturer = TextAttribute(True, 'Manufacturer', 'manufacturer')
     model = TextAttribute(True, 'Model', 'model')
     serial_number = TextAttribute(False, 'SerialNumber', 'serial number')

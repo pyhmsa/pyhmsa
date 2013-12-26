@@ -138,6 +138,8 @@ class Window(Parameter):
 
 class _Detector(_Condition):
 
+    TEMPLATE = 'Detector'
+
     signal_type = EnumAttribute(_SIGNAL_TYPES, False, 'SignalType', 'type of signal')
     manufacturer = TextAttribute(False, 'Manufacturer', 'manufacturer')
     model = TextAttribute(False, 'Model', 'model')
@@ -189,6 +191,8 @@ class _Detector(_Condition):
 
 class DetectorCamera(_Detector):
 
+    CLASS = 'Camera'
+
     pixel_count_u = NumericalAttribute(None, True, 'UPixelCount', 'number of pixels along the horizontal axis')
     pixel_count_v = NumericalAttribute(None, True, 'VPixelCount', 'number of pixels along the vertical axis')
     exposure_time = NumericalAttribute('ms', False, 'ExposureTime', 'exposure time')
@@ -238,6 +242,8 @@ class DetectorCamera(_Detector):
 
 class DetectorSpectrometer(_Detector):
 
+    CLASS = 'Spectrometer'
+
     channel_count = NumericalAttribute(None, True, 'ChannelCount', 'number of channels')
     calibration = ObjectAttribute(_Calibration, True, doc='calibration')
     collection_mode = EnumAttribute(_COLLECTION_MODES, False, 'CollectionMode', 'mode of collection')
@@ -279,6 +285,8 @@ class DetectorSpectrometer(_Detector):
         self.collection_mode = collection_mode
 
 class DetectorSpectrometerCL(DetectorSpectrometer):
+
+    CLASS = 'Spectrometer/CL'
 
     grating_d = NumericalAttribute('mm-1', False, 'Grating-d', 'grating spacing')
 
@@ -329,6 +337,8 @@ class DetectorSpectrometerCL(DetectorSpectrometer):
 
 
 class DetectorSpectrometerWDS(DetectorSpectrometer):
+
+    CLASS = 'Spectrometer/WDS'
 
     dispersion_element = TextAttribute(False, 'DispersionElement', 'dispersion element')
     crystal_2d = NumericalAttribute(u'\u00c5', False, 'Crystal-2d', 'crystal 2d-spacing')
@@ -397,6 +407,8 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
 
 class DetectorSpectrometerXEDS(DetectorSpectrometer):
     
+    CLASS = 'Spectrometer/XEDS'
+
     technology = EnumAttribute(_XEDS_TECHNOLOGIES, False, 'Technology', 'technology')
     nominal_throughput = NumericalAttribute('counts', False, 'NominalThroughput', 'nominal throughput')
     time_constant = NumericalAttribute(u'\u00b5s', False, 'TimeConstant', 'time constant')

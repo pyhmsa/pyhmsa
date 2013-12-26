@@ -30,6 +30,8 @@ from pyhmsa.util.parameter import NumericalRangeAttribute
 
 class RegionOfInterest(_Condition):
     
+    TEMPLATE = 'RegionOfInterest'
+
     channels = NumericalRangeAttribute(None, 0, required=True, doc='Channel range')
 
     def __init__(self, start_channel, end_channel):

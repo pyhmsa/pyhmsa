@@ -49,6 +49,8 @@ _SYMBOLS = [
 
 class ElementID(_Condition):
     
+    TEMPLATE = 'ElementID'
+
     atomic_number = AtomicNumberAttribute(True, 'Element', "atomic number")
 
     def __init__(self, atomic_number):
@@ -72,6 +74,8 @@ class ElementID(_Condition):
 
 class ElementIDXray(ElementID):
     
+    CLASS = 'X-ray'
+
     line = TextAttribute(True, 'Line', 'x-ray line')
     energy = NumericalAttribute('eV', False, 'Energy', 'energy of x-ray line')
 

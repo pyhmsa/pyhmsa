@@ -42,6 +42,8 @@ _COMPOSITION_UNITS = frozenset(['atoms', 'mol%', 'vol%', 'wt%',
 
 class SpecimenPosition(_Condition):
 
+    TEMPLATE = 'SpecimenPosition'
+
     x = NumericalAttribute('mm', False, 'X', 'x coordinate')
     y = NumericalAttribute('mm', False, 'Y', 'y coordinate')
     z = NumericalAttribute('mm', False, 'Z', 'z coordinate')
@@ -103,6 +105,8 @@ class Composition(UserDict):
 
 class Specimen(_Condition):
 
+    TEMPLATE = 'Specimen'
+
     name = TextAttribute(True, 'Name', 'name')
     description = TextAttribute(False, 'Description', 'description')
     origin = TextAttribute(False, 'Origin', 'origin')
@@ -161,6 +165,8 @@ class SpecimenLayer(Parameter):
 
 class SpecimenMultilayer(Specimen):
     
+    CLASS = 'Multilayer'
+
     layers = FrozenAttribute(list, doc='modifiable list of layers')
 
     def __init__(self, name, description=None, origin=None, formula=None,
