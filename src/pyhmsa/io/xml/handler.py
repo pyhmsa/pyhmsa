@@ -33,23 +33,23 @@ from pyhmsa.util.parameter import \
      TimeAttribute)
 
 # Globals and constants variables.
-DTYPES_LOOKUP_FROM_XML = {'byte': np.uint8,
-                          'int16': np.int16,
-                          'uint16': np.uint16,
-                          'int32': np.int32,
-                          'uint32': np.uint32,
-                          'int64': np.int64,
-                          'float': np.float32,
-                          'double': np.float64}
+DTYPES_LOOKUP_FROM_XML = {'byte': np.dtype(np.uint8),
+                          'int16': np.dtype(np.int16),
+                          'uint16': np.dtype(np.uint16),
+                          'int32': np.dtype(np.int32),
+                          'uint32': np.dtype(np.uint32),
+                          'int64': np.dtype(np.int64),
+                          'float': np.dtype(np.float32),
+                          'double': np.dtype(np.float64)}
 
-DTYPES_LOOKUP_TO_XML = {np.uint8: 'byte',
-                        np.int16: 'int16',
-                        np.uint16: 'uint16',
-                        np.int32: 'int32',
-                        np.uint32: 'uint32',
-                        np.int64: 'int64',
-                        np.float32: 'float',
-                        np.float64: 'double'}
+DTYPES_LOOKUP_TO_XML = {np.dtype(np.uint8): 'byte',
+                        np.dtype(np.int16): 'int16',
+                        np.dtype(np.uint16): 'uint16',
+                        np.dtype(np.int32): 'int32',
+                        np.dtype(np.uint32): 'uint32',
+                        np.dtype(np.int64): 'int64',
+                        np.dtype(np.float32): 'float',
+                        np.dtype(np.float64): 'double'}
 
 class _XMLHandler(object):
 
@@ -79,10 +79,10 @@ class _XMLHandler(object):
                 return method
 
         raise ValueError('No class was found for %s' % attrib_class.__name__)
-    
+
     def can_parse(self, element):
         return False
-    
+
     def _parse_parameter(self, element, klass):
         obj = klass.__new__(klass)
 
@@ -111,12 +111,12 @@ class _XMLHandler(object):
             assert len(value) == int(element.attrib['Count'])
         else:
             dtype = DTYPES_LOOKUP_FROM_XML[datatype]
-            value = dtype(float(element.text))
+            value = dtype.type(float(element.text))
 
-        unit = element.attrib.get('Unit')
+        unit = element.get('Unit')
 
         return convert_value(value, unit)
-    
+
     def _parse_text_attribute(self, element, attrib=None):
         attribs = list(filter(lambda s: s.startswith('alt-lang-'), element.keys()))
         if any(attribs):
@@ -128,7 +128,7 @@ class _XMLHandler(object):
             return langstr(element.text, alternatives)
         else:
             return element.text
-    
+
     def _parse_object_attribute(self, element, attrib=None):
         return self._parse_parameter(element, attrib.type_)
 
@@ -145,7 +145,7 @@ class _XMLHandler(object):
 
     def can_convert(self, obj):
         return False
-    
+
     def _convert_parameter(self, obj, element=None):
         if element is None:
             element = etree.Element('Unknown')
@@ -160,20 +160,20 @@ class _XMLHandler(object):
                     raise ValueError('Value for %s is required' % name)
                 else:
                     continue
-            
+
             method = self._find_method(self._converters, attrib)
             subelement = method(value, attrib)
             element.append(subelement)
 
         return element
-    
+
     def _convert_numerical_attribute(self, value, attrib):
         element = etree.Element(attrib.xmlname)
 
         if hasattr(value, 'unit'):
             element.attrib['Unit'] = value.unit
 
-        datatype = DTYPES_LOOKUP_TO_XML[value.dtype.type]
+        datatype = DTYPES_LOOKUP_TO_XML[value.dtype]
 
         value = value.tolist()
         if np.isscalar(value):
@@ -186,7 +186,7 @@ class _XMLHandler(object):
         element.attrib['DataType'] = datatype
 
         return element
-    
+
     def _convert_text_attribute(self, value, attrib):
         element = etree.Element(attrib.xmlname)
         element.text = str(value)
@@ -196,7 +196,7 @@ class _XMLHandler(object):
                 element.set('alt-lang-' + language_tag, altvalue)
 
         return element
-    
+
     def _convert_object_attribute(self, value, attrib):
         return self._convert_parameter(value, etree.Element(attrib.xmlname))
 
