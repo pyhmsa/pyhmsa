@@ -29,7 +29,7 @@ from pyhmsa.core.condition.acquisition import \
     (AcquisitionPoint, AcquisitionMultipoint,
      AcquisitionRasterLinescan, AcquisitionRasterXY, AcquisitionRasterXYZ)
 from pyhmsa.core.condition.specimen import SpecimenPosition
-from pyhmsa.io.xml.handler import _XMLHandler
+from pyhmsa.io.xmlhandler import _XMLHandler
 from pyhmsa.util.parameter import ObjectAttribute
 
 # Globals and constants variables.
@@ -50,9 +50,9 @@ class AcquisitionPointXMLHandler(_XMLHandler):
         return self._convert_parameter(obj, element)
 
 class AcquisitionMultipointXMLHandler(_XMLHandler):
-    
-    def __init__(self):
-        _XMLHandler.__init__(self)
+
+    def __init__(self, version):
+        _XMLHandler.__init__(self, version)
         self._attrib_specimen_position = \
             ObjectAttribute(SpecimenPosition, xmlname='SpecimenPosition')
 
@@ -98,8 +98,8 @@ class AcquisitionMultipointXMLHandler(_XMLHandler):
 
 class _AcquisitionRasterXMLHandler(_XMLHandler):
 
-    def __init__(self):
-        _XMLHandler.__init__(self)
+    def __init__(self, version):
+        _XMLHandler.__init__(self, version)
         self._attrib_specimen_position = \
             ObjectAttribute(SpecimenPosition, xmlname='SpecimenPosition')
 

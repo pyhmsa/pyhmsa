@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 """
 ================================================================================
-:mod:`handler` -- Handler to convert core objects to XML
+:mod:`xmlhandler` -- Handler to convert core objects to XML
 ================================================================================
 
-.. module:: handler
+.. module:: xmlhandler
    :synopsis: Handler to convert core objects to XML
 
-.. inheritance-diagram:: handler
+.. inheritance-diagram:: xmlhandler
 
 """
 
@@ -53,7 +53,9 @@ DTYPES_LOOKUP_TO_XML = {np.dtype(np.uint8): 'byte',
 
 class _XMLHandler(object):
 
-    def __init__(self):
+    def __init__(self, version):
+        self._version = version
+
         self._parsers = {NumericalAttribute: self._parse_numerical_attribute,
                          TextAttribute: self._parse_text_attribute,
                          ObjectAttribute: self._parse_object_attribute,
@@ -212,3 +214,7 @@ class _XMLHandler(object):
 
     def to_xml(self, obj):
         raise NotImplementedError # pragma: no cover
+
+    @property
+    def version(self):
+        return self._version

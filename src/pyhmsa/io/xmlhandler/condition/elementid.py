@@ -25,7 +25,7 @@ import xml.etree.ElementTree as etree
 
 # Local modules.
 from pyhmsa.core.condition.elementid import ElementID, ElementIDXray
-from pyhmsa.io.xml.handler import _XMLHandler
+from pyhmsa.io.xmlhandler import _XMLHandler
 
 # Globals and constants variables.
 

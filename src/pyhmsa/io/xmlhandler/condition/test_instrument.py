@@ -17,7 +17,7 @@ from io import StringIO
 # Third party modules.
 
 # Local modules.
-from pyhmsa.io.xml.handlers.condition.instrument import InstrumentXMLHandler
+from pyhmsa.io.xmlhandler.condition.instrument import InstrumentXMLHandler
 from pyhmsa.core.condition.instrument import Instrument
 
 # Globals and constants variables.
@@ -27,7 +27,7 @@ class TestInstrumentXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = InstrumentXMLHandler()
+        self.h = InstrumentXMLHandler(1.0)
 
         self.obj = Instrument('Example Inc.', 'Example Model 123',
                               '12345-abc-67890')
@@ -57,6 +57,6 @@ class TestInstrumentXMLHandler(unittest.TestCase):
         self.assertEqual('Example Model 123', element.find('Model').text)
         self.assertEqual('12345-abc-67890', element.find('SerialNumber').text)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

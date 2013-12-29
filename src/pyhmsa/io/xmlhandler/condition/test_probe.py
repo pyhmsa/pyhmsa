@@ -17,7 +17,7 @@ from io import StringIO
 # Third party modules.
 
 # Local modules.
-from pyhmsa.io.xml.handlers.condition.probe import \
+from pyhmsa.io.xmlhandler.condition.probe import \
     ProbeEMXMLHandler, ProbeTEMXMLHandler
 from pyhmsa.core.condition.probe import ProbeEM, ProbeTEM
 
@@ -29,7 +29,7 @@ class TestProbeEMXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = ProbeEMXMLHandler()
+        self.h = ProbeEMXMLHandler(1.0)
 
         self.obj = ProbeEM(15.0, 47.59, GUN_TYPE_LAB6, 12345.0, 1.234, 4200.0,
                            12345.0, 3.14e-6, 3.14e-10, 2500.0, 10.0)
@@ -93,7 +93,7 @@ class TestProbeTEMXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = ProbeTEMXMLHandler()
+        self.h = ProbeTEMXMLHandler(1.0)
 
         self.obj = ProbeTEM(15.0, LENS_MODE_IMAGE,
                             camera_magnification=2.0, convergence_angle=1.5)
@@ -128,6 +128,6 @@ class TestProbeTEMXMLHandler(unittest.TestCase):
         self.assertEqual('2.0', element.find('CameraMagnification').text)
         self.assertEqual('1.5', element.find('ConvergenceAngle').text)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

@@ -17,7 +17,7 @@ from io import StringIO
 # Third party modules.
 
 # Local modules.
-from pyhmsa.io.xml.handlers.condition.specimen import \
+from pyhmsa.io.xmlhandler.condition.specimen import \
     (CompositionXMLHandler, SpecimenPositionXMLHandler,
      SpecimenXMLHandler, SpecimenMultilayerXMLHandler)
 from pyhmsa.core.condition.specimen import \
@@ -30,7 +30,7 @@ class TestSpecimenPositionXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = SpecimenPositionXMLHandler()
+        self.h = SpecimenPositionXMLHandler(1.0)
 
         self.obj = SpecimenPosition(0.0, 0.0, 10.0, 90.0, 70.0)
 
@@ -73,7 +73,7 @@ class TestCompositionXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = CompositionXMLHandler()
+        self.h = CompositionXMLHandler(1.0)
 
         self.obj = Composition('atoms')
         self.obj[11] = 3
@@ -119,7 +119,7 @@ class TestSpecimenXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = SpecimenXMLHandler()
+        self.h = SpecimenXMLHandler(1.0)
 
         comp = Composition('atoms')
         comp.update({11: 3, 13: 1, 9: 6})
@@ -166,7 +166,7 @@ class TestSpecimenMultilayerXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = SpecimenMultilayerXMLHandler()
+        self.h = SpecimenMultilayerXMLHandler(1.0)
 
         self.obj = SpecimenMultilayer('Cryolite', 'Natural cryolite standard',
                             'Kitaa, Greenland', 'Na3AlF6')
@@ -215,6 +215,6 @@ class TestSpecimenMultilayerXMLHandler(unittest.TestCase):
         self.assertEqual('C', element.find('Layers/Layer/Formula').text)
         self.assertEqual('100.0', element.find('Layers/Layer/Composition/Element').text)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

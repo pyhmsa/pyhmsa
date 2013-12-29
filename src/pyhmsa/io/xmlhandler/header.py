@@ -25,7 +25,7 @@ import xml.etree.ElementTree as etree
 
 # Local modules.
 from pyhmsa.core.header import Header
-from pyhmsa.io.xml.handler import _XMLHandler
+from pyhmsa.io.xmlhandler import _XMLHandler
 
 # Globals and constants variables.
 
@@ -54,7 +54,7 @@ class HeaderXMLHandler(_XMLHandler):
         for name, value in obj.__dict__.items():
             if name in obj.__class__.__dict__:
                 continue # already converted
-            
+
             subelement = etree.Element(name.title())
             subelement.text = str(value)
 

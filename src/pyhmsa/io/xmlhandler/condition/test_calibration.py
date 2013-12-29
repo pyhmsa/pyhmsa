@@ -20,7 +20,7 @@ from io import StringIO
 from pyhmsa.core.condition.calibration import \
     (CalibrationConstant, CalibrationLinear,
      CalibrationPolynomial, CalibrationExplicit)
-from pyhmsa.io.xml.handlers.condition.calibration import \
+from pyhmsa.io.xmlhandler.condition.calibration import \
     (CalibrationConstantXMLHandler, CalibrationLinearXMLHandler,
      CalibrationPolynomialXMLHandler, CalibrationExplicitXMLHandler)
 
@@ -31,7 +31,7 @@ class TestCalibrationConstantXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = CalibrationConstantXMLHandler()
+        self.h = CalibrationConstantXMLHandler(1.0)
 
         self.obj = CalibrationConstant('Energy', 'eV', -237.098251)
 
@@ -69,7 +69,7 @@ class TestCalibrationLinearXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = CalibrationLinearXMLHandler()
+        self.h = CalibrationLinearXMLHandler(1.0)
 
         self.obj = CalibrationLinear('Energy', 'eV', 2.49985, -237.098251)
 
@@ -109,7 +109,7 @@ class TestCalibrationPolynomialXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = CalibrationPolynomialXMLHandler()
+        self.h = CalibrationPolynomialXMLHandler(1.0)
 
         self.obj = CalibrationPolynomial('Energy', 'eV', (-2.225, 0.677, 0.134, -0.018))
 
@@ -152,7 +152,7 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = CalibrationExplicitXMLHandler()
+        self.h = CalibrationExplicitXMLHandler(1.0)
 
         self.obj = CalibrationExplicit('Energy', 'eV', (-2.225, 0.677, 0.134, -0.018))
 
@@ -189,6 +189,6 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
         self.assertEqual('eV', element.find('Unit').text)
         self.assertEqual('-2.225,0.677,0.134,-0.018', element.find('Values').text)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

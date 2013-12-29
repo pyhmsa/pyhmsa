@@ -26,7 +26,7 @@ import xml.etree.ElementTree as etree
 # Local modules.
 from pyhmsa.core.condition.specimen import \
     SpecimenPosition, Specimen, SpecimenMultilayer, Composition, SpecimenLayer
-from pyhmsa.io.xml.handler import _XMLHandler
+from pyhmsa.io.xmlhandler import _XMLHandler
 
 # Globals and constants variables.
 
@@ -87,9 +87,9 @@ class CompositionXMLHandler(_XMLHandler):
 
 class _SpecimenXMLHandler(_XMLHandler):
 
-    def __init__(self):
-        _XMLHandler.__init__(self)
-        self._handler_composition = CompositionXMLHandler()
+    def __init__(self, version):
+        _XMLHandler.__init__(self, version)
+        self._handler_composition = CompositionXMLHandler(version)
 
     def _parse_composition(self, element):
         subelement = element.find('Composition')
@@ -122,7 +122,7 @@ class SpecimenXMLHandler(_SpecimenXMLHandler):
         return element
 
 class SpecimenLayerXMLHandler(_SpecimenXMLHandler):
-    
+
     def can_parse(self, element):
         return element.tag == 'Layer'
 
@@ -143,10 +143,10 @@ class SpecimenLayerXMLHandler(_SpecimenXMLHandler):
         return element
 
 class SpecimenMultilayerXMLHandler(_SpecimenXMLHandler):
-    
-    def __init__(self):
-        _SpecimenXMLHandler.__init__(self)
-        self._handler_layer = SpecimenLayerXMLHandler()
+
+    def __init__(self, version):
+        _SpecimenXMLHandler.__init__(self, version)
+        self._handler_layer = SpecimenLayerXMLHandler(version)
 
     def can_parse(self, element):
         return element.tag == 'Specimen' and element.get('Class') == 'Multilayer'

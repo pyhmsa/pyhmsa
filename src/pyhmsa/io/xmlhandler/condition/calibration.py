@@ -27,7 +27,7 @@ import xml.etree.ElementTree as etree
 from pyhmsa.core.condition.calibration import \
     (CalibrationConstant, CalibrationLinear,
      CalibrationPolynomial, CalibrationExplicit)
-from pyhmsa.io.xml.handler import _XMLHandler
+from pyhmsa.io.xmlhandler import _XMLHandler
 
 # Globals and constants variables.
 

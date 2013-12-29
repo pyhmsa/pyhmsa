@@ -17,7 +17,7 @@ from io import StringIO
 # Third party modules.
 
 # Local modules.
-from pyhmsa.io.xml.handler import _XMLHandler
+from pyhmsa.io.xmlhandler import _XMLHandler
 from pyhmsa.util.parameter import Parameter, NumericalAttribute, TextAttribute
 from pyhmsa.type.language import langstr
 
@@ -39,7 +39,7 @@ class Test_XMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = _XMLHandler()
+        self.h = _XMLHandler(1.0)
         self.obj = MockParameter(2.0)
 
     def tearDown(self):
@@ -72,7 +72,7 @@ class Test_XMLHandler(unittest.TestCase):
         self.assertEqual('ABC', obj.value3)
         self.assertEqual('abc', obj.value3.alternatives['en-US'])
         self.assertEqual('def', obj.value3.alternatives['ru'])
-    
+
     def test_convert_parameter_value1(self):
         element = self.h._convert_parameter(self.obj, etree.Element('Mock'))
         self.assertEqual('2.0', element.find('Value1').text)
@@ -84,7 +84,7 @@ class Test_XMLHandler(unittest.TestCase):
         element = self.h._convert_parameter(self.obj, etree.Element('Mock'))
         self.assertEqual('4.0', element.find('Value2').text)
         self.assertEqual('nm', element.find('Value2').get('Unit'))
-    
+
     def test_convert_parameter_value3(self):
         self.obj.value3 = langstr('ABC', {'en-US': 'abc', 'ru': 'def'})
         element = self.h._convert_parameter(self.obj, etree.Element('Mock'))
@@ -92,6 +92,6 @@ class Test_XMLHandler(unittest.TestCase):
         self.assertEqual('abc', element.find('Value3').get('alt-lang-en-US'))
         self.assertEqual('def', element.find('Value3').get('alt-lang-ru'))
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

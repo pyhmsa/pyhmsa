@@ -25,15 +25,16 @@ import numpy as np
 
 # Local modules.
 from pyhmsa.core.condition import Conditions
+from pyhmsa.type.numerical import validate_dtype
 
 # Globals and constants variables.
 
 class _Datum(np.ndarray):
 
-    def __new__(cls, shape, dtype=float, buffer=None, offset=0,
-          strides=None, order=None, conditions=None):
-        obj = np.ndarray.__new__(cls, shape, dtype, buffer, offset, strides,
-                                 order)
+    def __new__(cls, shape, dtype=np.float32, buffer=None, conditions=None):
+        validate_dtype(dtype)
+        obj = np.ndarray.__new__(cls, shape, dtype, buffer, offset=0,
+                                 strides=None, order=None)
 
         if conditions is None:
             conditions = Conditions()

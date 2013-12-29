@@ -17,7 +17,7 @@ from io import StringIO
 # Third party modules.
 
 # Local modules.
-from pyhmsa.io.xml.handlers.condition.acquisition import \
+from pyhmsa.io.xmlhandler.condition.acquisition import \
     (AcquisitionPointXMLHandler, AcquisitionMultipointXMLHandler,
      AcquisitionRasterLinescanXMLHandler, AcquisitionRasterXYXMLHandler,
      AcquisitionRasterXYZXMLHandler)
@@ -34,7 +34,7 @@ class TestAcquisitionPointXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = AcquisitionPointXMLHandler()
+        self.h = AcquisitionPointXMLHandler(1.0)
 
         position = SpecimenPosition(0.0, 0.0, 10.0, 90.0, 70.0)
         self.obj = AcquisitionPoint(position, 35.0, 14400.0, 36.0)
@@ -96,7 +96,7 @@ class TestAcquisitionMultipointXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = AcquisitionMultipointXMLHandler()
+        self.h = AcquisitionMultipointXMLHandler(1.0)
 
         self.obj = AcquisitionMultipoint()
         self.obj.positions.append(SpecimenPosition(0.0, 0.0, 10.0, 90.0, 70.0))
@@ -161,7 +161,7 @@ class TestAcquisitionRasterLinescanXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = AcquisitionRasterLinescanXMLHandler()
+        self.h = AcquisitionRasterLinescanXMLHandler(1.0)
 
         position_start = SpecimenPosition(0.0, 0.0, 10.0)
         position_end = SpecimenPosition(10.24, 0.0, 10.0)
@@ -216,7 +216,7 @@ class TestAcquisitionRasterXYXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = AcquisitionRasterXYXMLHandler()
+        self.h = AcquisitionRasterXYXMLHandler(1.0)
 
         self.obj = AcquisitionRasterXY(158, 98, 1.0, 2.0, 40)
 
@@ -260,7 +260,7 @@ class TestAcquisitionRasterXYZXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = AcquisitionRasterXYZXMLHandler()
+        self.h = AcquisitionRasterXYZXMLHandler(1.0)
 
         self.obj = AcquisitionRasterXYZ(158, 98, 185, 1.0, 2.0, 3.0,
                                         raster_mode_z=RASTER_MODE_Z_FIB)
@@ -305,6 +305,6 @@ class TestAcquisitionRasterXYZXMLHandler(unittest.TestCase):
         self.assertEqual('3.0', element.find('ZStepSize').text)
         self.assertEqual('FIB', element.find('ZRasterMode').text)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

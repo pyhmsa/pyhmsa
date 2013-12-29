@@ -17,7 +17,7 @@ from io import StringIO
 # Third party modules.
 
 # Local modules.
-from pyhmsa.io.xml.handlers.condition.elementid import \
+from pyhmsa.io.xmlhandler.condition.elementid import \
     ElementIDXMLHandler, ElementIDXrayXMLHandler
 from pyhmsa.core.condition.elementid import ElementID, ElementIDXray
 
@@ -28,7 +28,7 @@ class TestElementIDXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = ElementIDXMLHandler()
+        self.h = ElementIDXMLHandler(1.0)
 
         self.obj = ElementID(11)
 
@@ -59,7 +59,7 @@ class TestElementIDXrayXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = ElementIDXrayXMLHandler()
+        self.h = ElementIDXrayXMLHandler(1.0)
 
         self.obj = ElementIDXray(11, u'M\u03b1', 1234.0)
 
@@ -94,6 +94,6 @@ class TestElementIDXrayXMLHandler(unittest.TestCase):
         self.assertEqual(u'M\u03b1', element.find('Line').text)
         self.assertEqual('1234.0', element.find('Energy').text)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

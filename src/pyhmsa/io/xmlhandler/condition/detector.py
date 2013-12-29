@@ -27,9 +27,9 @@ import xml.etree.ElementTree as etree
 from pyhmsa.core.condition.detector import \
     (DetectorCamera, DetectorSpectrometer, DetectorSpectrometerCL,
      DetectorSpectrometerWDS, DetectorSpectrometerXEDS, Window, WindowLayer)
-from pyhmsa.io.xml.handler import _XMLHandler
-from pyhmsa.io.xml.handlers.condition.calibration import \
-    (CalibrationConstantXMLHandler, CalibrationLinearXMLHandler, 
+from pyhmsa.io.xmlhandler import _XMLHandler
+from pyhmsa.io.xmlhandler.condition.calibration import \
+    (CalibrationConstantXMLHandler, CalibrationLinearXMLHandler,
      CalibrationPolynomialXMLHandler, CalibrationExplicitXMLHandler)
 
 # Globals and constants variables.
@@ -81,12 +81,14 @@ class DetectorCameraXMLHandler(_XMLHandler):
 
 class _DetectorSpectrometerXMLHandler(_XMLHandler):
 
-    def __init__(self):
-        _XMLHandler.__init__(self)
+    def __init__(self, version):
+        _XMLHandler.__init__(self, version)
         self._handlers_calibration = \
-            [CalibrationConstantXMLHandler(), CalibrationLinearXMLHandler(),
-             CalibrationPolynomialXMLHandler(), CalibrationExplicitXMLHandler()]
-        self._handler_window = WindowXMLHandler()
+            [CalibrationConstantXMLHandler(version),
+             CalibrationLinearXMLHandler(version),
+             CalibrationPolynomialXMLHandler(version),
+             CalibrationExplicitXMLHandler(version)]
+        self._handler_window = WindowXMLHandler(version)
 
     def _parse_calibration(self, element):
         subelement = element.find('Calibration')
@@ -134,7 +136,7 @@ class DetectorSpectrometerXMLHandler(_DetectorSpectrometerXMLHandler):
 
     def can_convert(self, obj):
         return isinstance(obj, DetectorSpectrometer)
-    
+
     def to_xml(self, obj):
         element = etree.Element('Detector', {'Class': 'Spectrometer'})
         element = self._convert_parameter(obj, element)

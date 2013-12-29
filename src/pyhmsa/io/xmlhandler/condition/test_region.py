@@ -17,7 +17,7 @@ from io import StringIO
 # Third party modules.
 
 # Local modules.
-from pyhmsa.io.xml.handlers.condition.region import RegionOfInterestXMLHandler
+from pyhmsa.io.xmlhandler.condition.region import RegionOfInterestXMLHandler
 from pyhmsa.core.condition.region import RegionOfInterest
 
 # Globals and constants variables.
@@ -27,7 +27,7 @@ class TestRegionOfInterestXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = RegionOfInterestXMLHandler()
+        self.h = RegionOfInterestXMLHandler(1.0)
 
         self.obj = RegionOfInterest(556, 636)
 
@@ -62,6 +62,6 @@ class TestRegionOfInterestXMLHandler(unittest.TestCase):
         self.assertEqual('556', element.find('StartChannel').text)
         self.assertEqual('636', element.find('EndChannel').text)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

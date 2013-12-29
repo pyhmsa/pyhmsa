@@ -25,7 +25,7 @@ class TestAnalysis1D(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.datum = Analysis1D((50,))
+        self.datum = Analysis1D(50)
         self.datum[0] = 5.0
 
     def tearDown(self):
@@ -45,6 +45,6 @@ class TestAnalysis1D(unittest.TestCase):
         self.assertEqual(3, datum.channel)
 
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

@@ -22,7 +22,7 @@ from pyhmsa.core.condition.detector import \
      DetectorSpectrometerWDS, DetectorSpectrometerXEDS,
      PulseHeightAnalyser, Window)
 from pyhmsa.core.condition.calibration import CalibrationConstant
-from pyhmsa.io.xml.handlers.condition.detector import \
+from pyhmsa.io.xmlhandler.condition.detector import \
     (WindowXMLHandler,
      DetectorCameraXMLHandler,
      DetectorSpectrometerXMLHandler, DetectorSpectrometerCLXMLHandler,
@@ -38,7 +38,7 @@ class TestWindowXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = WindowXMLHandler()
+        self.h = WindowXMLHandler(1.0)
 
         self.obj = Window()
         self.obj.append_layer('Al', 1.0)
@@ -76,7 +76,7 @@ class TestDetectorCameraXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = DetectorCameraXMLHandler()
+        self.h = DetectorCameraXMLHandler(1.0)
 
         self.obj = DetectorCamera(512, 400, 200.0, 4.5, 80.0,
                                   SIGNAL_TYPE_ELS, 'Example Inc.', 'Example Model 123',
@@ -157,7 +157,7 @@ class TestDetectorSpectrometerXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = DetectorSpectrometerXMLHandler()
+        self.h = DetectorSpectrometerXMLHandler(1.0)
 
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
         self.obj = DetectorSpectrometer(4096, calibration, COLLECTION_MODE_PARALLEL)
@@ -201,7 +201,7 @@ class TestDetectorSpectrometerCLXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = DetectorSpectrometerCLXMLHandler()
+        self.h = DetectorSpectrometerCLXMLHandler(1.0)
 
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
         self.obj = DetectorSpectrometerCL(4096, calibration, 800.0)
@@ -237,7 +237,7 @@ class TestDetectorSpectrometerWDSXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = DetectorSpectrometerWDSXMLHandler()
+        self.h = DetectorSpectrometerWDSXMLHandler(1.0)
 
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
         pha = PulseHeightAnalyser(1750, 32, 0.5, 4.5, PHA_MODE_DIFFERENTIAL)
@@ -299,7 +299,7 @@ class TestDetectorSpectrometerXEDSXMLHandler(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = DetectorSpectrometerXEDSXMLHandler()
+        self.h = DetectorSpectrometerXEDSXMLHandler(1.0)
 
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
         self.obj = DetectorSpectrometerXEDS(4096, calibration, COLLECTION_MODE_PARALLEL,
@@ -346,6 +346,6 @@ class TestDetectorSpectrometerXEDSXMLHandler(unittest.TestCase):
         self.assertEqual('Al', element.find('Window/Layer').get('Material'))
         self.assertEqual('1.0', element.find('Window/Layer').text)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()
