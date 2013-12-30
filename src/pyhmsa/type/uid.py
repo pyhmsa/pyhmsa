@@ -44,18 +44,18 @@ _REG_KEY = 'SOFTWARE\\HmsaUID'
 def generate_uid():
     """
     Generates a unique identifier id.
-    The method to generate the id was taken from the C implementation of the 
+    The method to generate the id was taken from the C implementation of the
     HMSA lib.
     """
     sha1 = hashlib.sha1()
 
     # Current date/time
     sha1.update(str(time.time()).encode('ascii'))
-    
+
     # Tick count
     # Note: GetTickCount() not available in Python
     sha1.update(str(time.clock()).encode('ascii'))
-    
+
     # Counter from registry (incremented here)
     # Only on Windows
     if winreg: # pragma: no cover
@@ -80,4 +80,4 @@ def generate_uid():
     uid = sha1.hexdigest()
     uid = uid[:16] # Take only the first 16 characters
 
-    return uid
+    return uid.encode('ascii').upper()
