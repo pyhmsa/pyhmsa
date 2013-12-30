@@ -19,16 +19,12 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
-try:
-    from collections import UserDict
-except ImportError: # pragma: no cover
-    from UserDict import UserDict
 
 # Third party modules.
 
 # Local modules.
 from pyhmsa.util.parameter import Parameter
-from pyhmsa.type.identifier import validate_identifier
+from pyhmsa.type.identifier import _IdentifierDict
 
 # Globals and constants variables.
 
@@ -37,10 +33,9 @@ class _Condition(Parameter):
     TEMPLATE = None
     CLASS = None
 
-class Conditions(UserDict):
+class Conditions(_IdentifierDict):
 
     def __setitem__(self, identifier, condition):
-        validate_identifier(identifier)
+        _IdentifierDict.__setitem__(self, identifier, condition)
         if not isinstance(condition, _Condition):
             raise ValueError("Value is not a condition")
-        UserDict.__setitem__(self, identifier, condition)

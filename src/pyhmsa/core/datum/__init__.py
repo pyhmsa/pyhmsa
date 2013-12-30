@@ -26,6 +26,7 @@ import numpy as np
 # Local modules.
 from pyhmsa.core.condition import Conditions
 from pyhmsa.type.numerical import validate_dtype
+from pyhmsa.type.identifier import _IdentifierDict
 
 # Globals and constants variables.
 
@@ -51,4 +52,9 @@ class _Datum(np.ndarray):
     def conditions(self):
         return self._conditions
 
+class Data(_IdentifierDict):
 
+    def __setitem__(self, identifier, condition):
+        _IdentifierDict.__setitem__(self, identifier, condition)
+        if not isinstance(condition, _Datum):
+            raise ValueError("Value is not a datum")

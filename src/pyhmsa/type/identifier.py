@@ -19,6 +19,10 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
+try:
+    from collections import UserDict
+except ImportError: # pragma: no cover
+    from UserDict import UserDict
 
 # Third party modules.
 
@@ -32,3 +36,9 @@ def validate_identifier(identifier):
         return True
     except UnicodeEncodeError:
         raise ValueError('Identifier contains non-ascii characters')
+
+class _IdentifierDict(UserDict):
+
+    def __setitem__(self, identifier, item):
+        validate_identifier(identifier)
+        UserDict.__setitem__(self, identifier, item)
