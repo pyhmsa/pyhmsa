@@ -23,27 +23,26 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.type.checksum import Checksum
 from pyhmsa.type.identifier import validate_identifier
 from pyhmsa.util.parameter import \
-    Parameter, TextAttribute, DateAttribute, TimeAttribute, ObjectAttribute
+    Parameter, TextAttribute, DateAttribute, TimeAttribute, ChecksumAttribute
 
 # Globals and constants variables.
 
 class Header(Parameter):
-    
+
     title = TextAttribute(False, 'Title', 'title')
     author = TextAttribute(False, 'Author', 'author')
     owner = TextAttribute(False, 'Owner', 'legal owner')
     date = DateAttribute(False, 'Date', 'date')
     time = TimeAttribute(False, 'Time', 'time')
-    checksum = ObjectAttribute(Checksum, False, 'Checksum', 'checksum')
+    checksum = ChecksumAttribute(False, 'Checksum', 'checksum')
 
     def __init__(self, **kwargs):
         """
-        Contains metadata that principally identifies the title of the document, 
-        the author/ownership of the data, and the date/time of collection. 
-        Header information shall not contain parameters that are required for 
+        Contains metadata that principally identifies the title of the document,
+        the author/ownership of the data, and the date/time of collection.
+        Header information shall not contain parameters that are required for
         the interpretation of the experimental data.
         """
         for key, value in kwargs.items():

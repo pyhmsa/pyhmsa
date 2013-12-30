@@ -28,9 +28,10 @@ import numpy as np
 # Local modules.
 from pyhmsa.type.numerical import convert_value
 from pyhmsa.type.language import langstr
+from pyhmsa.type.checksum import Checksum
 from pyhmsa.util.parameter import \
     (NumericalAttribute, TextAttribute, ObjectAttribute, DateAttribute,
-     TimeAttribute)
+     TimeAttribute, ChecksumAttribute)
 
 # Globals and constants variables.
 DTYPES_LOOKUP_FROM_XML = {'byte': np.dtype(np.uint8),
@@ -61,12 +62,14 @@ class _XMLHandler(object):
                          ObjectAttribute: self._parse_object_attribute,
                          DateAttribute: self._parse_date_attribute,
                          TimeAttribute: self._parse_time_attribute,
+                         ChecksumAttribute: self._parse_checksum_attribute,
                          }
         self._converters = {NumericalAttribute: self._convert_numerical_attribute,
                             TextAttribute: self._convert_text_attribute,
                             ObjectAttribute: self._convert_object_attribute,
                             DateAttribute: self._convert_date_attribute,
                             TimeAttribute: self._convert_time_attribute,
+                            ChecksumAttribute: self._convert_checksum_attribute,
                             }
 
     def _find_method(self, lookup, attrib):
@@ -142,6 +145,11 @@ class _XMLHandler(object):
         dt = datetime.datetime.strptime(element.text, '%H:%M:%S')
         return datetime.time(dt.hour, dt.minute, dt.second)
 
+    def _parse_checksum_attribute(self, element, attrib=None):
+        value = element.text
+        algorithm = element.attrib['Algorithm']
+        return Checksum(value, algorithm)
+
     def from_xml(self, element):
         raise NotImplementedError # pragma: no cover
 
@@ -210,6 +218,12 @@ class _XMLHandler(object):
     def _convert_time_attribute(self, value, attrib):
         element = etree.Element(attrib.xmlname)
         element.text = value.strftime('%H:%M:%S')
+        return element
+
+    def _convert_checksum_attribute(self, value, attrib):
+        element = etree.Element(attrib.xmlname)
+        element.text = value.value
+        element.set('Algorithm', value.algorithm)
         return element
 
     def to_xml(self, obj):

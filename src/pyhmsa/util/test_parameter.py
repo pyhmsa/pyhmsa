@@ -19,7 +19,8 @@ import datetime
 from pyhmsa.util.parameter import \
     (Parameter, _Attribute, FrozenAttribute, NumericalAttribute, TextAttribute,
      AtomicNumberAttribute, UnitAttribute, ObjectAttribute, EnumAttribute,
-     NumericalRangeAttribute, DateAttribute, TimeAttribute)
+     NumericalRangeAttribute, DateAttribute, TimeAttribute, ChecksumAttribute)
+from pyhmsa.type.checksum import Checksum
 
 # Globals and constants variables.
 
@@ -37,6 +38,7 @@ class MockParameter(Parameter):
     numerical_range = NumericalRangeAttribute('s', -4.0, 4.0)
     date = DateAttribute()
     time = TimeAttribute()
+    checksum = ChecksumAttribute()
 
 class TestModule(unittest.TestCase):
 
@@ -151,7 +153,7 @@ class TestModule(unittest.TestCase):
         self.assertEqual(2013, self.mock.date.year)
         self.assertEqual(12, self.mock.date.month)
         self.assertEqual(24, self.mock.date.day)
-        
+
         self.mock.date = datetime.date(2013, 12, 25)
         self.assertEqual(2013, self.mock.date.year)
         self.assertEqual(12, self.mock.date.month)
@@ -174,6 +176,16 @@ class TestModule(unittest.TestCase):
         self.mock.time = None
         self.assertIsNone(self.mock.time)
 
-if __name__ == '__main__': #pragma: no cover
+    def testchecksum_attribute(self):
+        self.mock.checksum = Checksum('53AAD59C05D59A40AD746D6928EA6D2D526865FD', 'SHA-1')
+        self.assertEqual('53AAD59C05D59A40AD746D6928EA6D2D526865FD', self.mock.checksum.value)
+        self.assertEqual('SHA-1', self.mock.checksum.algorithm)
+
+        self.mock.checksum = None
+        self.assertIsNone(self.mock.checksum)
+
+        self.assertRaises(ValueError, self.mock.set_checksum, object())
+
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

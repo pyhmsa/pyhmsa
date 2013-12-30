@@ -29,6 +29,7 @@ import numpy as np
 # Local modules.
 from pyhmsa.type.numerical import convert_value
 from pyhmsa.type.unit import validate_unit
+from pyhmsa.type.checksum import Checksum
 
 # Globals and constants variables.
 
@@ -50,17 +51,17 @@ class _Attribute(object):
         if instance is None:
             return self
         return instance.__dict__.get(self.name, None)
-    
+
     def __set__(self, instance, value):
         value = self._prepare_value(value)
         self._validate_value(value)
         instance.__dict__[self.name] = value
-    
+
     def __delete__(self, instance):
         if self._required:
             raise ValueError("%s is required" % self.name)
         instance.__dict__.pop(self.name, None)
-    
+
     def _new(self, cls, clsname, bases, methods, name):
         self._name = name
 
@@ -88,7 +89,7 @@ class _Attribute(object):
         return self._xmlname
 
 class FrozenAttribute(_Attribute):
-    
+
     def __init__(self, class_or_value, args=(), kwargs=None, xmlname=None, doc=None):
         _Attribute.__init__(self, True, xmlname, doc)
 
@@ -190,7 +191,7 @@ class ObjectAttribute(_Attribute):
 
     def _validate_value(self, value):
         _Attribute._validate_value(self, value)
-        
+
         if value is not None and not isinstance(value, self._type):
             raise ValueError('Value must be of type "%s"' % self._type)
 
@@ -211,7 +212,7 @@ class EnumAttribute(TextAttribute):
             raise ValueError('Unknown %s: %s' % (self.name, value))
 
 class NumericalRangeAttribute(NumericalAttribute):
-    
+
     def __init__(self, default_unit=None, minvalue=-np.inf, maxvalue=np.inf,
                   required=False, xmlname=None, doc=None):
         NumericalAttribute.__init__(self, default_unit, required, xmlname, doc)
@@ -259,6 +260,14 @@ class TimeAttribute(_Attribute):
             dt = datetime.datetime.strptime(value, '%H:%M:%S')
             value = datetime.time(dt.hour, dt.minute, dt.second)
         return value
+
+class ChecksumAttribute(_Attribute):
+
+    def _validate_value(self, value):
+        _Attribute._validate_value(self, value)
+
+        if value is not None and not isinstance(value, Checksum):
+            raise ValueError('Value must be a Checksum object')
 
 class ParameterMetaclass(type):
 

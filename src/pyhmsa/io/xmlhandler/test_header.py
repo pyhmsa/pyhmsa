@@ -19,6 +19,7 @@ from io import StringIO
 # Local modules.
 from pyhmsa.core.header import Header
 from pyhmsa.io.xmlhandler.header import HeaderXMLHandler
+from pyhmsa.type.checksum import Checksum
 
 # Globals and constants variables.
 
@@ -31,9 +32,9 @@ class TestHeaderXMLHandler(unittest.TestCase):
 
         self.obj = Header(title='Beep Beep', author='Wyle E. Coyote',
                           owner='Acme Inc.', date='1985-10-26', time='20:04:00',
-                          extra='Blah')
+                          extra='Blah', checksum=Checksum('53AAD59C05D59A40AD746D6928EA6D2D526865FD', 'SHA-1'))
 
-        source = StringIO('<Header><Title>Beep Beep</Title><Author>Wyle E. Coyote</Author><Owner>Acme Inc.</Owner><Date>1985-10-26</Date><Time>20:04:00</Time></Header>')
+        source = StringIO('<Header><Checksum Algorithm="SHA-1">53AAD59C05D59A40AD746D6928EA6D2D526865FD</Checksum><Title>Beep Beep</Title><Author>Wyle E. Coyote</Author><Owner>Acme Inc.</Owner><Date>1985-10-26</Date><Time>20:04:00</Time></Header>')
         self.element = etree.parse(source).getroot()
 
     def tearDown(self):
@@ -46,6 +47,8 @@ class TestHeaderXMLHandler(unittest.TestCase):
 
     def testfrom_xml(self):
         obj = self.h.from_xml(self.element)
+        self.assertEqual('53AAD59C05D59A40AD746D6928EA6D2D526865FD', obj.checksum.value)
+        self.assertEqual('SHA-1', obj.checksum.algorithm)
         self.assertEqual('Beep Beep', obj.title)
         self.assertEqual('Wyle E. Coyote', obj.author)
         self.assertEqual('Acme Inc.', obj.owner)
@@ -63,6 +66,8 @@ class TestHeaderXMLHandler(unittest.TestCase):
     def testto_xml(self):
         element = self.h.to_xml(self.obj)
         self.assertEqual('Header', element.tag)
+        self.assertEqual('53AAD59C05D59A40AD746D6928EA6D2D526865FD', element.find('Checksum').text)
+        self.assertEqual('SHA-1', element.find('Checksum').get('Algorithm'))
         self.assertEqual('Beep Beep', element.find('Title').text)
         self.assertEqual('Wyle E. Coyote', element.find('Author').text)
         self.assertEqual('Acme Inc.', element.find('Owner').text)
