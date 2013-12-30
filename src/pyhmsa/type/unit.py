@@ -54,6 +54,7 @@ _NON_SI_UNITS = frozenset([u'\u00b0', # deg,
                            'atoms',
                            'counts',
                            'c/s', # counts per second
+                           'cps', # counts per second
                            'eV',
                            '%',
                            'mol%',
