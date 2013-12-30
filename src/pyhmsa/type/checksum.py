@@ -31,9 +31,6 @@ import hashlib
 CHECKSUM_ALGORITHM_SHA1 = 'SHA-1'
 CHECKSUM_ALGORITHM_SUM32 = 'SUM32'
 
-_CHECKSUM_ALGORITHMS = frozenset([CHECKSUM_ALGORITHM_SHA1, 
-                                  CHECKSUM_ALGORITHM_SUM32])
-
 Checksum = namedtuple('Checksum', ['value', 'algorithm'])
 
 def calculate_checksum_sha1(buffer):
@@ -46,3 +43,14 @@ def calculate_checksum_sum32(buffer):
     sumbytes = sum(buffer)
     value = hex(sumbytes)[2:34].zfill(32)
     return Checksum(value, CHECKSUM_ALGORITHM_SUM32)
+
+_CHECKSUM_ALGORITHMS = {CHECKSUM_ALGORITHM_SHA1: calculate_checksum_sha1,
+                        CHECKSUM_ALGORITHM_SUM32: calculate_checksum_sum32}
+
+def calculate_checksum(algorithm, buffer):
+    try:
+        method = _CHECKSUM_ALGORITHMS[algorithm.upper()]
+    except KeyError:
+        raise ValueError('Unknown checksum algorithm: %s' % algorithm)
+    else:
+        return method(buffer)
