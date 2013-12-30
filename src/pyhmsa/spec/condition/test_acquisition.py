@@ -15,15 +15,15 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.acquisition import \
+from pyhmsa.spec.condition.acquisition import \
     (_Acquisition, AcquisitionPoint, AcquisitionMultipoint,
      _AcquisitionRaster, AcquisitionRasterLinescan,
     AcquisitionRasterXY, AcquisitionRasterXYZ
      )
-from pyhmsa.core.condition.specimen import SpecimenPosition
+from pyhmsa.spec.condition.specimen import SpecimenPosition
 
 # Globals and constants variables.
-from pyhmsa.core.condition.acquisition import \
+from pyhmsa.spec.condition.acquisition import \
     (POSITION_LOCATION_CENTER, POSITION_LOCATION_START, POSITION_LOCATION_END,
      RASTER_MODE_STAGE, RASTER_MODE_Z_FIB)
 
@@ -299,6 +299,6 @@ class TestAcquisitionRasterXYZ(unittest.TestCase):
 
         self.assertRaises(ValueError, self.acq.set_raster_mode_z, 'ABC')
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

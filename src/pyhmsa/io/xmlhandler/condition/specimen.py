@@ -24,7 +24,7 @@ import xml.etree.ElementTree as etree
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.specimen import \
+from pyhmsa.spec.condition.specimen import \
     SpecimenPosition, Specimen, SpecimenMultilayer, Composition, SpecimenLayer
 from pyhmsa.io.xmlhandler import _XMLHandler
 

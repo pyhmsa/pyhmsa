@@ -24,7 +24,7 @@ import xml.etree.ElementTree as etree
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.region import RegionOfInterest
+from pyhmsa.spec.condition.region import RegionOfInterest
 from pyhmsa.io.xmlhandler import _XMLHandler
 
 # Globals and constants variables.

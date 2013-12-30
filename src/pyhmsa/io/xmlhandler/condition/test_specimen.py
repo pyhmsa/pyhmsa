@@ -20,7 +20,7 @@ from io import StringIO
 from pyhmsa.io.xmlhandler.condition.specimen import \
     (CompositionXMLHandler, SpecimenPositionXMLHandler,
      SpecimenXMLHandler, SpecimenMultilayerXMLHandler)
-from pyhmsa.core.condition.specimen import \
+from pyhmsa.spec.condition.specimen import \
     (Composition, SpecimenPosition, Specimen, SpecimenMultilayer)
 
 # Globals and constants variables.

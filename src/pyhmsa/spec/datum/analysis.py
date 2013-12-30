@@ -24,7 +24,7 @@ __license__ = "GPL v3"
 import numpy as np
 
 # Local modules.
-from pyhmsa.core.datum import _Datum
+from pyhmsa.spec.datum import _Datum
 
 # Globals and constants variables.
 

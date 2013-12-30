@@ -21,13 +21,13 @@ from pyhmsa.io.xmlhandler.condition.acquisition import \
     (AcquisitionPointXMLHandler, AcquisitionMultipointXMLHandler,
      AcquisitionRasterLinescanXMLHandler, AcquisitionRasterXYXMLHandler,
      AcquisitionRasterXYZXMLHandler)
-from pyhmsa.core.condition.acquisition import \
+from pyhmsa.spec.condition.acquisition import \
     (AcquisitionPoint, AcquisitionMultipoint,
      AcquisitionRasterLinescan, AcquisitionRasterXY, AcquisitionRasterXYZ)
-from pyhmsa.core.condition.specimen import SpecimenPosition
+from pyhmsa.spec.condition.specimen import SpecimenPosition
 
 # Globals and constants variables.
-from pyhmsa.core.condition.acquisition import RASTER_MODE_STAGE, RASTER_MODE_Z_FIB
+from pyhmsa.spec.condition.acquisition import RASTER_MODE_STAGE, RASTER_MODE_Z_FIB
 
 class TestAcquisitionPointXMLHandler(unittest.TestCase):
 

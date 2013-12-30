@@ -23,7 +23,7 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import _Condition
+from pyhmsa.spec.condition import _Condition
 from pyhmsa.util.parameter import NumericalAttribute, EnumAttribute
 
 # Globals and constants variables.
@@ -50,14 +50,14 @@ class _Probe(_Condition):
 
     def __init__(self):
         """
-        Describes the type and conditions of the analytical probe used to 
-        collect a HMSA dataset, such as settings for electron or ion columns, 
-        lasers, etc. 
+        Describes the type and conditions of the analytical probe used to
+        collect a HMSA dataset, such as settings for electron or ion columns,
+        lasers, etc.
         """
         pass
-    
+
 class ProbeEM(_Probe):
-    
+
     CLASS = 'EM'
 
     beam_voltage = NumericalAttribute('kV', True, 'BeamVoltage', 'beam voltage')
@@ -74,13 +74,13 @@ class ProbeEM(_Probe):
 
     def __init__(self, beam_voltage, beam_current=None, gun_type=None,
                   emission_current=None, filament_current=None,
-                  extractor_bias=None, beam_diameter=None, 
-                  chamber_pressure=None, gun_pressure=None, 
+                  extractor_bias=None, beam_diameter=None,
+                  chamber_pressure=None, gun_pressure=None,
                   scan_magnification=None, working_distance=None):
         """
-        Describes the electron column conditions of the transmission electron 
+        Describes the electron column conditions of the transmission electron
         microscope used to collect a HMSA dataset.
-        
+
         :arg beam_voltage: beam voltage (required)
         :arg beam_current: beam current (optional)
         :arg gun_type: type of gun (optional)
@@ -123,9 +123,9 @@ class ProbeTEM(ProbeEM):
                   scan_magnification=None, working_distance=None,
                   camera_magnification=None, convergence_angle=None):
         """
-        Describes the electron column conditions of the transmission electron 
+        Describes the electron column conditions of the transmission electron
         microscope used to collect a HMSA dataset.
-        
+
         :arg beam_voltage: beam voltage (required)
         :arg lens_mode: lens mode (required)
         :arg beam_current: beam current (optional)

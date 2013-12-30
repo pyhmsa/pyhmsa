@@ -23,13 +23,13 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.datum import _Datum
+from pyhmsa.spec.datum import _Datum
 
 # Globals and constants variables.
 
 class _ImageRaster(_Datum):
     """
-    Represents a dataset that has been rastered over regularly spaced intervals 
+    Represents a dataset that has been rastered over regularly spaced intervals
     in one or more dimensions, such as a 1D linescan, a 2D image or a 3D
     serial section.
     """
@@ -64,15 +64,15 @@ class ImageRaster2D(_ImageRaster):
     @property
     def y(self):
         return self.shape[1]
-    
+
 class ImageRaster2DSpectral(ImageRaster2D):
     """
     Represents a dataset that has been raster mapped in 2D (x/y dimensions),
     where for each raster coordinate, the datum collected was a 1D array
-    (channel dimension). 
+    (channel dimension).
     An example of this type of dataset is a SEM-XEDS map.
     """
-    
+
     def __array_finalize__(self, obj):
         ImageRaster2D.__array_finalize__(self, obj)
 

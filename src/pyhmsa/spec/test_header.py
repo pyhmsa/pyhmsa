@@ -15,7 +15,7 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.header import Header
+from pyhmsa.spec.header import Header
 from pyhmsa.type.checksum import Checksum
 
 # Globals and constants variables.
@@ -89,6 +89,6 @@ class TestHeader(unittest.TestCase):
         self.header['Test'] = None
         self.assertNotIn('Test', self.header)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

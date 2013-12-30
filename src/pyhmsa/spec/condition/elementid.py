@@ -23,7 +23,7 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import _Condition
+from pyhmsa.spec.condition import _Condition
 from pyhmsa.util.parameter import \
     NumericalAttribute, TextAttribute, AtomicNumberAttribute
 
@@ -48,16 +48,16 @@ _SYMBOLS = [
     ]
 
 class ElementID(_Condition):
-    
+
     TEMPLATE = 'ElementID'
 
     atomic_number = AtomicNumberAttribute(True, 'Element', "atomic number")
 
     def __init__(self, atomic_number):
         """
-        Defines and elemental identification, as may be useful for region of 
+        Defines and elemental identification, as may be useful for region of
         interest images, XAFS spectral maps, and the like.
-        
+
         :arg z: atomic number (required)
         """
         _Condition.__init__(self)
@@ -73,7 +73,7 @@ class ElementID(_Condition):
     symbol = property(get_symbol, doc='Symbol')
 
 class ElementIDXray(ElementID):
-    
+
     CLASS = 'X-ray'
 
     line = TextAttribute(True, 'Line', 'x-ray line')
@@ -81,9 +81,9 @@ class ElementIDXray(ElementID):
 
     def __init__(self, atomic_number, line, energy=None):
         """
-        Defines and elemental identification based on an x-ray peak, as may be 
+        Defines and elemental identification based on an x-ray peak, as may be
         useful for region of interest images and the like.
-        
+
         :arg atomic_number: atomic number (required)
         :arg line: x-ray line (required)
         :arg energy: energy of x-ray line (optional)

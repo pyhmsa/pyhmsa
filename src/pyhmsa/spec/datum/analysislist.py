@@ -23,7 +23,7 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.datum import _Datum
+from pyhmsa.spec.datum import _Datum
 
 # Globals and constants variables.
 
@@ -32,8 +32,8 @@ class _AnalysisList(_Datum):
     Represents a sequence of point measurements collected under the same
     conditions but in an irregular pattern, such as a line scan, a time
     sequence, or sparsely scanned images.
-    
-    Each row (first index) represents a point measurement. 
+
+    Each row (first index) represents a point measurement.
     """
 
     def __array_finalize__(self, obj):
@@ -55,7 +55,7 @@ class AnalysisList0D(_AnalysisList):
     such as a line scan or time sequence of single-valued data (e.g. Ti counts,
     BSE yield, vacuum pressure).
     """
-    
+
     def __array_finalize__(self, obj):
         _AnalysisList.__array_finalize__(self, obj)
 
@@ -70,7 +70,7 @@ class AnalysisList1D(_AnalysisList):
     Represents a sequence of point measurements with one datum dimension,
     such as a spectrum.
     """
-    
+
     def __array_finalize__(self, obj):
         _AnalysisList.__array_finalize__(self, obj)
 
@@ -86,7 +86,7 @@ class AnalysisList1D(_AnalysisList):
 
 class AnalysisList2D(_AnalysisList):
     """
-    Represents a sequence of point measurements with two datum dimensions, 
+    Represents a sequence of point measurements with two datum dimensions,
     such as a diffraction pattern.
     """
 

@@ -24,7 +24,7 @@ __license__ = "GPL v3"
 import numpy as np
 
 # Local modules.
-from pyhmsa.core.condition import Conditions
+from pyhmsa.spec.condition import Conditions
 from pyhmsa.type.numerical import validate_dtype
 from pyhmsa.type.identifier import _IdentifierDict
 

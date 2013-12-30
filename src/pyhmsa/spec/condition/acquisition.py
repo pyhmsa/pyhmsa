@@ -23,8 +23,8 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import _Condition
-from pyhmsa.core.condition.specimen import SpecimenPosition
+from pyhmsa.spec.condition import _Condition
+from pyhmsa.spec.condition.specimen import SpecimenPosition
 from pyhmsa.util.parameter import \
     NumericalAttribute, ObjectAttribute, EnumAttribute, FrozenAttribute
 from pyhmsa.util.cookbook import flatten
@@ -57,9 +57,9 @@ class _Acquisition(_Condition):
 
     def __init__(self, dwell_time=None, total_time=None, dwell_time_live=None):
         """
-        Describes the position and duration of one or more measurements of the 
+        Describes the position and duration of one or more measurements of the
         specimen.
-        
+
         :arg dwell_time: uniform real time taken for each individual measurement (optional)
         :arg total_time: total real time taken to collect all measurements (optional)
         :arg dwell_time_live: analogous detector live time for each individual measurement (optional)
@@ -80,7 +80,7 @@ class AcquisitionPoint(_Acquisition):
     def __init__(self, position,
                  dwell_time=None, total_time=None, dwell_time_live=None):
         """
-        Defines the position and duration for a singular measurement of the 
+        Defines the position and duration for a singular measurement of the
         specimen.
 
         :arg position: physical location on (or in) the specimen (required)
@@ -101,10 +101,10 @@ class AcquisitionMultipoint(_Acquisition):
     def __init__(self, positions=None,
                  dwell_time=None, total_time=None, dwell_time_live=None):
         """
-        Defines the position and duration of an irregular sequence of 
+        Defines the position and duration of an irregular sequence of
         measurements of the specimen.
 
-        :arg positions: iterable of specimen positions (optional) 
+        :arg positions: iterable of specimen positions (optional)
         :arg dwell_time: uniform real time taken for each individual measurement (optional)
         :arg total_time: total real time taken to collect all measurements (optional)
         :arg dwell_time_live: analogous detector live time for each individual measurement (optional)

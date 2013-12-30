@@ -15,7 +15,7 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.calibration import \
+from pyhmsa.spec.condition.calibration import \
     (_Calibration, CalibrationConstant, CalibrationLinear,
      CalibrationPolynomial, CalibrationExplicit)
 
@@ -108,6 +108,6 @@ class TestCalibrationExplicit(unittest.TestCase):
 
         self.assertRaises(ValueError, CalibrationExplicit, 'Energy', 'eV', None)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

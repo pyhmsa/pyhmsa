@@ -16,7 +16,7 @@ import logging
 import numpy as np
 
 # Local modules.
-from pyhmsa.core.datum.analysis import Analysis1D
+from pyhmsa.spec.datum.analysis import Analysis1D
 
 # Globals and constants variables.
 

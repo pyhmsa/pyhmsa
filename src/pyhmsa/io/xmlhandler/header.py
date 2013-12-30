@@ -24,7 +24,7 @@ import xml.etree.ElementTree as etree
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.header import Header
+from pyhmsa.spec.header import Header
 from pyhmsa.io.xmlhandler import _XMLHandler
 
 # Globals and constants variables.

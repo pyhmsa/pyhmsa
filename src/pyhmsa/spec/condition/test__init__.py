@@ -15,7 +15,7 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import Conditions, _Condition
+from pyhmsa.spec.condition import Conditions, _Condition
 
 # Globals and constants variables.
 
@@ -28,7 +28,7 @@ class TestConditions(unittest.TestCase):
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
-    
+
     def test__setitem__(self):
         cnd = _Condition()
         self.cnds['Condition1'] = cnd
@@ -37,6 +37,6 @@ class TestConditions(unittest.TestCase):
 
         self.assertRaises(ValueError, self.cnds.__setitem__, u'\u00b0', cnd)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

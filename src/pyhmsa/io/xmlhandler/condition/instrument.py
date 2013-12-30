@@ -24,7 +24,7 @@ import xml.etree.ElementTree as etree
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.instrument import Instrument
+from pyhmsa.spec.condition.instrument import Instrument
 from pyhmsa.io.xmlhandler import _XMLHandler
 
 # Globals and constants variables.

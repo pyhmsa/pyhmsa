@@ -23,8 +23,8 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import _Condition
-from pyhmsa.core.condition.calibration import _Calibration
+from pyhmsa.spec.condition import _Condition
+from pyhmsa.spec.condition.calibration import _Calibration
 from pyhmsa.util.parameter import \
     (Parameter, NumericalAttribute, EnumAttribute, TextAttribute,
      FrozenAttribute, UnitAttribute, ObjectAttribute)
@@ -66,7 +66,7 @@ _XEDS_TECHNOLOGIES = frozenset([XEDS_TECHNOLOGY_GE, XEDS_TECHNOLOGY_SILI,
                                 XEDS_TECHNOLOGY_SDD, XEDS_TECHNOLOGY_UCAL])
 
 class PulseHeightAnalyser(Parameter):
-    
+
     bias = NumericalAttribute('V', False, 'Bias', 'bias')
     gain = NumericalAttribute(None, False, 'Gain', 'gain')
     base_level = NumericalAttribute('V' , False, 'BaseLevel', 'base level')
@@ -76,14 +76,14 @@ class PulseHeightAnalyser(Parameter):
     def __init__(self, bias=None, gain=None, base_level=None, window=None,
                   mode=None):
         """
-        Defines the condition of the pulse height analyser of a WDS 
+        Defines the condition of the pulse height analyser of a WDS
         spectrometer.
-        
+
         :arg bias: bias (optional)
         :arg gain: gain (optional)
         :arg base_level: base level (optional)
         :arg window: window (optional)
-        :arg mode: mode, either :const:`PHA_MODE_INTEGRAL` or 
+        :arg mode: mode, either :const:`PHA_MODE_INTEGRAL` or
             :const:`PHA_MODE_DIFFERENTIAL` (optional)
         """
         self.bias = bias
@@ -100,7 +100,7 @@ class WindowLayer(Parameter):
     def __init__(self, material, thickness):
         """
         Defines a layer of a window.
-        
+
         :arg material: material
         :arg thickness: thickness
         """
@@ -108,13 +108,13 @@ class WindowLayer(Parameter):
         self.thickness = thickness
 
 class Window(Parameter):
-    
+
     layers = FrozenAttribute(list, doc='modifiable list of layers')
 
     def __init__(self, layers=None):
         """
         Defines the layer(s) of a window.
-        
+
         :arg layers: iterable of :class:`.Layer` (optional)
         """
         if layers is None:
@@ -125,10 +125,10 @@ class Window(Parameter):
         """
         Helper function that creates a new :class:`.Layer` and appends it to
         this window.
-        
+
         :arg material: material
         :arg thickness: thickness
-        
+
         :return: created layer
         :rtype: :class:`.Layer`
         """
@@ -158,9 +158,9 @@ class _Detector(_Condition):
                   azimuth=None, distance=None, area=None, solid_angle=None,
                   semi_angle=None, temperature=None):
         """
-        Describes the type and configuration of a detector used to collect a 
+        Describes the type and configuration of a detector used to collect a
         HMSA dataset.
-        
+
         :arg signal_type: type of signal (optional)
         :arg manufacturer: manufacturer (optional)
         :arg model: model (optional)
@@ -206,12 +206,12 @@ class DetectorCamera(_Detector):
                   azimuth=None, distance=None, area=None, solid_angle=None,
                   semi_angle=None, temperature=None):
         """
-        Describes the calibration and collection mode of a camera used to 
-        collect a HMSA dataset, such as an EBSD or TEM camera. 
-        The camera detector is expected to have two datum axes (U and V) which 
-        are, in general, assumed to be independent of the specimen coordinate 
+        Describes the calibration and collection mode of a camera used to
+        collect a HMSA dataset, such as an EBSD or TEM camera.
+        The camera detector is expected to have two datum axes (U and V) which
+        are, in general, assumed to be independent of the specimen coordinate
         dimensions (X/Y/Z).
-        
+
         :arg pixel_count_u: number of pixels along the horizontal axis (required)
         :arg pixel_count_y: number of pixels along the vertical axis (required)
         :arg exposure_time: exposure time (optional)
@@ -254,14 +254,14 @@ class DetectorSpectrometer(_Detector):
                   azimuth=None, distance=None, area=None, solid_angle=None,
                   semi_angle=None, temperature=None):
         """
-        Describes the calibration and collection mode of a spectrometer used to 
+        Describes the calibration and collection mode of a spectrometer used to
         collect a HMSA dataset.
-        
+
         :arg channel_count: number of channels (required)
         :arg calibration: calibration (required)
         :type calibration: :class:`._Calibration`
-        :arg collection mode: mode of collection, either 
-            :const:`COLLECTION_MODE_PARALLEL` or 
+        :arg collection mode: mode of collection, either
+            :const:`COLLECTION_MODE_PARALLEL` or
             :const:`COLLECTION_MODE_SERIAL` (optional)
         :arg signal_type: type of signal (optional)
         :arg manufacturer: manufacturer (optional)
@@ -298,21 +298,21 @@ class DetectorSpectrometerCL(DetectorSpectrometer):
                   azimuth=None, distance=None, area=None, solid_angle=None,
                   semi_angle=None, temperature=None):
         """
-        Describes the type and configuration of a cathodoluminescence 
+        Describes the type and configuration of a cathodoluminescence
         spectrometer.
-        
+
         .. note::
-        
-           If the spectrometer is operating as a monochromator (e.g. 
-           monochromatic CL mapping), the calibration definition shall be of 
+
+           If the spectrometer is operating as a monochromator (e.g.
+           monochromatic CL mapping), the calibration definition shall be of
            type :class:`.CalibrationConstant`.
-        
+
         :arg channel_count: number of channels (required)
         :arg calibration: calibration (required)
         :type calibration: :class:`._Calibration`
         :arg grating_d: grading spacing (optional)
-        :arg collection mode: mode of collection, either 
-            :const:`COLLECTION_MODE_PARALLEL` or 
+        :arg collection mode: mode of collection, either
+            :const:`COLLECTION_MODE_PARALLEL` or
             :const:`COLLECTION_MODE_SERIAL` (optional)
         :arg signal_type: type of signal (optional)
         :arg manufacturer: manufacturer (optional)
@@ -355,20 +355,20 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
                   azimuth=None, distance=None, area=None, solid_angle=None,
                   semi_angle=None, temperature=None):
         """
-        Describes the type and configuration of a wavelength dispersive x-ray 
+        Describes the type and configuration of a wavelength dispersive x-ray
         spectrometer.
-        
+
         .. note::
-        
-           If the spectrometer is operating as a monochromator (e.g. WDS 
-           mapping), the calibration definition shall be of  type 
+
+           If the spectrometer is operating as a monochromator (e.g. WDS
+           mapping), the calibration definition shall be of  type
            :class:`.CalibrationConstant`.
-        
+
         :arg channel_count: number of channels (required)
         :arg calibration: calibration (required)
         :type calibration: :class:`._Calibration`
-        :arg collection mode: mode of collection, either 
-            :const:`COLLECTION_MODE_PARALLEL` or 
+        :arg collection mode: mode of collection, either
+            :const:`COLLECTION_MODE_PARALLEL` or
             :const:`COLLECTION_MODE_SERIAL` (optional)
         :arg dispersion_element element: dispersion element (optional)
         :arg crystal_2d: crystal 2d-spacing (optional)
@@ -406,7 +406,7 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
         self.window = window
 
 class DetectorSpectrometerXEDS(DetectorSpectrometer):
-    
+
     CLASS = 'Spectrometer/XEDS'
 
     technology = EnumAttribute(_XEDS_TECHNOLOGIES, False, 'Technology', 'technology')
@@ -423,14 +423,14 @@ class DetectorSpectrometerXEDS(DetectorSpectrometer):
                   azimuth=None, distance=None, area=None, solid_angle=None,
                   semi_angle=None, temperature=None):
         """
-        Describes the type and configuration of an energy dispersive x-ray 
+        Describes the type and configuration of an energy dispersive x-ray
         spectrometer.
-        
+
         :arg channel_count: number of channels (required)
         :arg calibration: calibration (required)
         :type calibration: :class:`._Calibration`
-        :arg collection mode: mode of collection, either 
-            :const:`COLLECTION_MODE_PARALLEL` or 
+        :arg collection mode: mode of collection, either
+            :const:`COLLECTION_MODE_PARALLEL` or
             :const:`COLLECTION_MODE_SERIAL` (optional)
         :arg technology: technology (optional)
         :arg nominal_throughput: nominal throughput (optional)

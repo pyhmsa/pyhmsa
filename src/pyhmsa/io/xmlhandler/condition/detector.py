@@ -24,7 +24,7 @@ import xml.etree.ElementTree as etree
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.detector import \
+from pyhmsa.spec.condition.detector import \
     (DetectorCamera, DetectorSpectrometer, DetectorSpectrometerCL,
      DetectorSpectrometerWDS, DetectorSpectrometerXEDS, Window, WindowLayer)
 from pyhmsa.io.xmlhandler import _XMLHandler

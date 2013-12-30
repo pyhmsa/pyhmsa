@@ -17,7 +17,7 @@ from io import StringIO
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.header import Header
+from pyhmsa.spec.header import Header
 from pyhmsa.io.xmlhandler.header import HeaderXMLHandler
 from pyhmsa.type.checksum import Checksum
 

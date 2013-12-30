@@ -25,10 +25,10 @@ import xml.etree.ElementTree as etree
 import numpy as np
 
 # Local modules.
-from pyhmsa.core.condition.acquisition import \
+from pyhmsa.spec.condition.acquisition import \
     (AcquisitionPoint, AcquisitionMultipoint,
      AcquisitionRasterLinescan, AcquisitionRasterXY, AcquisitionRasterXYZ)
-from pyhmsa.core.condition.specimen import SpecimenPosition
+from pyhmsa.spec.condition.specimen import SpecimenPosition
 from pyhmsa.io.xmlhandler import _XMLHandler
 from pyhmsa.util.parameter import ObjectAttribute
 

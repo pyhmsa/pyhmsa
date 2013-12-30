@@ -15,7 +15,7 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.specimen import \
+from pyhmsa.spec.condition.specimen import \
     SpecimenPosition, Specimen, Composition, SpecimenLayer, SpecimenMultilayer
 
 # Globals and constants variables.
@@ -179,6 +179,6 @@ class TestSpecimenMultilayer(unittest.TestCase):
         self.assertEqual(1, len(self.spc.layers))
         self.assertEqual('Carbon coat', self.spc.layers[0].name)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

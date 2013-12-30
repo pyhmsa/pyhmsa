@@ -15,7 +15,7 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.instrument import Instrument
+from pyhmsa.spec.condition.instrument import Instrument
 
 # Globals and constants variables.
 
@@ -41,6 +41,6 @@ class TestInstrument(unittest.TestCase):
         self.instrument.serial_number = '12345-abc-67890'
         self.assertEqual('12345-abc-67890', self.instrument.serial_number)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

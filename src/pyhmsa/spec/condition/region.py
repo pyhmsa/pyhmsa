@@ -23,23 +23,23 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import _Condition
+from pyhmsa.spec.condition import _Condition
 from pyhmsa.util.parameter import NumericalRangeAttribute
 
 # Globals and constants variables.
 
 class RegionOfInterest(_Condition):
-    
+
     TEMPLATE = 'RegionOfInterest'
 
     channels = NumericalRangeAttribute(None, 0, required=True, doc='Channel range')
 
     def __init__(self, start_channel, end_channel):
         """
-        Defines a region of a spectrum (or other one-dimensional datum), 
-        as may be useful for defining start and end channels used for a region 
+        Defines a region of a spectrum (or other one-dimensional datum),
+        as may be useful for defining start and end channels used for a region
         of interest image.
-        
+
         :arg start_channel: start channel (required)
         :arg end_channel: end channel (required)
         """

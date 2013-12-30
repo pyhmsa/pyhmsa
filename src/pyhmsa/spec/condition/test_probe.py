@@ -15,10 +15,10 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.probe import _Probe, ProbeEM, ProbeTEM
+from pyhmsa.spec.condition.probe import _Probe, ProbeEM, ProbeTEM
 
 # Globals and constants variables.
-from pyhmsa.core.condition.probe import GUN_TYPE_LAB6, LENS_MODE_IMAGE
+from pyhmsa.spec.condition.probe import GUN_TYPE_LAB6, LENS_MODE_IMAGE
 
 class Test_Probe(unittest.TestCase):
 
@@ -52,7 +52,7 @@ class TestProbeEM(unittest.TestCase):
         self.probe.beam_current = 47.59
         self.assertAlmostEqual(47.59, self.probe.beam_current, 4)
         self.assertEqual('nA', self.probe.beam_current.unit)
-    
+
     def testgun_type(self):
         self.probe.gun_type = GUN_TYPE_LAB6
         self.assertEqual(GUN_TYPE_LAB6, self.probe.gun_type)
@@ -121,6 +121,6 @@ class TestProbeTEM(unittest.TestCase):
         self.assertAlmostEqual(1.5, self.probe.convergence_angle, 4)
         self.assertEqual('mrad', self.probe.convergence_angle.unit)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

@@ -24,7 +24,7 @@ import xml.etree.ElementTree as etree
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.probe import ProbeEM, ProbeTEM
+from pyhmsa.spec.condition.probe import ProbeEM, ProbeTEM
 from pyhmsa.io.xmlhandler import _XMLHandler
 
 # Globals and constants variables.

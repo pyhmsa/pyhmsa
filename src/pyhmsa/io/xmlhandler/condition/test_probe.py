@@ -19,10 +19,10 @@ from io import StringIO
 # Local modules.
 from pyhmsa.io.xmlhandler.condition.probe import \
     ProbeEMXMLHandler, ProbeTEMXMLHandler
-from pyhmsa.core.condition.probe import ProbeEM, ProbeTEM
+from pyhmsa.spec.condition.probe import ProbeEM, ProbeTEM
 
 # Globals and constants variables.
-from pyhmsa.core.condition.probe import GUN_TYPE_LAB6, LENS_MODE_IMAGE
+from pyhmsa.spec.condition.probe import GUN_TYPE_LAB6, LENS_MODE_IMAGE
 
 class TestProbeEMXMLHandler(unittest.TestCase):
 

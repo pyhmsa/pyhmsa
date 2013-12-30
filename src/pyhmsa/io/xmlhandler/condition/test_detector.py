@@ -17,11 +17,11 @@ from io import StringIO
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.detector import \
+from pyhmsa.spec.condition.detector import \
     (DetectorCamera, DetectorSpectrometer, DetectorSpectrometerCL,
      DetectorSpectrometerWDS, DetectorSpectrometerXEDS,
      PulseHeightAnalyser, Window)
-from pyhmsa.core.condition.calibration import CalibrationConstant
+from pyhmsa.spec.condition.calibration import CalibrationConstant
 from pyhmsa.io.xmlhandler.condition.detector import \
     (WindowXMLHandler,
      DetectorCameraXMLHandler,
@@ -29,7 +29,7 @@ from pyhmsa.io.xmlhandler.condition.detector import \
      DetectorSpectrometerWDSXMLHandler, DetectorSpectrometerXEDSXMLHandler)
 
 # Globals and constants variables.
-from pyhmsa.core.condition.detector import \
+from pyhmsa.spec.condition.detector import \
     (PHA_MODE_DIFFERENTIAL, SIGNAL_TYPE_ELS, COLLECTION_MODE_PARALLEL,
      XEDS_TECHNOLOGY_SILI)
 

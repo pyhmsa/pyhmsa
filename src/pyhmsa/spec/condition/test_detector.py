@@ -15,14 +15,14 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.detector import \
+from pyhmsa.spec.condition.detector import \
     (PulseHeightAnalyser, WindowLayer, Window,
      _Detector, DetectorCamera, DetectorSpectrometer,
      DetectorSpectrometerCL, DetectorSpectrometerWDS, DetectorSpectrometerXEDS)
-from pyhmsa.core.condition.calibration import CalibrationConstant
+from pyhmsa.spec.condition.calibration import CalibrationConstant
 
 # Globals and constants variables.
-from pyhmsa.core.condition.detector import \
+from pyhmsa.spec.condition.detector import \
     (PHA_MODE_DIFFERENTIAL, SIGNAL_TYPE_ELS, COLLECTION_MODE_PARALLEL,
      XEDS_TECHNOLOGY_SILI)
 
@@ -113,7 +113,7 @@ class Test_Detector(unittest.TestCase):
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
-    
+
     def testsignal_type(self):
         self.det.signal_type = SIGNAL_TYPE_ELS
         self.assertEqual(SIGNAL_TYPE_ELS, self.det.signal_type)
@@ -277,7 +277,7 @@ class TestDetectorSpectrometerWDS(unittest.TestCase):
         self.det.rowland_circle_diameter = 140.0
         self.assertAlmostEqual(140.0, self.det.rowland_circle_diameter, 4)
         self.assertEqual('mm', self.det.rowland_circle_diameter.unit)
-    
+
     def testpulse_height_analyser(self):
         pha = PulseHeightAnalyser(1700.0, 16, 0.7, 9.3, PHA_MODE_DIFFERENTIAL)
         self.det.pulse_height_analyser = pha
@@ -304,7 +304,7 @@ class TestDetectorSpectrometerXEDS(unittest.TestCase):
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
-        
+
     def testtechnology(self):
         self.det.technology = XEDS_TECHNOLOGY_SILI
         self.assertEqual(XEDS_TECHNOLOGY_SILI, self.det.technology)
@@ -333,6 +333,6 @@ class TestDetectorSpectrometerXEDS(unittest.TestCase):
         self.assertEqual('Al', self.det.window.layers[0].material)
         self.assertEqual(1.0, self.det.window.layers[0].thickness)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

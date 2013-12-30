@@ -23,7 +23,7 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition import _Condition
+from pyhmsa.spec.condition import _Condition
 from pyhmsa.util.parameter import TextAttribute
 
 # Globals and constants variables.
@@ -39,7 +39,7 @@ class Instrument(_Condition):
     def __init__(self, manufacturer, model, serial_number=None):
         """
         Describes the type of instrument used to collect a HMSA dataset.
-        
+
         :arg manufacturer: manufacturer (required)
         :arg model: model (required)
         :arg serial_number: serial number (optional)

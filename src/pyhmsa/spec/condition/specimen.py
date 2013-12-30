@@ -28,7 +28,7 @@ except ImportError: # pragma: no cover
 import numpy as np
 
 # Local modules.
-from pyhmsa.core.condition import _Condition
+from pyhmsa.spec.condition import _Condition
 from pyhmsa.type.numerical import convert_value
 from pyhmsa.type.unit import validate_unit
 from pyhmsa.util.parameter import \
@@ -52,11 +52,11 @@ class SpecimenPosition(_Condition):
 
     def __init__(self, x=None, y=None, z=None, r=None, t=None):
         """
-        Defines a physical location on (or in) the specimen. 
-        The position shall be defined in the coordinate system of the instrument. 
-        This version of the HMSA standard does not specify a template or 
+        Defines a physical location on (or in) the specimen.
+        The position shall be defined in the coordinate system of the instrument.
+        This version of the HMSA standard does not specify a template or
         definition of coordinate systems.
-        
+
         :arg x: x coordinate
         :arg y: y coordinate
         :arg z: z coordinate
@@ -164,7 +164,7 @@ class SpecimenLayer(Parameter):
         return self.thickness is None
 
 class SpecimenMultilayer(Specimen):
-    
+
     CLASS = 'Multilayer'
 
     layers = FrozenAttribute(list, doc='modifiable list of layers')

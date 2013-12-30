@@ -24,7 +24,7 @@ import xml.etree.ElementTree as etree
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.calibration import \
+from pyhmsa.spec.condition.calibration import \
     (CalibrationConstant, CalibrationLinear,
      CalibrationPolynomial, CalibrationExplicit)
 from pyhmsa.io.xmlhandler import _XMLHandler

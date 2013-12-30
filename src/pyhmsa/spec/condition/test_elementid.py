@@ -15,7 +15,7 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.elementid import ElementID, ElementIDXray
+from pyhmsa.spec.condition.elementid import ElementID, ElementIDXray
 
 # Globals and constants variables.
 
@@ -58,6 +58,6 @@ class TestElementIDXray(unittest.TestCase):
         self.assertAlmostEqual(1234, self.element.energy, 4)
         self.assertEqual('eV', self.element.energy.unit)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

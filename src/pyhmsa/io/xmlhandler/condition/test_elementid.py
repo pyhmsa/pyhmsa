@@ -19,7 +19,7 @@ from io import StringIO
 # Local modules.
 from pyhmsa.io.xmlhandler.condition.elementid import \
     ElementIDXMLHandler, ElementIDXrayXMLHandler
-from pyhmsa.core.condition.elementid import ElementID, ElementIDXray
+from pyhmsa.spec.condition.elementid import ElementID, ElementIDXray
 
 # Globals and constants variables.
 

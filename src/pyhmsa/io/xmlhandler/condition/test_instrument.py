@@ -18,7 +18,7 @@ from io import StringIO
 
 # Local modules.
 from pyhmsa.io.xmlhandler.condition.instrument import InstrumentXMLHandler
-from pyhmsa.core.condition.instrument import Instrument
+from pyhmsa.spec.condition.instrument import Instrument
 
 # Globals and constants variables.
 

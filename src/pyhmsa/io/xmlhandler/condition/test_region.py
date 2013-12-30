@@ -18,7 +18,7 @@ from io import StringIO
 
 # Local modules.
 from pyhmsa.io.xmlhandler.condition.region import RegionOfInterestXMLHandler
-from pyhmsa.core.condition.region import RegionOfInterest
+from pyhmsa.spec.condition.region import RegionOfInterest
 
 # Globals and constants variables.
 

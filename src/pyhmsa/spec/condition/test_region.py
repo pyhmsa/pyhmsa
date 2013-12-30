@@ -15,7 +15,7 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.core.condition.region import RegionOfInterest
+from pyhmsa.spec.condition.region import RegionOfInterest
 
 # Globals and constants variables.
 
@@ -39,6 +39,6 @@ class TestRegionOfInterest(unittest.TestCase):
         self.assertRaises(ValueError, self.roi.set_channels, -1, 636)
         self.assertRaises(ValueError, self.roi.set_channels, 636, 556)
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()
