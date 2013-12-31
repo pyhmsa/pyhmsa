@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 ================================================================================
 :mod:`calibration` -- XML handler for calibrations
@@ -19,7 +18,6 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
-import xml.etree.ElementTree as etree
 
 # Third party modules.
 
@@ -36,57 +34,53 @@ class CalibrationConstantXMLHandler(_XMLHandler):
     def can_parse(self, element):
         return element.tag == 'Calibration' and element.get('Class') == 'Constant'
 
-    def from_xml(self, element):
+    def parse(self, element):
         return self._parse_parameter(element, CalibrationConstant)
 
     def can_convert(self, obj):
         return isinstance(obj, CalibrationConstant)
 
-    def to_xml(self, obj):
-        element = etree.Element('Calibration', {'Class': 'Constant'})
-        return self._convert_parameter(obj, element)
+    def convert(self, obj):
+        return self._convert_parameter(obj, 'Calibration', {'Class': 'Constant'})
 
 class CalibrationLinearXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
         return element.tag == 'Calibration' and element.get('Class') == 'Linear'
 
-    def from_xml(self, element):
+    def parse(self, element):
         return self._parse_parameter(element, CalibrationLinear)
 
     def can_convert(self, obj):
         return isinstance(obj, CalibrationLinear)
 
-    def to_xml(self, obj):
-        element = etree.Element('Calibration', {'Class': 'Linear'})
-        return self._convert_parameter(obj, element)
+    def convert(self, obj):
+        return self._convert_parameter(obj, 'Calibration', {'Class': 'Linear'})
 
 class CalibrationPolynomialXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
         return element.tag == 'Calibration' and element.get('Class') == 'Polynomial'
 
-    def from_xml(self, element):
+    def parse(self, element):
         return self._parse_parameter(element, CalibrationPolynomial)
 
     def can_convert(self, obj):
         return isinstance(obj, CalibrationPolynomial)
 
-    def to_xml(self, obj):
-        element = etree.Element('Calibration', {'Class': 'Polynomial'})
-        return self._convert_parameter(obj, element)
+    def convert(self, obj):
+        return self._convert_parameter(obj, 'Calibration', {'Class': 'Polynomial'})
 
 class CalibrationExplicitXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
         return element.tag == 'Calibration' and element.get('Class') == 'Explicit'
 
-    def from_xml(self, element):
+    def parse(self, element):
         return self._parse_parameter(element, CalibrationExplicit)
 
     def can_convert(self, obj):
         return isinstance(obj, CalibrationExplicit)
 
-    def to_xml(self, obj):
-        element = etree.Element('Calibration', {'Class': 'Explicit'})
-        return self._convert_parameter(obj, element)
+    def convert(self, obj):
+        return self._convert_parameter(obj, 'Calibration', {'Class': 'Explicit'})

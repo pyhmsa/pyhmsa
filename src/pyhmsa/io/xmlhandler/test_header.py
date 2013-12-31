@@ -45,8 +45,8 @@ class TestHeaderXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Acquisition')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual('53AAD59C05D59A40AD746D6928EA6D2D526865FD', obj.checksum.value)
         self.assertEqual('SHA-1', obj.checksum.algorithm)
         self.assertEqual('Beep Beep', obj.title)
@@ -63,8 +63,8 @@ class TestHeaderXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Header', element.tag)
         self.assertEqual('53AAD59C05D59A40AD746D6928EA6D2D526865FD', element.find('Checksum').text)
         self.assertEqual('SHA-1', element.find('Checksum').get('Algorithm'))

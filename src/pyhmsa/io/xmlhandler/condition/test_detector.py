@@ -53,8 +53,8 @@ class TestWindowXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_parse(self.element))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual(1, len(obj.layers))
         self.assertEqual('Al', obj.layers[0].material)
         self.assertAlmostEqual(1.0, obj.layers[0].thickness, 4)
@@ -64,8 +64,8 @@ class TestWindowXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Window', element.tag)
         self.assertEqual(1, len(element.findall('Layer')))
         self.assertEqual('Al', element.findall('Layer')[0].get('Material'))
@@ -94,8 +94,8 @@ class TestDetectorCameraXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Detector')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
 
         self.assertEqual('Example Inc.', obj.manufacturer)
         self.assertEqual('Example Model 123', obj.model)
@@ -128,8 +128,8 @@ class TestDetectorCameraXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Detector', element.tag)
         self.assertEqual('Camera', element.get('Class'))
 
@@ -173,8 +173,8 @@ class TestDetectorSpectrometerXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Detector')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual(4096, obj.channel_count)
         self.assertEqual('Energy', obj.calibration.quantity)
         self.assertEqual('eV', obj.calibration.unit)
@@ -185,8 +185,8 @@ class TestDetectorSpectrometerXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Detector', element.tag)
         self.assertEqual('Spectrometer', element.get('Class'))
         self.assertEqual('4096', element.find('ChannelCount').text)
@@ -217,8 +217,8 @@ class TestDetectorSpectrometerCLXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Detector')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertAlmostEqual(800.0, obj.grating_d, 4)
         self.assertEqual('mm-1', obj.grating_d.unit)
 
@@ -226,8 +226,8 @@ class TestDetectorSpectrometerCLXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Detector', element.tag)
         self.assertEqual('Spectrometer/CL', element.get('Class'))
         self.assertEqual('800.0', element.find('Grating-d').text)
@@ -256,8 +256,8 @@ class TestDetectorSpectrometerWDSXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Detector')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual('TAP', obj.dispersion_element)
         self.assertAlmostEqual(8.742, obj.crystal_2d, 4)
         self.assertEqual(u'\u00c5', obj.crystal_2d.unit)
@@ -280,8 +280,8 @@ class TestDetectorSpectrometerWDSXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Detector', element.tag)
         self.assertEqual('Spectrometer/WDS', element.get('Class'))
         self.assertEqual('TAP', element.find('DispersionElement').text)
@@ -317,8 +317,8 @@ class TestDetectorSpectrometerXEDSXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Detector')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual(1, len(obj.window.layers))
         self.assertEqual(XEDS_TECHNOLOGY_SILI, obj.technology)
         self.assertAlmostEqual(180000.0, obj.nominal_throughput, 4)
@@ -335,8 +335,8 @@ class TestDetectorSpectrometerXEDSXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Detector', element.tag)
         self.assertEqual('Spectrometer/XEDS', element.get('Class'))
         self.assertEqual(XEDS_TECHNOLOGY_SILI, element.find('Technology').text)

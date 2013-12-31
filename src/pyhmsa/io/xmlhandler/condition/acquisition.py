@@ -39,15 +39,14 @@ class AcquisitionPointXMLHandler(_XMLHandler):
     def can_parse(self, element):
         return element.tag == 'Acquisition' and element.get('Class') == 'Point'
 
-    def from_xml(self, element):
+    def parse(self, element):
         return self._parse_parameter(element, AcquisitionPoint)
 
     def can_convert(self, obj):
         return isinstance(obj, AcquisitionPoint)
 
-    def to_xml(self, obj):
-        element = etree.Element('Acquisition', {'Class': 'Point'})
-        return self._convert_parameter(obj, element)
+    def convert(self, obj):
+        return self._convert_parameter(obj, 'Acquisition', {'Class': 'Point'})
 
 class AcquisitionMultipointXMLHandler(_XMLHandler):
 
@@ -59,7 +58,7 @@ class AcquisitionMultipointXMLHandler(_XMLHandler):
     def can_parse(self, element):
         return element.tag == 'Acquisition' and element.get('Class') == 'Multipoint'
 
-    def from_xml(self, element):
+    def parse(self, element):
         obj = self._parse_parameter(element, AcquisitionMultipoint)
 
         for subelement in element.findall('./Positions/SpecimenPosition'):
@@ -77,21 +76,20 @@ class AcquisitionMultipointXMLHandler(_XMLHandler):
     def can_convert(self, obj):
         return isinstance(obj, AcquisitionMultipoint)
 
-    def to_xml(self, obj):
-        element = etree.Element('Acquisition', {'Class': 'Multipoint'})
-        element = self._convert_parameter(obj, element)
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Multipoint'})
 
         value = np.uint32(len(obj.positions))
         attrib = type('MockAttribute', (object,), {'xmlname': 'PointCount'})
-        subelement = self._convert_numerical_attribute(value, attrib)
-        element.append(subelement)
+        subelements = self._convert_numerical_attribute(value, attrib)
+        element.extend(subelements)
 
         subelement = etree.Element('Positions')
         for position in obj.positions:
-            subsubelement = \
+            subsubelements = \
                 self._convert_object_attribute(position,
                                                self._attrib_specimen_position)
-            subelement.append(subsubelement)
+            subelement.extend(subsubelements)
         element.append(subelement)
 
         return element
@@ -115,22 +113,24 @@ class _AcquisitionRasterXMLHandler(_XMLHandler):
 
         return positions
 
-    def _convert_positions(self, value, element):
-        for location, position in value.items():
+    def _convert_positions(self, obj):
+        elements = []
+
+        for location, position in obj.positions.items():
             subelement = \
                 self._convert_object_attribute(position,
-                                               self._attrib_specimen_position)
+                                               self._attrib_specimen_position)[0]
             subelement.set('Name', location)
-            element.append(subelement)
+            elements.append(subelement)
 
-        return element
+        return elements
 
 class AcquisitionRasterLinescanXMLHandler(_AcquisitionRasterXMLHandler):
 
     def can_parse(self, element):
         return element.tag == 'Acquisition' and element.get('Class') == 'Raster/Linescan'
 
-    def from_xml(self, element):
+    def parse(self, element):
         obj = self._parse_parameter(element, AcquisitionRasterLinescan)
         obj.positions.update(self._parse_positions(element))
         return obj
@@ -138,10 +138,9 @@ class AcquisitionRasterLinescanXMLHandler(_AcquisitionRasterXMLHandler):
     def can_convert(self, obj):
         return isinstance(obj, AcquisitionRasterLinescan)
 
-    def to_xml(self, obj):
-        element = etree.Element('Acquisition', {'Class': 'Raster/Linescan'})
-        element = self._convert_parameter(obj, element)
-        element = self._convert_positions(obj.positions, element)
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Raster/Linescan'})
+        element.extend(self._convert_positions(obj))
         return element
 
 class AcquisitionRasterXYXMLHandler(_AcquisitionRasterXMLHandler):
@@ -149,7 +148,7 @@ class AcquisitionRasterXYXMLHandler(_AcquisitionRasterXMLHandler):
     def can_parse(self, element):
         return element.tag == 'Acquisition' and element.get('Class') == 'Raster/XY'
 
-    def from_xml(self, element):
+    def parse(self, element):
         obj = self._parse_parameter(element, AcquisitionRasterXY)
         obj.positions.update(self._parse_positions(element))
         return obj
@@ -157,10 +156,9 @@ class AcquisitionRasterXYXMLHandler(_AcquisitionRasterXMLHandler):
     def can_convert(self, obj):
         return isinstance(obj, AcquisitionRasterXY)
 
-    def to_xml(self, obj):
-        element = etree.Element('Acquisition', {'Class': 'Raster/XY'})
-        element = self._convert_parameter(obj, element)
-        element = self._convert_positions(obj.positions, element)
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Raster/XY'})
+        element.extend(self._convert_positions(obj))
         return element
 
 class AcquisitionRasterXYZXMLHandler(_AcquisitionRasterXMLHandler):
@@ -168,7 +166,7 @@ class AcquisitionRasterXYZXMLHandler(_AcquisitionRasterXMLHandler):
     def can_parse(self, element):
         return element.tag == 'Acquisition' and element.get('Class') == 'Raster/XYZ'
 
-    def from_xml(self, element):
+    def parse(self, element):
         obj = self._parse_parameter(element, AcquisitionRasterXYZ)
         obj.positions.update(self._parse_positions(element))
         return obj
@@ -176,8 +174,7 @@ class AcquisitionRasterXYZXMLHandler(_AcquisitionRasterXMLHandler):
     def can_convert(self, obj):
         return isinstance(obj, AcquisitionRasterXYZ)
 
-    def to_xml(self, obj):
-        element = etree.Element('Acquisition', {'Class': 'Raster/XYZ'})
-        element = self._convert_parameter(obj, element)
-        element = self._convert_positions(obj.positions, element)
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Raster/XYZ'})
+        element.extend(self._convert_positions(obj))
         return element

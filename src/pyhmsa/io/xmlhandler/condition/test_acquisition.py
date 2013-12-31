@@ -50,8 +50,8 @@ class TestAcquisitionPointXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Acquisition')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
 
         self.assertAlmostEqual(35.0, obj.dwell_time, 4)
         self.assertEqual('s', obj.dwell_time.unit)
@@ -76,8 +76,8 @@ class TestAcquisitionPointXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Acquisition', element.tag)
         self.assertEqual('Point', element.attrib['Class'])
 
@@ -113,8 +113,8 @@ class TestAcquisitionMultipointXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Acquisition')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertAlmostEqual(0.0, obj.positions[0].x, 4)
         self.assertEqual('mm', obj.positions[0].x.unit)
         self.assertAlmostEqual(0.0, obj.positions[0].y, 4)
@@ -141,8 +141,8 @@ class TestAcquisitionMultipointXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Acquisition', element.tag)
         self.assertEqual('Multipoint', element.attrib['Class'])
         self.assertEqual('0.0', element.find('Positions').findall('SpecimenPosition')[0].find('X').text)
@@ -179,8 +179,8 @@ class TestAcquisitionRasterLinescanXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Acquisition')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual(RASTER_MODE_STAGE, obj.raster_mode)
         self.assertEqual(1024, obj.step_count)
         self.assertAlmostEqual(10.0, obj.step_size, 4)
@@ -202,8 +202,8 @@ class TestAcquisitionRasterLinescanXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Acquisition', element.tag)
         self.assertEqual('Raster/Linescan', element.attrib['Class'])
         self.assertEqual('Stage', element.find('RasterMode').text)
@@ -231,8 +231,8 @@ class TestAcquisitionRasterXYXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Acquisition')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual(158, obj.step_count_x)
         self.assertEqual(98, obj.step_count_y)
         self.assertAlmostEqual(1.0, obj.step_size_x, 4)
@@ -245,8 +245,8 @@ class TestAcquisitionRasterXYXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Acquisition', element.tag)
         self.assertEqual('Raster/XY', element.attrib['Class'])
         self.assertEqual('158', element.find('XStepCount').text)
@@ -276,8 +276,8 @@ class TestAcquisitionRasterXYZXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Acquisition')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual(158, obj.step_count_x)
         self.assertEqual(98, obj.step_count_y)
         self.assertEqual(185, obj.step_count_z)
@@ -293,8 +293,8 @@ class TestAcquisitionRasterXYZXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Acquisition', element.tag)
         self.assertEqual('Raster/XYZ', element.attrib['Class'])
         self.assertEqual('158', element.find('XStepCount').text)

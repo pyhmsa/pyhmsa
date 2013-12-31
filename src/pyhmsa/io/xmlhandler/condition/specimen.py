@@ -35,21 +35,21 @@ class SpecimenPositionXMLHandler(_XMLHandler):
     def can_parse(self, element):
         return element.tag == 'SpecimenPosition'
 
-    def from_xml(self, element):
+    def parse(self, element):
         return self._parse_parameter(element, SpecimenPosition)
 
     def can_convert(self, obj):
         return isinstance(obj, SpecimenPosition)
 
-    def to_xml(self, obj):
-        return self._convert_parameter(obj, etree.Element('SpecimenPosition'))
+    def convert(self, obj):
+        return self._convert_parameter(obj, 'SpecimenPosition')
 
 class CompositionXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
         return element.tag == 'Composition'
 
-    def from_xml(self, element):
+    def parse(self, element):
         units = []
         tmpcomposition = {}
         for subelement in element.findall('Element'):
@@ -73,12 +73,12 @@ class CompositionXMLHandler(_XMLHandler):
     def can_convert(self, obj):
         return isinstance(obj, Composition)
 
-    def to_xml(self, obj):
+    def convert(self, obj):
         element = etree.Element('Composition')
 
         attrib = type('MockAttribute', (object,), {'xmlname': 'Element'})
         for z, fraction in obj.items():
-            subelement = self._convert_numerical_attribute(fraction, attrib)
+            subelement = self._convert_numerical_attribute(fraction, attrib)[0]
             subelement.set('Unit', obj.unit)
             subelement.set('Z', str(z))
             element.append(subelement)
@@ -95,20 +95,19 @@ class _SpecimenXMLHandler(_XMLHandler):
         subelement = element.find('Composition')
         if subelement is None:
             return Composition("wt%")
-        return self._handler_composition.from_xml(subelement)
+        return self._handler_composition.parse(subelement)
 
-    def _convert_composition(self, value, element):
-        if value is None:
-            return element
-        element.append(self._handler_composition.to_xml(value))
-        return element
+    def _convert_composition(self, obj):
+        if obj.composition is None:
+            return []
+        return [self._handler_composition.convert(obj.composition)]
 
 class SpecimenXMLHandler(_SpecimenXMLHandler):
 
     def can_parse(self, element):
         return element.tag == 'Specimen'
 
-    def from_xml(self, element):
+    def parse(self, element):
         obj = self._parse_parameter(element, Specimen)
         obj.composition = self._parse_composition(element)
         return obj
@@ -116,9 +115,9 @@ class SpecimenXMLHandler(_SpecimenXMLHandler):
     def can_convert(self, obj):
         return isinstance(obj, Specimen)
 
-    def to_xml(self, obj):
-        element = self._convert_parameter(obj, etree.Element('Specimen'))
-        element = self._convert_composition(obj.composition, element)
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'Specimen')
+        element.extend(self._convert_composition(obj))
         return element
 
 class SpecimenLayerXMLHandler(_SpecimenXMLHandler):
@@ -126,7 +125,7 @@ class SpecimenLayerXMLHandler(_SpecimenXMLHandler):
     def can_parse(self, element):
         return element.tag == 'Layer'
 
-    def from_xml(self, element):
+    def parse(self, element):
         obj = self._parse_parameter(element, SpecimenLayer)
         obj.name = element.get('Name')
         obj.composition = self._parse_composition(element)
@@ -135,11 +134,11 @@ class SpecimenLayerXMLHandler(_SpecimenXMLHandler):
     def can_convert(self, obj):
         return isinstance(obj, Specimen)
 
-    def to_xml(self, obj):
-        element = self._convert_parameter(obj, etree.Element('Layer'))
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'Layer')
         if obj.name is not None:
             element.set('Name', obj.name)
-        element = self._convert_composition(obj.composition, element)
+        element.extend(self._convert_composition(obj))
         return element
 
 class SpecimenMultilayerXMLHandler(_SpecimenXMLHandler):
@@ -151,12 +150,12 @@ class SpecimenMultilayerXMLHandler(_SpecimenXMLHandler):
     def can_parse(self, element):
         return element.tag == 'Specimen' and element.get('Class') == 'Multilayer'
 
-    def from_xml(self, element):
+    def parse(self, element):
         obj = self._parse_parameter(element, SpecimenMultilayer)
         obj.composition = self._parse_composition(element)
 
         for subelement in element.findall('Layers/Layer'):
-            layer = self._handler_layer.from_xml(subelement)
+            layer = self._handler_layer.parse(subelement)
             obj.layers.append(layer)
 
         return obj
@@ -164,14 +163,13 @@ class SpecimenMultilayerXMLHandler(_SpecimenXMLHandler):
     def can_convert(self, obj):
         return isinstance(obj, SpecimenMultilayer)
 
-    def to_xml(self, obj):
-        element = etree.Element('Specimen', {'Class': 'Multilayer'})
-        element = self._convert_parameter(obj, element)
-        element = self._convert_composition(obj.composition, element)
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'Specimen', {'Class': 'Multilayer'})
+        element.extend(self._convert_composition(obj))
 
         subelement = etree.Element('Layers')
         for layer in obj.layers:
-            subsubelement = self._handler_layer.to_xml(layer)
+            subsubelement = self._handler_layer.convert(layer)
             subelement.append(subsubelement)
         element.append(subelement)
 

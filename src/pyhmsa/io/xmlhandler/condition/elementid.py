@@ -19,7 +19,6 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
-import xml.etree.ElementTree as etree
 
 # Third party modules.
 
@@ -34,14 +33,14 @@ class ElementIDXMLHandler(_XMLHandler):
     def can_parse(self, element):
         return element.tag == 'ElementID'
 
-    def from_xml(self, element):
+    def parse(self, element):
         return self._parse_parameter(element, ElementID)
 
     def can_convert(self, obj):
         return isinstance(obj, ElementID)
 
-    def to_xml(self, obj):
-        element = self._convert_parameter(obj, etree.Element('ElementID'))
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'ElementID')
         element.find('Element').set('Symbol', obj.symbol) # manually add symbol
         return element
 
@@ -50,14 +49,13 @@ class ElementIDXrayXMLHandler(_XMLHandler):
     def can_parse(self, element):
         return element.tag == 'ElementID' and element.get('Class') == 'X-ray'
 
-    def from_xml(self, element):
+    def parse(self, element):
         return self._parse_parameter(element, ElementIDXray)
 
     def can_convert(self, obj):
         return isinstance(obj, ElementIDXray)
 
-    def to_xml(self, obj):
-        element = etree.Element('ElementID', {'Class': 'X-ray'})
-        element = self._convert_parameter(obj, element)
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'ElementID', {'Class': 'X-ray'})
         element.find('Element').set('Symbol', obj.symbol) # manually add symbol
         return element

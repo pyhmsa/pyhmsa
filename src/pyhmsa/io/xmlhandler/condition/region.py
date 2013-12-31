@@ -19,7 +19,6 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
-import xml.etree.ElementTree as etree
 
 # Third party modules.
 
@@ -34,7 +33,7 @@ class RegionOfInterestXMLHandler(_XMLHandler):
     def can_parse(self, element):
         return element.tag == 'RegionOfInterest'
 
-    def from_xml(self, element):
+    def parse(self, element):
         obj = self._parse_parameter(element, RegionOfInterest)
 
         subelement = element.find('StartChannel')
@@ -53,17 +52,17 @@ class RegionOfInterestXMLHandler(_XMLHandler):
     def can_convert(self, obj):
         return isinstance(obj, RegionOfInterest)
 
-    def to_xml(self, obj):
-        element = self._convert_parameter(obj, etree.Element('RegionOfInterest'))
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'RegionOfInterest')
 
         value = obj.start_channel
         attrib = type('MockAttribute', (object,), {'xmlname': 'StartChannel'})
-        subelement = self._convert_numerical_attribute(value, attrib)
-        element.append(subelement)
+        subelements = self._convert_numerical_attribute(value, attrib)
+        element.extend(subelements)
 
         value = obj.end_channel
         attrib = type('MockAttribute', (object,), {'xmlname': 'EndChannel'})
-        subelement = self._convert_numerical_attribute(value, attrib)
-        element.append(subelement)
+        subelements = self._convert_numerical_attribute(value, attrib)
+        element.extend(subelements)
 
         return element

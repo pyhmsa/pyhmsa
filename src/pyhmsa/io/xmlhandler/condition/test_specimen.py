@@ -43,8 +43,8 @@ class TestSpecimenPositionXMLHandler(unittest.TestCase):
     def testcan_parse(self):
         self.assertTrue(self.h.can_parse(self.element))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertAlmostEqual(0.0, obj.x, 4)
         self.assertEqual('mm', obj.x.unit)
         self.assertAlmostEqual(0.0, obj.y, 4)
@@ -59,8 +59,8 @@ class TestSpecimenPositionXMLHandler(unittest.TestCase):
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('SpecimenPosition', element.tag)
         self.assertEqual('0.0', element.find('X').text)
         self.assertEqual('0.0', element.find('Y').text)
@@ -89,8 +89,8 @@ class TestCompositionXMLHandler(unittest.TestCase):
     def testcan_parse(self):
         self.assertTrue(self.h.can_parse(self.element))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual('atoms', obj.unit)
         self.assertEqual(3, len(obj))
         self.assertAlmostEqual(3.0, obj[11], 4)
@@ -99,18 +99,18 @@ class TestCompositionXMLHandler(unittest.TestCase):
 
         source = StringIO('<Composition></Composition>')
         element = etree.parse(source)
-        obj = self.h.from_xml(element)
+        obj = self.h.parse(element)
         self.assertIsNone(obj)
 
         source = StringIO('<Composition><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="wt%" DataType="float">1.</Element></Composition>')
         element = etree.parse(source)
-        self.assertRaises(ValueError, self.h.from_xml, element)
+        self.assertRaises(ValueError, self.h.parse, element)
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Composition', element.tag)
         self.assertEqual(3, len(element.findall('Element')))
 
@@ -135,8 +135,8 @@ class TestSpecimenXMLHandler(unittest.TestCase):
     def testcan_parse(self):
         self.assertTrue(self.h.can_parse(self.element))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual('Cryolite', obj.name)
         self.assertEqual('Natural cryolite standard', obj.description)
         self.assertEqual('Kitaa, Greenland', obj.origin)
@@ -151,8 +151,8 @@ class TestSpecimenXMLHandler(unittest.TestCase):
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Specimen', element.tag)
         self.assertEqual('Cryolite', element.find('Name').text)
         self.assertEqual('Natural cryolite standard', element.find('Description').text)
@@ -186,8 +186,8 @@ class TestSpecimenMultilayerXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Specimen')))
         self.assertFalse(self.h.can_parse(etree.Element('ABC')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual('Cryolite', obj.name)
         self.assertEqual('Natural cryolite standard', obj.description)
         self.assertEqual('Kitaa, Greenland', obj.origin)
@@ -203,8 +203,8 @@ class TestSpecimenMultilayerXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Specimen', element.tag)
         self.assertEqual('Cryolite', element.find('Name').text)
         self.assertEqual('Natural cryolite standard', element.find('Description').text)

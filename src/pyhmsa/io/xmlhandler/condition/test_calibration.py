@@ -46,8 +46,8 @@ class TestCalibrationConstantXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Calibration')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual('Energy', obj.quantity)
         self.assertEqual('eV', obj.unit)
         self.assertAlmostEqual(-237.098251, obj.value, 6)
@@ -56,8 +56,8 @@ class TestCalibrationConstantXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Calibration', element.tag)
         self.assertEqual('Constant', element.get('Class'))
         self.assertEqual('Energy', element.find('Quantity').text)
@@ -84,8 +84,8 @@ class TestCalibrationLinearXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Calibration')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual('Energy', obj.quantity)
         self.assertEqual('eV', obj.unit)
         self.assertAlmostEqual(2.49985, obj.gain, 6)
@@ -95,8 +95,8 @@ class TestCalibrationLinearXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Calibration', element.tag)
         self.assertEqual('Linear', element.get('Class'))
         self.assertEqual('Energy', element.find('Quantity').text)
@@ -124,8 +124,8 @@ class TestCalibrationPolynomialXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Calibration')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual('Energy', obj.quantity)
         self.assertEqual('eV', obj.unit)
         self.assertEqual(4, len(obj.coefficients))
@@ -138,8 +138,8 @@ class TestCalibrationPolynomialXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Calibration', element.tag)
         self.assertEqual('Polynomial', element.get('Class'))
         self.assertEqual('Energy', element.find('Quantity').text)
@@ -167,8 +167,8 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Calibration')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual('Energy', obj.quantity)
         self.assertEqual('eV', obj.unit)
         self.assertEqual(4, len(obj.values))
@@ -181,8 +181,8 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Calibration', element.tag)
         self.assertEqual('Explicit', element.get('Class'))
         self.assertEqual('Energy', element.find('Quantity').text)

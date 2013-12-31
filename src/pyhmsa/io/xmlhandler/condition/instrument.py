@@ -19,7 +19,6 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
-import xml.etree.ElementTree as etree
 
 # Third party modules.
 
@@ -34,11 +33,11 @@ class InstrumentXMLHandler(_XMLHandler):
     def can_parse(self, element):
         return element.tag == 'Instrument'
 
-    def from_xml(self, element):
+    def parse(self, element):
         return self._parse_parameter(element, Instrument)
 
     def can_convert(self, obj):
         return isinstance(obj, Instrument)
 
-    def to_xml(self, obj):
-        return self._convert_parameter(obj, etree.Element('Instrument'))
+    def convert(self, obj):
+        return self._convert_parameter(obj, 'Instrument')

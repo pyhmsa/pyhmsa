@@ -34,7 +34,7 @@ from pyhmsa.util.parameter import \
      TimeAttribute, ChecksumAttribute)
 
 # Globals and constants variables.
-DTYPES_LOOKUP_FROM_XML = {'byte': np.dtype(np.uint8),
+DTYPES_LOOKUP_parse = {'byte': np.dtype(np.uint8),
                           'int16': np.dtype(np.int16),
                           'uint16': np.dtype(np.uint16),
                           'int32': np.dtype(np.int32),
@@ -43,7 +43,7 @@ DTYPES_LOOKUP_FROM_XML = {'byte': np.dtype(np.uint8),
                           'float': np.dtype(np.float32),
                           'double': np.dtype(np.float64)}
 
-DTYPES_LOOKUP_TO_XML = {np.dtype(np.uint8): 'byte',
+DTYPES_LOOKUP_convert = {np.dtype(np.uint8): 'byte',
                         np.dtype(np.int16): 'int16',
                         np.dtype(np.uint16): 'uint16',
                         np.dtype(np.int32): 'int32',
@@ -111,11 +111,11 @@ class _XMLHandler(object):
     def _parse_numerical_attribute(self, element, attrib=None):
         datatype = element.attrib['DataType']
         if datatype.startswith('array:'):
-            dtype = DTYPES_LOOKUP_FROM_XML[datatype[6:]]
+            dtype = DTYPES_LOOKUP_parse[datatype[6:]]
             value = np.array(list(map(float, element.text.split(','))), dtype=dtype)
             assert len(value) == int(element.attrib['Count'])
         else:
-            dtype = DTYPES_LOOKUP_FROM_XML[datatype]
+            dtype = DTYPES_LOOKUP_parse[datatype]
             value = dtype.type(float(element.text))
 
         unit = element.get('Unit')
@@ -150,15 +150,16 @@ class _XMLHandler(object):
         algorithm = element.attrib['Algorithm']
         return Checksum(value, algorithm)
 
-    def from_xml(self, element):
+    def parse(self, element):
         raise NotImplementedError # pragma: no cover
 
     def can_convert(self, obj):
         return False
 
-    def _convert_parameter(self, obj, element=None):
-        if element is None:
-            element = etree.Element('Unknown')
+    def _convert_parameter(self, obj, tag=None, attrib=None):
+        if attrib is None:
+            attrib = {}
+        element = etree.Element(tag or 'Unknown', attrib)
 
         for name, attrib in obj.__class__.__attributes__.items():
             if attrib.xmlname is None: # skip, undefined way to convert
@@ -172,8 +173,8 @@ class _XMLHandler(object):
                     continue
 
             method = self._find_method(self._converters, attrib)
-            subelement = method(value, attrib)
-            element.append(subelement)
+            subelements = method(value, attrib)
+            element.extend(subelements)
 
         return element
 
@@ -183,7 +184,7 @@ class _XMLHandler(object):
         if hasattr(value, 'unit') and value.unit is not None:
             element.attrib['Unit'] = value.unit
 
-        datatype = DTYPES_LOOKUP_TO_XML[value.dtype]
+        datatype = DTYPES_LOOKUP_convert[value.dtype]
 
         value = value.tolist()
         if np.isscalar(value):
@@ -195,7 +196,7 @@ class _XMLHandler(object):
 
         element.attrib['DataType'] = datatype
 
-        return element
+        return [element]
 
     def _convert_text_attribute(self, value, attrib):
         element = etree.Element(attrib.xmlname)
@@ -205,28 +206,28 @@ class _XMLHandler(object):
             for language_tag, altvalue in value.alternatives.items():
                 element.set('alt-lang-' + language_tag, altvalue)
 
-        return element
+        return [element]
 
     def _convert_object_attribute(self, value, attrib):
-        return self._convert_parameter(value, etree.Element(attrib.xmlname))
+        return [self._convert_parameter(value, attrib.xmlname)]
 
     def _convert_date_attribute(self, value, attrib):
         element = etree.Element(attrib.xmlname)
         element.text = value.strftime('%Y-%m-%d')
-        return element
+        return [element]
 
     def _convert_time_attribute(self, value, attrib):
         element = etree.Element(attrib.xmlname)
         element.text = value.strftime('%H:%M:%S')
-        return element
+        return [element]
 
     def _convert_checksum_attribute(self, value, attrib):
         element = etree.Element(attrib.xmlname)
         element.text = value.value
         element.set('Algorithm', value.algorithm)
-        return element
+        return [element]
 
-    def to_xml(self, obj):
+    def convert(self, obj):
         raise NotImplementedError # pragma: no cover
 
     @property

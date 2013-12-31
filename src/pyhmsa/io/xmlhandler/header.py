@@ -34,7 +34,7 @@ class HeaderXMLHandler(_XMLHandler):
     def can_parse(self, element):
         return element.tag == 'Header'
 
-    def from_xml(self, element):
+    def parse(self, element):
         obj = self._parse_parameter(element, Header)
 
         for subelement in element.iter():
@@ -48,8 +48,8 @@ class HeaderXMLHandler(_XMLHandler):
     def can_convert(self, obj):
         return isinstance(obj, Header)
 
-    def to_xml(self, obj):
-        element = self._convert_parameter(obj, etree.Element('Header'))
+    def convert(self, obj):
+        element = self._convert_parameter(obj, 'Header')
 
         for name, value in obj.__dict__.items():
             if name in obj.__class__.__dict__:

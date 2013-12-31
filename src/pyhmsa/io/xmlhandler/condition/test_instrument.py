@@ -41,8 +41,8 @@ class TestInstrumentXMLHandler(unittest.TestCase):
     def testcan_parse(self):
         self.assertTrue(self.h.can_parse(self.element))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual('Example Inc.', obj.manufacturer)
         self.assertEqual('Example Model 123', obj.model)
         self.assertEqual('12345-abc-67890', obj.serial_number)
@@ -50,8 +50,8 @@ class TestInstrumentXMLHandler(unittest.TestCase):
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Instrument', element.tag)
         self.assertEqual('Example Inc.', element.find('Manufacturer').text)
         self.assertEqual('Example Model 123', element.find('Model').text)

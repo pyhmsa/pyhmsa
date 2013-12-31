@@ -45,8 +45,8 @@ class TestProbeEMXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Probe')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertAlmostEqual(15.0, obj.beam_voltage, 4)
         self.assertEqual('kV', obj.beam_voltage.unit)
         self.assertAlmostEqual(47.59, obj.beam_current, 4)
@@ -72,8 +72,8 @@ class TestProbeEMXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Probe', element.tag)
         self.assertEqual('EM', element.get('Class'))
         self.assertEqual('15.0', element.find('BeamVoltage').text)
@@ -109,8 +109,8 @@ class TestProbeTEMXMLHandler(unittest.TestCase):
         self.assertFalse(self.h.can_parse(etree.Element('Probe')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
-    def testfrom_xml(self):
-        obj = self.h.from_xml(self.element)
+    def testparse(self):
+        obj = self.h.parse(self.element)
         self.assertEqual(LENS_MODE_IMAGE, obj.lens_mode)
         self.assertAlmostEqual(2.0, obj.camera_magnification, 4)
         self.assertAlmostEqual(1.5, obj.convergence_angle, 4)
@@ -120,8 +120,8 @@ class TestProbeTEMXMLHandler(unittest.TestCase):
         self.assertTrue(self.h.can_convert(self.obj))
         self.assertFalse(self.h.can_convert(object()))
 
-    def testto_xml(self):
-        element = self.h.to_xml(self.obj)
+    def testconvert(self):
+        element = self.h.convert(self.obj)
         self.assertEqual('Probe', element.tag)
         self.assertEqual('TEM', element.get('Class'))
         self.assertEqual(LENS_MODE_IMAGE, element.find('LensMode').text)
