@@ -180,7 +180,7 @@ class _XMLHandler(object):
     def _convert_numerical_attribute(self, value, attrib):
         element = etree.Element(attrib.xmlname)
 
-        if hasattr(value, 'unit'):
+        if hasattr(value, 'unit') and value.unit is not None:
             element.attrib['Unit'] = value.unit
 
         datatype = DTYPES_LOOKUP_TO_XML[value.dtype]
