@@ -290,6 +290,17 @@ class ParameterMetaclass(type):
         # Add __attributes__
         methods['__attributes__'] = attributes
 
+        # Add __repr__ method
+        def _repr(self):
+            reprstr = []
+            for name, attribute in self.__attributes__.items():
+                value = getattr(self, name, None)
+                if value is None and not attribute.is_required():
+                    continue
+                reprstr.append('%s=%s' % (name, value))
+            return '<%s(%s)>' % (self.__class__.__name__, ', '.join(reprstr))
+        methods['__repr__'] = _repr
+
         return type.__new__(cls, clsname, bases, methods)
 
 Parameter = ParameterMetaclass('Parameter', (object,), {})

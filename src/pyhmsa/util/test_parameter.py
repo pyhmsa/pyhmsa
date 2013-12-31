@@ -50,6 +50,9 @@ class TestModule(unittest.TestCase):
     def tearDown(self):
         unittest.TestCase.tearDown(self)
 
+    def test__repr__(self):
+        self.assertEqual('<MockParameter(', repr(self.mock)[:15])
+
     def test_attribute(self):
         self.mock.required = 'abc'
         self.assertEqual('abc', self.mock.required)
