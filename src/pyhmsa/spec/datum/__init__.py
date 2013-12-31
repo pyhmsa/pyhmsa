@@ -54,7 +54,7 @@ class _Datum(np.ndarray):
 
 class Data(_IdentifierDict):
 
-    def __setitem__(self, identifier, condition):
-        _IdentifierDict.__setitem__(self, identifier, condition)
-        if not isinstance(condition, _Datum):
+    def __setitem__(self, name, datum):
+        if not isinstance(datum, _Datum):
             raise ValueError("Value is not a datum")
+        _IdentifierDict.__setitem__(self, name, datum)

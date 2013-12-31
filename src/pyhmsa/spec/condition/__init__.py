@@ -36,6 +36,6 @@ class _Condition(Parameter):
 class Conditions(_IdentifierDict):
 
     def __setitem__(self, identifier, condition):
-        _IdentifierDict.__setitem__(self, identifier, condition)
         if not isinstance(condition, _Condition):
             raise ValueError("Value is not a condition")
+        _IdentifierDict.__setitem__(self, identifier, condition)
