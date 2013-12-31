@@ -31,7 +31,13 @@ import hashlib
 CHECKSUM_ALGORITHM_SHA1 = 'SHA-1'
 CHECKSUM_ALGORITHM_SUM32 = 'SUM32'
 
-Checksum = namedtuple('Checksum', ['value', 'algorithm'])
+class Checksum(namedtuple('Checksum', ['value', 'algorithm'])):
+
+    def __new__(cls, value, algorithm):
+        if algorithm not in _CHECKSUM_ALGORITHMS:
+            raise ValueError('Unknown algorithm: %s' % algorithm)
+        value = value.upper()
+        return cls.__bases__[0].__new__(cls, value, algorithm)
 
 def calculate_checksum_sha1(buffer):
     sha1 = hashlib.sha1()
