@@ -21,6 +21,7 @@ __license__ = "GPL v3"
 # Standard library modules.
 
 # Third party modules.
+import numpy as np
 
 # Local modules.
 from pyhmsa.spec.datum import _Datum
@@ -47,7 +48,7 @@ class _AnalysisList(_Datum):
 
     @property
     def analysis_count(self):
-        return len(self)
+        return np.uint32(len(self))
 
 class AnalysisList0D(_AnalysisList):
     """
@@ -82,7 +83,7 @@ class AnalysisList1D(_AnalysisList):
 
     @property
     def channel(self):
-        return self.shape[1]
+        return np.uint32(self.shape[1])
 
 class AnalysisList2D(_AnalysisList):
     """
@@ -101,11 +102,11 @@ class AnalysisList2D(_AnalysisList):
 
     @property
     def u(self):
-        return self.shape[1]
+        return np.uint32(self.shape[1])
 
     @property
     def v(self):
-        return self.shape[2]
+        return np.uint32(self.shape[2])
 
     def toimage(self, index):
         raise NotImplementedError

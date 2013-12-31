@@ -70,7 +70,7 @@ class Analysis1D(_Analysis):
 
     @property
     def channel(self):
-        return len(self)
+        return np.uint32(len(self))
 
 class Analysis2D(_Analysis):
     """
@@ -95,11 +95,11 @@ class Analysis2D(_Analysis):
 
     @property
     def u(self):
-        return self.shape[0]
+        return np.uint32(self.shape[0])
 
     @property
     def v(self):
-        return self.shape[1]
+        return np.uint32(self.shape[1])
 
     def toimage(self):
         raise NotImplementedError

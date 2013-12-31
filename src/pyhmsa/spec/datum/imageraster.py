@@ -21,6 +21,7 @@ __license__ = "GPL v3"
 # Standard library modules.
 
 # Third party modules.
+import numpy as np
 
 # Local modules.
 from pyhmsa.spec.datum import _Datum
@@ -59,11 +60,11 @@ class ImageRaster2D(_ImageRaster):
 
     @property
     def x(self):
-        return self.shape[0]
+        return np.uint32(self.shape[0])
 
     @property
     def y(self):
-        return self.shape[1]
+        return np.uint32(self.shape[1])
 
 class ImageRaster2DSpectral(ImageRaster2D):
     """
@@ -84,7 +85,7 @@ class ImageRaster2DSpectral(ImageRaster2D):
 
     @property
     def channel(self):
-        return self.shape[2]
+        return np.uint32(self.shape[2])
 
 class ImageRaster2DHyperimage(ImageRaster2D):
     """
@@ -104,9 +105,9 @@ class ImageRaster2DHyperimage(ImageRaster2D):
 
     @property
     def u(self):
-        return self.shape[2]
+        return np.uint32(self.shape[2])
 
     @property
     def v(self):
-        return self.shape[3]
+        return np.uint32(self.shape[3])
 
