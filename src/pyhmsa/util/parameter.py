@@ -240,6 +240,8 @@ class NumericalRangeAttribute(NumericalAttribute):
             raise ValueError("Upper value is greater than limit")
 
     def _new(self, cls, clsname, bases, methods, name):
+        NumericalAttribute._new(self, cls, clsname, bases, methods, name)
+
         # Change set method to allow two values and unit input
         methods['set_%s' % name] = \
             lambda instance, vmin, vmax, unit = None: \
