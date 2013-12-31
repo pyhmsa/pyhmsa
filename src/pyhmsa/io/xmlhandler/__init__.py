@@ -222,10 +222,7 @@ class _XMLHandler(object):
         return [element]
 
     def _convert_checksum_attribute(self, value, attrib):
-        element = etree.Element(attrib.xmlname)
-        element.text = value.value
-        element.set('Algorithm', value.algorithm)
-        return [element]
+        return [] # Checksum is added manually later by the writer
 
     def convert(self, obj):
         raise NotImplementedError # pragma: no cover
