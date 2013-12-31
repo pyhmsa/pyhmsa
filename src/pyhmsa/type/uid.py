@@ -24,6 +24,7 @@ import time
 import uuid
 import getpass
 import socket
+import binascii
 
 try:
     import winreg
@@ -80,4 +81,4 @@ def generate_uid():
     uid = sha1.hexdigest()
     uid = uid[:16] # Take only the first 16 characters
 
-    return uid.encode('ascii').upper()
+    return binascii.unhexlify(uid)

@@ -28,8 +28,8 @@ class TestModule(unittest.TestCase):
         unittest.TestCase.tearDown(self)
 
     def testgenerate_uid(self):
-        self.assertEqual(16, len(generate_uid()))
+        self.assertEqual(8, len(generate_uid()))
 
-if __name__ == '__main__': #pragma: no cover
+if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()
