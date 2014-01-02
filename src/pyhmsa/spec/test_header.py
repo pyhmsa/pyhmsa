@@ -26,9 +26,43 @@ class TestHeader(unittest.TestCase):
         unittest.TestCase.setUp(self)
 
         self.header = Header()
+        self.header['Extra1'] = 'Test'
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
+
+    def testskeleton(self):
+        header = Header(title='Beep beep')
+        self.assertEqual('Beep beep', header.title)
+
+        header2 = Header(Extra2='Test2')
+        self.assertIn('Extra1', self.header)
+        self.assertNotIn('Extra2', self.header)
+        self.assertNotIn('Extra1', header)
+        self.assertNotIn('Extra2', header)
+        self.assertNotIn('Extra1', header2)
+        self.assertIn('Extra2', header2)
+
+    def test__len__(self):
+        self.assertEqual(7, len(self.header))
+
+    def test__iter__(self):
+        self.assertEqual(7, len(list(iter(self.header))))
+
+    def test__setitem__(self):
+        self.header['Test'] = 'Abc'
+        self.assertEqual('Abc', self.header['Test'])
+
+    def test__delitem__(self):
+        self.header['Test'] = 'Abc'
+        del self.header['Test']
+        self.assertNotIn('Test', self.header)
+
+    def test__contains__(self):
+        self.assertIn('title', self.header)
+        self.assertIn('Title', self.header)
+        self.assertIn('Extra1', self.header)
+        self.assertNotIn('Extra2', self.header)
 
     def testtitle(self):
         self.header.title = 'Beep beep'
@@ -81,13 +115,6 @@ class TestHeader(unittest.TestCase):
         self.header.checksum = checksum
         self.assertEqual('53AAD59C05D59A40AD746D6928EA6D2D526865FD', self.header.checksum.value)
         self.assertRaises(ValueError, self.header.set_checksum, '53AAD59C05D59A40AD746D6928EA6D2D526865FD')
-
-    def test__setitem__(self):
-        self.header['Test'] = 'Abc'
-        self.assertEqual('Abc', self.header['Test'])
-
-        self.header['Test'] = None
-        self.assertNotIn('Test', self.header)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

@@ -66,14 +66,13 @@ class TestHeaderXMLHandler(unittest.TestCase):
     def testconvert(self):
         element = self.h.convert(self.obj)
         self.assertEqual('Header', element.tag)
-        self.assertEqual('53AAD59C05D59A40AD746D6928EA6D2D526865FD', element.find('Checksum').text)
-        self.assertEqual('SHA-1', element.find('Checksum').get('Algorithm'))
+        self.assertIsNone(element.find('Checksum')) # Checksum not saved
         self.assertEqual('Beep Beep', element.find('Title').text)
         self.assertEqual('Wyle E. Coyote', element.find('Author').text)
         self.assertEqual('Acme Inc.', element.find('Owner').text)
         self.assertEqual('1985-10-26', element.find('Date').text)
         self.assertEqual('20:04:00', element.find('Time').text)
-        self.assertEqual('Blah', element.find('Extra').text)
+        self.assertEqual('Blah', element.find('extra').text)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

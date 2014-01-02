@@ -19,17 +19,25 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
+from collections import MutableMapping
+from abc import ABCMeta
 
 # Third party modules.
 
 # Local modules.
 from pyhmsa.type.identifier import validate_identifier
 from pyhmsa.util.parameter import \
-    Parameter, TextAttribute, DateAttribute, TimeAttribute, ChecksumAttribute
+    (ParameterMetaclass, Parameter, TextAttribute, DateAttribute,
+     TimeAttribute, ChecksumAttribute)
 
 # Globals and constants variables.
 
-class Header(Parameter):
+class _HeaderMetaclass(ABCMeta, ParameterMetaclass):
+    pass
+
+_BaseHeader = _HeaderMetaclass('_HeaderMetaclass', (MutableMapping, Parameter), {})
+
+class Header(_BaseHeader):
 
     title = TextAttribute(False, 'Title', 'title')
     author = TextAttribute(False, 'Author', 'author')
@@ -38,35 +46,49 @@ class Header(Parameter):
     time = TimeAttribute(False, 'Time', 'time')
     checksum = ChecksumAttribute(False, 'Checksum', 'checksum')
 
-    def __init__(self, **kwargs):
+    def __init__(self, title=None, author=None, owner=None, date=None,
+                 time=None, checksum=None, **kwargs):
         """
         Contains metadata that principally identifies the title of the document,
         the author/ownership of the data, and the date/time of collection.
         Header information shall not contain parameters that are required for
         the interpretation of the experimental data.
         """
-        for key, value in kwargs.items():
-            self[key] = value
+        self.title = title
+        self.author = author
+        self.owner = owner
+        self.date = date
+        self.time = time
+        self.checksum = checksum
+
+        self._extras = {}
+        self._extras.update(kwargs)
+
+    def __reduce__(self):
+        return (self.__class__, ())
+
+    def __len__(self):
+        return len(self._extras) + len(self.__attributes__)
+
+    def __iter__(self):
+        for key in self._extras.keys() | self.__attributes__.keys():
+            yield key
 
     def __setitem__(self, key, value):
-        key = key.lower()
-        validate_identifier(key)
-
-        if value is None:
-            self.__dict__.pop(key, None)
-            return
-
-        method = getattr(self, 'set_%s' % key, None)
-        if method:
-            method(value)
+        if key.lower() in self.__attributes__:
+            setattr(self, key.lower(), value)
         else:
-            self.__dict__[key] = value
+            validate_identifier(key)
+            self._extras[key] = value
 
     def __getitem__(self, key):
-        return self.__dict__.get(key.lower())
+        if key.lower() in self.__attributes__:
+            return getattr(self, key.lower())
+        else:
+            return self._extras[key]
 
     def __delitem__(self, key):
-        del self.__dict__[key.lower()]
-
-    def __contains__(self, key):
-        return key.lower() in self.__dict__
+        if key.lower() in self.__attributes__:
+            delattr(self, key.lower())
+        else:
+            del self._extras[key]

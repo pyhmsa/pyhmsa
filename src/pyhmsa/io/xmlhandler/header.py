@@ -38,8 +38,8 @@ class HeaderXMLHandler(_XMLHandler):
         obj = self._parse_parameter(element, Header)
 
         for subelement in element.iter():
-            name = subelement.tag.lower()
-            if hasattr(obj, name):
+            name = subelement.tag
+            if name in obj:
                 continue # already parsed
             obj[name] = subelement.text
 
@@ -51,13 +51,9 @@ class HeaderXMLHandler(_XMLHandler):
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Header')
 
-        for name, value in obj.__dict__.items():
-            if name in obj.__class__.__dict__:
-                continue # already converted
-
-            subelement = etree.Element(name.title())
+        for name, value in obj._extras.items():
+            subelement = etree.Element(name)
             subelement.text = str(value)
-
             element.append(subelement)
 
         return element
