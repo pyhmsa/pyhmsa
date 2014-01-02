@@ -44,10 +44,10 @@ class TestHeader(unittest.TestCase):
         self.assertIn('Extra2', header2)
 
     def test__len__(self):
-        self.assertEqual(7, len(self.header))
+        self.assertEqual(8, len(self.header))
 
     def test__iter__(self):
-        self.assertEqual(7, len(list(iter(self.header))))
+        self.assertEqual(8, len(list(iter(self.header))))
 
     def test__setitem__(self):
         self.header['Test'] = 'Abc'
@@ -109,6 +109,10 @@ class TestHeader(unittest.TestCase):
         self.assertEqual(13, self.header.time.hour)
         self.assertEqual(1, self.header.time.minute)
         self.assertEqual(4, self.header.time.second)
+
+    def testtimezone(self):
+        self.header.timezone = 'AUS Eastern Standard Time'
+        self.assertEqual('AUS Eastern Standard Time', self.header.timezone)
 #
     def testchecksum(self):
         checksum = Checksum('53AAD59C05D59A40AD746D6928EA6D2D526865FD', 'SHA-1')

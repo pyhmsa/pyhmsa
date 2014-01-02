@@ -44,6 +44,7 @@ class Header(_BaseHeader):
     owner = TextAttribute(False, 'Owner', 'legal owner')
     date = DateAttribute(False, 'Date', 'date')
     time = TimeAttribute(False, 'Time', 'time')
+    timezone = TextAttribute(False, 'Timezone', 'timezone')
     checksum = ChecksumAttribute(False, 'Checksum', 'checksum')
 
     def __init__(self, title=None, author=None, owner=None, date=None,
