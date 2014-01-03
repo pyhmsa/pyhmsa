@@ -45,15 +45,6 @@ class Analysis0D(_Analysis):
         buffer = np.array(value, dtype=dtype)
         return _Analysis.__new__(cls, (), dtype, buffer, conditions)
 
-    def __array_finalize__(self, obj):
-        _Analysis.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        if obj.ndim != 0:
-            raise ValueError('Invalid dimension of array. Only 0D array accepted.')
-
 class Analysis1D(_Analysis):
     """
     Stores a measurement of a specimen at a single point in space or time
@@ -65,15 +56,6 @@ class Analysis1D(_Analysis):
             raise ValueError('Number of channel must be greater than 0')
         shape = (channels,)
         return _Analysis.__new__(cls, shape, dtype, buffer, conditions)
-
-    def __array_finalize__(self, obj):
-        _Analysis.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        if obj.ndim != 1:
-            raise ValueError('Invalid dimension of array. Only 1D array accepted.')
 
     @property
     def channels(self):
@@ -96,15 +78,6 @@ class Analysis2D(_Analysis):
             raise ValueError('Dimension must be greater than 0')
         shape = (u, v)
         return _Analysis.__new__(cls, shape, dtype, buffer, conditions)
-
-    def __array_finalize__(self, obj):
-        _Analysis.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        if obj.ndim != 2:
-            raise ValueError('Invalid dimension of array. Only 2D array accepted.')
 
     @property
     def u(self):

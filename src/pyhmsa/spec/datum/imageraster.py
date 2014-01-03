@@ -36,15 +36,6 @@ class _ImageRaster(_Datum):
     serial section.
     """
 
-    def __array_finalize__(self, obj):
-        _Datum.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        if obj.ndim < 2:
-            raise ValueError('Invalid dimension of array')
-
 class ImageRaster2D(_ImageRaster):
     """
     Represents a dataset that has been raster mapped in 2D (x/y dimensions).
@@ -53,15 +44,6 @@ class ImageRaster2D(_ImageRaster):
     def __new__(cls, x, y, dtype=np.float32, buffer=None, conditions=None):
         shape = (x, y)
         return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions)
-
-    def __array_finalize__(self, obj):
-        _ImageRaster.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        if obj.ndim != 2:
-            raise ValueError('Invalid dimension of array')
 
     @property
     def x(self):
@@ -86,15 +68,6 @@ class ImageRaster2DSpectral(_ImageRaster):
                 buffer=None, conditions=None):
         shape = (x, y, channels)
         return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions)
-
-    def __array_finalize__(self, obj):
-        _ImageRaster.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        if obj.ndim != 3:
-            raise ValueError('Invalid dimension of array')
 
     @property
     def x(self):
@@ -122,15 +95,6 @@ class ImageRaster2DHyperimage(_ImageRaster):
                 buffer=None, conditions=None):
         shape = (x, y, u, v)
         return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions)
-
-    def __array_finalize__(self, obj):
-        _ImageRaster.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        if obj.ndim != 4:
-            raise ValueError('Invalid dimension of array')
 
     @property
     def x(self):

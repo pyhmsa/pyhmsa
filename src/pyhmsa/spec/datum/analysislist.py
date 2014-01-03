@@ -38,15 +38,6 @@ class _AnalysisList(_Datum):
     Each row (first index) represents a point measurement.
     """
 
-    def __array_finalize__(self, obj):
-        _Datum.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        if obj.ndim < 2:
-            raise ValueError('Invalid dimension of array')
-
     @property
     def analysis_count(self):
         return np.uint32(len(self))
@@ -63,15 +54,6 @@ class AnalysisList0D(_AnalysisList):
         shape = (analysis_count, 1)
         return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions)
 
-    def __array_finalize__(self, obj):
-        _AnalysisList.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        if obj.ndim != 2 or obj.shape[1] != 1:
-            raise ValueError('Invalid dimension of array')
-
     def toanalysis(self, analysis_index):
         return Analysis0D(self[analysis_index, 0], self.dtype, self.conditions)
 
@@ -85,15 +67,6 @@ class AnalysisList1D(_AnalysisList):
                 buffer=None, conditions=None):
         shape = (analysis_count, channels)
         return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions)
-
-    def __array_finalize__(self, obj):
-        _AnalysisList.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        if obj.ndim != 2 or obj.shape[1] < 1:
-            raise ValueError('Invalid dimension of array')
 
     @property
     def channels(self):
@@ -113,16 +86,6 @@ class AnalysisList2D(_AnalysisList):
                 buffer=None, conditions=None):
         shape = (analysis_count, u, v)
         return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions)
-
-    def __array_finalize__(self, obj):
-        _AnalysisList.__array_finalize__(self, obj)
-
-        if obj is None:
-            return
-
-        # FIXME: Does not work with print()
-        if obj.ndim != 3 or obj.shape[1] < 1 or obj.shape[2] < 1:
-            raise ValueError('Invalid dimension of array')
 
     @property
     def u(self):

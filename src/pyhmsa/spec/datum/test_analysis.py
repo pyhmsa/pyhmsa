@@ -38,8 +38,6 @@ class TestAnalysis0D(unittest.TestCase):
         self.assertAlmostEqual(4.0, self.datum, 4)
         self.assertEqual(1, len(self.datum.conditions))
 
-        self.assertRaises(ValueError, np.arange(5.0).view, Analysis0D)
-
 class TestAnalysis1D(unittest.TestCase):
 
     def setUp(self):
@@ -69,8 +67,6 @@ class TestAnalysis1D(unittest.TestCase):
         datum = datum[:3]
         self.assertEqual(3, datum.channels)
 
-        self.assertRaises(ValueError, np.ones((3, 3)).view, Analysis1D)
-
 class TestAnalysis2D(unittest.TestCase):
 
     def setUp(self):
@@ -90,8 +86,6 @@ class TestAnalysis2D(unittest.TestCase):
         self.assertEqual(1, len(self.datum.conditions))
         self.assertEqual(147, self.datum[0, 0])
         self.assertEqual(218, self.datum[-1, -1])
-
-        self.assertRaises(ValueError, np.ones((3, 3, 3)).view, Analysis2D)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
