@@ -25,6 +25,7 @@ import numpy as np
 
 # Local modules.
 from pyhmsa.spec.datum import _Datum
+from pyhmsa.spec.datum.analysis import Analysis0D, Analysis1D, Analysis2D
 
 # Globals and constants variables.
 
@@ -49,13 +50,17 @@ class ImageRaster2D(_ImageRaster):
     Represents a dataset that has been raster mapped in 2D (x/y dimensions).
     """
 
+    def __new__(cls, x, y, dtype=np.float32, buffer=None, conditions=None):
+        shape = (x, y)
+        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions)
+
     def __array_finalize__(self, obj):
         _ImageRaster.__array_finalize__(self, obj)
 
         if obj is None:
             return
 
-        if obj.ndim < 2:
+        if obj.ndim != 2:
             raise ValueError('Invalid dimension of array')
 
     @property
@@ -66,7 +71,10 @@ class ImageRaster2D(_ImageRaster):
     def y(self):
         return np.uint32(self.shape[1])
 
-class ImageRaster2DSpectral(ImageRaster2D):
+    def toanalysis(self, x, y):
+        return Analysis0D(self[x, y], self.dtype, self.conditions)
+
+class ImageRaster2DSpectral(_ImageRaster):
     """
     Represents a dataset that has been raster mapped in 2D (x/y dimensions),
     where for each raster coordinate, the datum collected was a 1D array
@@ -74,8 +82,13 @@ class ImageRaster2DSpectral(ImageRaster2D):
     An example of this type of dataset is a SEM-XEDS map.
     """
 
+    def __new__(cls, x, y, channels, dtype=np.float32,
+                buffer=None, conditions=None):
+        shape = (x, y, channels)
+        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions)
+
     def __array_finalize__(self, obj):
-        ImageRaster2D.__array_finalize__(self, obj)
+        _ImageRaster.__array_finalize__(self, obj)
 
         if obj is None:
             return
@@ -84,15 +97,31 @@ class ImageRaster2DSpectral(ImageRaster2D):
             raise ValueError('Invalid dimension of array')
 
     @property
-    def channel(self):
+    def x(self):
+        return np.uint32(self.shape[0])
+
+    @property
+    def y(self):
+        return np.uint32(self.shape[1])
+
+    @property
+    def channels(self):
         return np.uint32(self.shape[2])
 
-class ImageRaster2DHyperimage(ImageRaster2D):
+    def toanalysis(self, x, y):
+        return Analysis1D(self.channels, self.dtype, self[x, y], self.conditions)
+
+class ImageRaster2DHyperimage(_ImageRaster):
     """
     Represents a dataset that has been raster mapped in 2D (x/y dimensions),
     where for each raster coordinate, the datum collected was a 2D image
     (U/V dimensions.
     """
+
+    def __new__(cls, x, y, u, v, dtype=np.float32,
+                buffer=None, conditions=None):
+        shape = (x, y, u, v)
+        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions)
 
     def __array_finalize__(self, obj):
         _ImageRaster.__array_finalize__(self, obj)
@@ -104,6 +133,14 @@ class ImageRaster2DHyperimage(ImageRaster2D):
             raise ValueError('Invalid dimension of array')
 
     @property
+    def x(self):
+        return np.uint32(self.shape[0])
+
+    @property
+    def y(self):
+        return np.uint32(self.shape[1])
+
+    @property
     def u(self):
         return np.uint32(self.shape[2])
 
@@ -111,3 +148,5 @@ class ImageRaster2DHyperimage(ImageRaster2D):
     def v(self):
         return np.uint32(self.shape[3])
 
+    def toanalysis(self, x, y):
+        return Analysis2D(self.u, self.v, self.dtype, self[x, y], self.conditions)

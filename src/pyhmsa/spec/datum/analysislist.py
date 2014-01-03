@@ -25,6 +25,7 @@ import numpy as np
 
 # Local modules.
 from pyhmsa.spec.datum import _Datum
+from pyhmsa.spec.datum.analysis import Analysis0D, Analysis1D, Analysis2D
 
 # Globals and constants variables.
 
@@ -57,6 +58,11 @@ class AnalysisList0D(_AnalysisList):
     BSE yield, vacuum pressure).
     """
 
+    def __new__(cls, analysis_count, dtype=np.float32,
+                buffer=None, conditions=None):
+        shape = (analysis_count, 1)
+        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions)
+
     def __array_finalize__(self, obj):
         _AnalysisList.__array_finalize__(self, obj)
 
@@ -66,11 +72,19 @@ class AnalysisList0D(_AnalysisList):
         if obj.ndim != 2 or obj.shape[1] != 1:
             raise ValueError('Invalid dimension of array')
 
+    def toanalysis(self, analysis_index):
+        return Analysis0D(self[analysis_index, 0], self.dtype, self.conditions)
+
 class AnalysisList1D(_AnalysisList):
     """
     Represents a sequence of point measurements with one datum dimension,
     such as a spectrum.
     """
+
+    def __new__(cls, analysis_count, channels, dtype=np.float32,
+                buffer=None, conditions=None):
+        shape = (analysis_count, channels)
+        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions)
 
     def __array_finalize__(self, obj):
         _AnalysisList.__array_finalize__(self, obj)
@@ -82,8 +96,12 @@ class AnalysisList1D(_AnalysisList):
             raise ValueError('Invalid dimension of array')
 
     @property
-    def channel(self):
+    def channels(self):
         return np.uint32(self.shape[1])
+
+    def toanalysis(self, analysis_index):
+        return Analysis1D(self.channels, self.dtype, self[analysis_index, :],
+                          self.conditions)
 
 class AnalysisList2D(_AnalysisList):
     """
@@ -91,12 +109,18 @@ class AnalysisList2D(_AnalysisList):
     such as a diffraction pattern.
     """
 
+    def __new__(cls, analysis_count, u, v, dtype=np.float32,
+                buffer=None, conditions=None):
+        shape = (analysis_count, u, v)
+        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions)
+
     def __array_finalize__(self, obj):
         _AnalysisList.__array_finalize__(self, obj)
 
         if obj is None:
             return
 
+        # FIXME: Does not work with print()
         if obj.ndim != 3 or obj.shape[1] < 1 or obj.shape[2] < 1:
             raise ValueError('Invalid dimension of array')
 
@@ -108,7 +132,6 @@ class AnalysisList2D(_AnalysisList):
     def v(self):
         return np.uint32(self.shape[2])
 
-    def toimage(self, index):
-        raise NotImplementedError
-
-
+    def toanalysis(self, analysis_index):
+        return Analysis2D(self.u, self.v, self.dtype, self[analysis_index],
+                          self.conditions)

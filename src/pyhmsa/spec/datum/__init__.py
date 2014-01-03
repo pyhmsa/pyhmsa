@@ -34,6 +34,10 @@ class _Datum(np.ndarray):
 
     def __new__(cls, shape, dtype=np.float32, buffer=None, conditions=None):
         validate_dtype(dtype)
+
+        if buffer is None:
+            buffer = np.zeros(shape, dtype)
+
         obj = np.ndarray.__new__(cls, shape, dtype, buffer, offset=0,
                                  strides=None, order=None)
 
