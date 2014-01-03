@@ -15,7 +15,7 @@ import os
 
 # Third party modules.
 import numpy as np
-from PIL import Image, ImageChops
+from PIL import Image
 
 # Local modules.
 from pyhmsa.spec.datum.analysis import Analysis0D, Analysis1D, Analysis2D
@@ -92,18 +92,6 @@ class TestAnalysis2D(unittest.TestCase):
         self.assertEqual(218, self.datum[-1, -1])
 
         self.assertRaises(ValueError, np.ones((3, 3, 3)).view, Analysis2D)
-
-    def testfromimage(self):
-        datum = Analysis2D.fromimage(self.im)
-        self.assertEqual(220, datum.u)
-        self.assertEqual(220, datum.v)
-        self.assertEqual(0, len(datum.conditions))
-        self.assertEqual(147, datum[0, 0])
-        self.assertEqual(218, datum[-1, -1])
-
-    def testtoimage(self):
-        im = self.datum.toimage()
-        self.assertIsNone(ImageChops.difference(im, self.im).getbbox())
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

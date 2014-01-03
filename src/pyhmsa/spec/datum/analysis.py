@@ -23,11 +23,6 @@ __license__ = "GPL v3"
 # Third party modules.
 import numpy as np
 
-try:
-    from PIL import Image
-except ImportError:
-    Image = None
-
 # Local modules.
 from pyhmsa.spec.datum import _Datum
 
@@ -102,23 +97,6 @@ class Analysis2D(_Analysis):
         shape = (u, v)
         return _Analysis.__new__(cls, shape, dtype, buffer, conditions)
 
-    @classmethod
-    def fromimage(cls, im):
-        width, height = im.size
-        mode = im.mode
-
-        if mode in ['1', 'L', 'P']:
-            dtype = np.uint8
-        elif mode == 'I':
-            dtype = np.int32
-        elif mode == 'F':
-            dtype = np.float32
-        else:
-            raise ValueError('Unsupported mode: %s' % mode)
-
-        buffer = np.array(im, dtype=dtype)
-        return cls(width, height, dtype, buffer)
-
     def __array_finalize__(self, obj):
         _Analysis.__array_finalize__(self, obj)
 
@@ -135,8 +113,3 @@ class Analysis2D(_Analysis):
     @property
     def v(self):
         return np.uint32(self.shape[1])
-
-    def toimage(self):
-        if Image is None:
-            raise RuntimeError('PIL is not installed')
-        return Image.fromarray(self)
