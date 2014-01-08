@@ -41,9 +41,10 @@ class ImageRaster2D(_ImageRaster):
     Represents a dataset that has been raster mapped in 2D (x/y dimensions).
     """
 
-    def __new__(cls, x, y, dtype=np.float32, buffer=None, conditions=None):
+    def __new__(cls, x, y, dtype=np.float32, buffer=None,
+                conditions=None, order=None):
         shape = (x, y)
-        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions)
+        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions, order)
 
     @property
     def x(self):
@@ -65,9 +66,9 @@ class ImageRaster2DSpectral(_ImageRaster):
     """
 
     def __new__(cls, x, y, channels, dtype=np.float32,
-                buffer=None, conditions=None):
+                buffer=None, conditions=None, order=None):
         shape = (x, y, channels)
-        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions)
+        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions, order)
 
     @property
     def x(self):
@@ -92,9 +93,9 @@ class ImageRaster2DHyperimage(_ImageRaster):
     """
 
     def __new__(cls, x, y, u, v, dtype=np.float32,
-                buffer=None, conditions=None):
+                buffer=None, conditions=None, order=None):
         shape = (x, y, u, v)
-        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions)
+        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions, order)
 
     @property
     def x(self):

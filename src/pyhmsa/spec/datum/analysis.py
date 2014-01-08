@@ -41,9 +41,10 @@ class Analysis0D(_Analysis):
     comprising of one single-valued measurement.
     """
 
-    def __new__(cls, value, dtype=np.float32, conditions=None):
+    def __new__(cls, value, dtype=np.float32,
+                conditions=None, order=None):
         buffer = np.array(value, dtype=dtype)
-        return _Analysis.__new__(cls, (), dtype, buffer, conditions)
+        return _Analysis.__new__(cls, (), dtype, buffer, conditions, order)
 
 class Analysis1D(_Analysis):
     """
@@ -51,7 +52,8 @@ class Analysis1D(_Analysis):
     with one datum dimension.
     """
 
-    def __new__(cls, channels, dtype=np.float32, buffer=None, conditions=None):
+    def __new__(cls, channels, dtype=np.float32, buffer=None,
+                conditions=None, order=None):
         if channels <= 0:
             raise ValueError('Number of channel must be greater than 0')
         shape = (channels,)
@@ -73,11 +75,12 @@ class Analysis2D(_Analysis):
        Instead, such data shall be stored using the :class:`ImageRaster2D`.
     """
 
-    def __new__(cls, u, v, dtype=np.float32, buffer=None, conditions=None):
+    def __new__(cls, u, v, dtype=np.float32, buffer=None,
+                conditions=None, order=None):
         if u <= 0 or v <= 0:
             raise ValueError('Dimension must be greater than 0')
         shape = (u, v)
-        return _Analysis.__new__(cls, shape, dtype, buffer, conditions)
+        return _Analysis.__new__(cls, shape, dtype, buffer, conditions, order)
 
     @property
     def u(self):

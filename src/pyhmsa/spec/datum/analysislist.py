@@ -50,9 +50,9 @@ class AnalysisList0D(_AnalysisList):
     """
 
     def __new__(cls, analysis_count, dtype=np.float32,
-                buffer=None, conditions=None):
+                buffer=None, conditions=None, order=None):
         shape = (analysis_count, 1)
-        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions)
+        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions, order)
 
     def toanalysis(self, analysis_index):
         return Analysis0D(self[analysis_index, 0], self.dtype, self.conditions)
@@ -64,9 +64,9 @@ class AnalysisList1D(_AnalysisList):
     """
 
     def __new__(cls, analysis_count, channels, dtype=np.float32,
-                buffer=None, conditions=None):
+                buffer=None, conditions=None, order=None):
         shape = (analysis_count, channels)
-        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions)
+        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions, order)
 
     @property
     def channels(self):
@@ -83,9 +83,9 @@ class AnalysisList2D(_AnalysisList):
     """
 
     def __new__(cls, analysis_count, u, v, dtype=np.float32,
-                buffer=None, conditions=None):
+                buffer=None, conditions=None, order=None):
         shape = (analysis_count, u, v)
-        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions)
+        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions, order)
 
     @property
     def u(self):
