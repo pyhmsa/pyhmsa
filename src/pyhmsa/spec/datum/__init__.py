@@ -33,15 +33,16 @@ from pyhmsa.type.identifier import _IdentifierDict
 
 class _Datum(np.ndarray):
 
-    def __new__(cls, shape, dtype=np.float32, buffer=None,
-                conditions=None, order=None):
+    def __new__(cls, shape, dtype=np.float32,
+                buffer=None, offset=0, strides=None, order=None,
+                conditions=None):
         validate_dtype(dtype)
 
         if buffer is None:
             buffer = np.zeros(shape, dtype)
 
-        obj = np.ndarray.__new__(cls, shape, dtype, buffer, offset=0,
-                                 strides=None, order=order)
+        obj = np.ndarray.__new__(cls, shape, dtype, buffer, offset=offset,
+                                 strides=strides, order=order)
 
         if conditions is None:
             conditions = Conditions()

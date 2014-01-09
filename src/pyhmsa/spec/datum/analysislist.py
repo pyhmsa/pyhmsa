@@ -56,12 +56,15 @@ class AnalysisList0D(_AnalysisList):
     """
 
     def __new__(cls, analysis_count, dtype=np.float32,
-                buffer=None, conditions=None, order=None):
+                buffer=None, offset=0, strides=None, order=None,
+                conditions=None):
         shape = (analysis_count, 1)
-        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions, order)
+        return _AnalysisList.__new__(cls, shape, dtype,
+                                     buffer, offset, strides, order, conditions)
 
     def toanalysis(self, analysis_index):
-        return Analysis0D(self[analysis_index, 0], self.dtype, self.conditions)
+        return Analysis0D(self[analysis_index, 0], self.dtype,
+                          conditions=self.conditions)
 
 class AnalysisList1D(_AnalysisList):
     """
@@ -70,9 +73,11 @@ class AnalysisList1D(_AnalysisList):
     """
 
     def __new__(cls, analysis_count, channels, dtype=np.float32,
-                buffer=None, conditions=None, order=None):
+                buffer=None, offset=0, strides=None, order=None,
+                conditions=None):
         shape = (analysis_count, channels)
-        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions, order)
+        return _AnalysisList.__new__(cls, shape, dtype,
+                                     buffer, offset, strides, order, conditions)
 
     @property
     def channels(self):
@@ -86,7 +91,7 @@ class AnalysisList1D(_AnalysisList):
 
     def toanalysis(self, analysis_index):
         return Analysis1D(self.channels, self.dtype, self[analysis_index, :],
-                          self.conditions)
+                          conditions=self.conditions)
 
 class AnalysisList2D(_AnalysisList):
     """
@@ -95,9 +100,11 @@ class AnalysisList2D(_AnalysisList):
     """
 
     def __new__(cls, analysis_count, u, v, dtype=np.float32,
-                buffer=None, conditions=None, order=None):
+                buffer=None, offset=0, strides=None, order=None,
+                conditions=None):
         shape = (analysis_count, u, v)
-        return _AnalysisList.__new__(cls, shape, dtype, buffer, conditions, order)
+        return _AnalysisList.__new__(cls, shape, dtype,
+                                     buffer, offset, strides, order, conditions)
 
     @property
     def u(self):
@@ -116,4 +123,4 @@ class AnalysisList2D(_AnalysisList):
 
     def toanalysis(self, analysis_index):
         return Analysis2D(self.u, self.v, self.dtype, self[analysis_index],
-                          self.conditions)
+                          conditions=self.conditions)
