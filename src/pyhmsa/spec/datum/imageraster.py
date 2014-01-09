@@ -36,15 +36,10 @@ class _ImageRaster(_Datum):
     serial section.
     """
 
-class ImageRaster2D(_ImageRaster):
+class _ImageRaster2D(_ImageRaster):
     """
-    Represents a dataset that has been raster mapped in 2D (x/y dimensions).
+    Abstract class for image raster 2D classes.
     """
-
-    def __new__(cls, x, y, dtype=np.float32, buffer=None,
-                conditions=None, order=None):
-        shape = (x, y)
-        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions, order)
 
     @property
     def x(self):
@@ -54,10 +49,27 @@ class ImageRaster2D(_ImageRaster):
     def y(self):
         return np.uint32(self.shape[1])
 
+    @property
+    def collection_dimensions(self):
+        dims = _ImageRaster.collection_dimensions.fget(self) # @UndefinedVariable
+        dims['X'] = self.x
+        dims['Y'] = self.y
+        return dims
+
+class ImageRaster2D(_ImageRaster2D):
+    """
+    Represents a dataset that has been raster mapped in 2D (x/y dimensions).
+    """
+
+    def __new__(cls, x, y, dtype=np.float32, buffer=None,
+                conditions=None, order=None):
+        shape = (x, y)
+        return _ImageRaster2D.__new__(cls, shape, dtype, buffer, conditions, order)
+
     def toanalysis(self, x, y):
         return Analysis0D(self[x, y], self.dtype, self.conditions)
 
-class ImageRaster2DSpectral(_ImageRaster):
+class ImageRaster2DSpectral(_ImageRaster2D):
     """
     Represents a dataset that has been raster mapped in 2D (x/y dimensions),
     where for each raster coordinate, the datum collected was a 1D array
@@ -68,24 +80,22 @@ class ImageRaster2DSpectral(_ImageRaster):
     def __new__(cls, x, y, channels, dtype=np.float32,
                 buffer=None, conditions=None, order=None):
         shape = (x, y, channels)
-        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions, order)
-
-    @property
-    def x(self):
-        return np.uint32(self.shape[0])
-
-    @property
-    def y(self):
-        return np.uint32(self.shape[1])
+        return _ImageRaster2D.__new__(cls, shape, dtype, buffer, conditions, order)
 
     @property
     def channels(self):
         return np.uint32(self.shape[2])
 
+    @property
+    def datum_dimensions(self):
+        dims = _ImageRaster2D.datum_dimensions.fget(self) # @UndefinedVariable
+        dims['Channel'] = self.channels
+        return dims
+
     def toanalysis(self, x, y):
         return Analysis1D(self.channels, self.dtype, self[x, y], self.conditions)
 
-class ImageRaster2DHyperimage(_ImageRaster):
+class ImageRaster2DHyperimage(_ImageRaster2D):
     """
     Represents a dataset that has been raster mapped in 2D (x/y dimensions),
     where for each raster coordinate, the datum collected was a 2D image
@@ -95,15 +105,7 @@ class ImageRaster2DHyperimage(_ImageRaster):
     def __new__(cls, x, y, u, v, dtype=np.float32,
                 buffer=None, conditions=None, order=None):
         shape = (x, y, u, v)
-        return _ImageRaster.__new__(cls, shape, dtype, buffer, conditions, order)
-
-    @property
-    def x(self):
-        return np.uint32(self.shape[0])
-
-    @property
-    def y(self):
-        return np.uint32(self.shape[1])
+        return _ImageRaster2D.__new__(cls, shape, dtype, buffer, conditions, order)
 
     @property
     def u(self):
@@ -112,6 +114,13 @@ class ImageRaster2DHyperimage(_ImageRaster):
     @property
     def v(self):
         return np.uint32(self.shape[3])
+
+    @property
+    def datum_dimensions(self):
+        dims = _ImageRaster2D.datum_dimensions.fget(self) # @UndefinedVariable
+        dims['U'] = self.u
+        dims['V'] = self.v
+        return dims
 
     def toanalysis(self, x, y):
         return Analysis2D(self.u, self.v, self.dtype, self[x, y], self.conditions)

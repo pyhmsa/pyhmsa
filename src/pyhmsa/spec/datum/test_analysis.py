@@ -59,6 +59,8 @@ class TestAnalysis1D(unittest.TestCase):
         self.assertAlmostEqual(0.0, self.datum[3], 4)
         self.assertAlmostEqual(0.0, self.datum[4], 4)
 
+        self.assertEqual(5, self.datum.datum_dimensions['Channel'])
+
         datum = np.arange(5.0).view(Analysis1D)
         self.assertAlmostEqual(3.0, datum[3], 4)
         self.assertEqual(0, len(datum.conditions))
@@ -86,6 +88,9 @@ class TestAnalysis2D(unittest.TestCase):
         self.assertEqual(1, len(self.datum.conditions))
         self.assertEqual(147, self.datum[0, 0])
         self.assertEqual(218, self.datum[-1, -1])
+
+        self.assertEqual(220, self.datum.datum_dimensions['U'])
+        self.assertEqual(220, self.datum.datum_dimensions['V'])
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

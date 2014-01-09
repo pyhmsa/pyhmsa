@@ -42,6 +42,12 @@ class _AnalysisList(_Datum):
     def analysis_count(self):
         return np.uint32(len(self))
 
+    @property
+    def collection_dimensions(self):
+        dims = _Datum.collection_dimensions.fget(self) # @UndefinedVariable
+        dims['Analysis'] = self.analysis_count
+        return dims
+
 class AnalysisList0D(_AnalysisList):
     """
     Represents a sequence of point measurements with zero datum dimension,
@@ -72,6 +78,12 @@ class AnalysisList1D(_AnalysisList):
     def channels(self):
         return np.uint32(self.shape[1])
 
+    @property
+    def datum_dimensions(self):
+        dims = _Datum.datum_dimensions.fget(self) # @UndefinedVariable
+        dims['Channel'] = self.channels
+        return dims
+
     def toanalysis(self, analysis_index):
         return Analysis1D(self.channels, self.dtype, self[analysis_index, :],
                           self.conditions)
@@ -94,6 +106,13 @@ class AnalysisList2D(_AnalysisList):
     @property
     def v(self):
         return np.uint32(self.shape[2])
+
+    @property
+    def datum_dimensions(self):
+        dims = _Datum.datum_dimensions.fget(self) # @UndefinedVariable
+        dims['U'] = self.u
+        dims['V'] = self.v
+        return dims
 
     def toanalysis(self, analysis_index):
         return Analysis2D(self.u, self.v, self.dtype, self[analysis_index],

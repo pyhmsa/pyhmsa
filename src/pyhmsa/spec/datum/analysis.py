@@ -63,6 +63,12 @@ class Analysis1D(_Analysis):
     def channels(self):
         return np.uint32(len(self))
 
+    @property
+    def datum_dimensions(self):
+        dims = _Analysis.datum_dimensions.fget(self) # @UndefinedVariable
+        dims['Channel'] = self.channels
+        return dims
+
 class Analysis2D(_Analysis):
     """
     Store a single measurement of the specimen at a single point in space or
@@ -89,3 +95,10 @@ class Analysis2D(_Analysis):
     @property
     def v(self):
         return np.uint32(self.shape[1])
+
+    @property
+    def datum_dimensions(self):
+        dims = _Analysis.datum_dimensions.fget(self) # @UndefinedVariable
+        dims['U'] = self.u
+        dims['V'] = self.v
+        return dims

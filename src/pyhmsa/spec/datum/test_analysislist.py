@@ -40,6 +40,8 @@ class TestAnalysisList0D(unittest.TestCase):
         self.assertEqual(1, len(self.datum.conditions))
         self.assertAlmostEqual(5.0, self.datum[0, 0], 4)
 
+        self.assertEqual(3, self.datum.collection_dimensions['Analysis'])
+
     def testtoanalysis(self):
         analysis = self.datum.toanalysis(0)
         self.assertAlmostEqual(5.0, analysis, 4)
@@ -63,6 +65,9 @@ class TestAnalysisList1D(unittest.TestCase):
         self.assertEqual(1, len(self.datum.conditions))
         self.assertAlmostEqual(1.0, self.datum[0, 0], 4)
         self.assertAlmostEqual(5.0, self.datum[0, -1], 4)
+
+        self.assertEqual(3, self.datum.collection_dimensions['Analysis'])
+        self.assertEqual(5, self.datum.datum_dimensions['Channel'])
 
     def testtoanalysis(self):
         analysis = self.datum.toanalysis(0)
@@ -90,6 +95,10 @@ class TestAnalysisList2D(unittest.TestCase):
         self.assertEqual(5, self.datum.u)
         self.assertEqual(5, self.datum.v)
         self.assertAlmostEqual(1.0, self.datum[0, 0, 0], 4)
+
+        self.assertEqual(3, self.datum.collection_dimensions['Analysis'])
+        self.assertEqual(5, self.datum.datum_dimensions['U'])
+        self.assertEqual(5, self.datum.datum_dimensions['V'])
 
     def testtoanalysis(self):
         analysis = self.datum.toanalysis(0)

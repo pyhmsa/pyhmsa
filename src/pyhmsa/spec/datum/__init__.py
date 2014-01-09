@@ -19,6 +19,7 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
+from collections import OrderedDict
 
 # Third party modules.
 import numpy as np
@@ -56,6 +57,14 @@ class _Datum(np.ndarray):
     @property
     def conditions(self):
         return self._conditions
+
+    @property
+    def datum_dimensions(self):
+        return OrderedDict()
+
+    @property
+    def collection_dimensions(self):
+        return OrderedDict()
 
 class Data(_IdentifierDict):
 

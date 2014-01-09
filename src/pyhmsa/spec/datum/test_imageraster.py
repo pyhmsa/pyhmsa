@@ -40,6 +40,9 @@ class TestImageRaster2D(unittest.TestCase):
         self.assertEqual(1, len(self.datum.conditions))
         self.assertAlmostEqual(5.0, self.datum[0, 0], 4)
 
+        self.assertEqual(5, self.datum.collection_dimensions['X'])
+        self.assertEqual(5, self.datum.collection_dimensions['Y'])
+
     def testtoanalysis(self):
         analysis = self.datum.toanalysis(0, 0)
         self.assertAlmostEqual(5.0, analysis, 4)
@@ -65,6 +68,10 @@ class TestImageRaster2DSpectral(unittest.TestCase):
         self.assertAlmostEqual(5.0, self.datum[0, 0, 0], 4)
         self.assertAlmostEqual(4.0, self.datum[0, 0, 1], 4)
         self.assertAlmostEqual(3.0, self.datum[0, 0, 2], 4)
+
+        self.assertEqual(5, self.datum.collection_dimensions['X'])
+        self.assertEqual(5, self.datum.collection_dimensions['Y'])
+        self.assertEqual(3, self.datum.datum_dimensions['Channel'])
 
     def testtoanalysis(self):
         analysis = self.datum.toanalysis(0, 0)
@@ -93,6 +100,11 @@ class TestImageRaster2DHyperimage(unittest.TestCase):
         self.assertEqual(3, self.datum.v)
         self.assertEqual(1, len(self.datum.conditions))
         self.assertAlmostEqual(1.0, self.datum[0, 0, 0, 0], 4)
+
+        self.assertEqual(5, self.datum.collection_dimensions['X'])
+        self.assertEqual(5, self.datum.collection_dimensions['Y'])
+        self.assertEqual(3, self.datum.datum_dimensions['U'])
+        self.assertEqual(3, self.datum.datum_dimensions['V'])
 
     def testtoanalysis(self):
         analysis = self.datum.toanalysis(0, 0)
