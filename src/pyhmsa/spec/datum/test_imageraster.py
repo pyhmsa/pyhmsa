@@ -18,7 +18,7 @@ import numpy as np
 # Local modules.
 from pyhmsa.spec.datum.imageraster import \
     ImageRaster2D, ImageRaster2DSpectral, ImageRaster2DHyperimage
-from pyhmsa.spec.condition import _Condition
+from pyhmsa.spec.condition.condition import _Condition
 
 # Globals and constants variables.
 

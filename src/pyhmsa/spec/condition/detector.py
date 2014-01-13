@@ -23,7 +23,7 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.spec.condition import _Condition
+from pyhmsa.spec.condition.condition import _Condition
 from pyhmsa.spec.condition.calibration import _Calibration
 from pyhmsa.util.parameter import \
     (Parameter, NumericalAttribute, EnumAttribute, TextAttribute,

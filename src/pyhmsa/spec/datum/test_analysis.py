@@ -19,7 +19,7 @@ from PIL import Image
 
 # Local modules.
 from pyhmsa.spec.datum.analysis import Analysis0D, Analysis1D, Analysis2D
-from pyhmsa.spec.condition import _Condition
+from pyhmsa.spec.condition.condition import _Condition
 
 # Globals and constants variables.
 

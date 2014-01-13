@@ -28,7 +28,7 @@ except ImportError: # pragma: no cover
 import numpy as np
 
 # Local modules.
-from pyhmsa.spec.condition import _Condition
+from pyhmsa.spec.condition.condition import _Condition
 from pyhmsa.type.numerical import convert_value
 from pyhmsa.type.unit import validate_unit
 from pyhmsa.util.parameter import \

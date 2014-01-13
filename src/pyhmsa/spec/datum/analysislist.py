@@ -24,7 +24,7 @@ __license__ = "GPL v3"
 import numpy as np
 
 # Local modules.
-from pyhmsa.spec.datum import _Datum
+from pyhmsa.spec.datum.datum import _Datum
 from pyhmsa.spec.datum.analysis import Analysis0D, Analysis1D, Analysis2D
 
 # Globals and constants variables.

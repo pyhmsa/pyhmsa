@@ -5,7 +5,7 @@
 __author__ = "Philippe T. Pinard"
 __email__ = "philippe.pinard@gmail.com"
 __version__ = "0.1"
-__copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
+__copyright__ = "Copyright (c) 2014 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
@@ -15,7 +15,8 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.spec.condition import Conditions, _Condition
+from pyhmsa.spec.condition.conditions import Conditions
+from pyhmsa.spec.condition.condition import _Condition
 
 # Globals and constants variables.
 
