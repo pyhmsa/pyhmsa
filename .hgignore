@@ -1,5 +1,6 @@
 syntax: glob
 
-src/build/*
+build
+dist
 src/*.egg-info
 src/pyhmsa/testdata

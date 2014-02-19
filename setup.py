@@ -38,7 +38,7 @@ class TestDataCommand(Command):
             os.makedirs(self.dist_dir)
 
         basepath = os.path.dirname(__file__)
-        testdatapath = os.path.join(basepath, 'pyhmsa', 'testdata')
+        testdatapath = os.path.join(basepath, 'src', 'pyhmsa', 'testdata')
 
         zipfilename = self.distribution.get_fullname() + '-testdata.zip'
         zipfilepath = os.path.join(self.dist_dir, zipfilename)
@@ -58,7 +58,8 @@ setup(name='pyHMSA',
       license='MIT',
       keywords='microscopy microanalysis hmsa file format',
 
-      packages=find_packages(),
+      packages=find_packages('src'),
+      package_dir={'':'src'},
 
       install_requires=['numpy'],
       zip_safe=True,
