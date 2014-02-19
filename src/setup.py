@@ -8,6 +8,9 @@ __copyright__ = "Copyright (c) 2013 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
+import os
+import zipfile
+from distutils.cmd import Command
 
 # Third party modules.
 from setuptools import setup, find_packages
@@ -15,6 +18,36 @@ from setuptools import setup, find_packages
 # Local modules.
 
 # Globals and constants variables.
+
+class TestDataCommand(Command):
+
+    description = "create a zip of all files in the testData folder"
+    user_options = [('dist-dir=', 'd',
+                     "directory to put final built distributions in "
+                     "[default: dist]"), ]
+
+    def initialize_options(self):
+        self.dist_dir = None
+
+    def finalize_options(self):
+        if self.dist_dir is None:
+            self.dist_dir = "dist"
+
+    def run(self):
+        if not os.path.exists(self.dist_dir):
+            os.makedirs(self.dist_dir)
+
+        basepath = os.path.dirname(__file__)
+        testdatapath = os.path.join(basepath, 'pyhmsa', 'testdata')
+
+        zipfilename = self.distribution.get_fullname() + '-testdata.zip'
+        zipfilepath = os.path.join(self.dist_dir, zipfilename)
+        with zipfile.ZipFile(zipfilepath, 'w') as z:
+            for root, _, files in os.walk(testdatapath):
+                for file in files:
+                    filename = os.path.join(root, file)
+                    arcname = os.path.relpath(filename, basepath)
+                    z.write(filename, arcname)
 
 setup(name='pyHMSA',
       version='0.1',
@@ -29,6 +62,8 @@ setup(name='pyHMSA',
 
       install_requires=['numpy'],
       zip_safe=True,
+
+      cmdclass={'zip_testdata': TestDataCommand},
 
       entry_points=\
         {'pyhmsa.fileformat.xmlhandler.condition':
