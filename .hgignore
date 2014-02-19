@@ -2,3 +2,4 @@ syntax: glob
 
 src/build/*
 src/*.egg-info
+src/pyhmsa/testdata
