@@ -31,42 +31,52 @@ setup(name='pyHMSA',
       zip_safe=True,
 
       entry_points=\
-        {'pyhmsa.condition': ['AcquisitionPoint = pyhmsa.core.condition.acquisition:AcquisitionPoint',
-                              'AcquisitionMultipoint = pyhmsa.core.condition.acquisition:AcquisitionMultipoint',
-                              'AcquisitionRasterLinescan = pyhmsa.core.condition.acquisition:AcquisitionRasterLinescan',
-                              'AcquisitionRasterXY = pyhmsa.core.condition.acquisition:AcquisitionRasterXY',
-                              'AcquisitionRasterXYZ = pyhmsa.core.condition.acquisition:AcquisitionRasterXYZ',
+        {'pyhmsa.io.xmlhandler.condition':
+            ['AcquisitionPoint = pyhmsa.io.xmlhandler.condition.acquisition:AcquisitionPointXMLHandler',
+             'AcquisitionMultipoint = pyhmsa.io.xmlhandler.condition.acquisition:AcquisitionMultipointXMLHandler',
+             'AcquisitionRasterLinescan = pyhmsa.io.xmlhandler.condition.acquisition:AcquisitionRasterLinescanXMLHandler',
+             'AcquisitionRasterXY = pyhmsa.io.xmlhandler.condition.acquisition:AcquisitionRasterXYXMLHandler',
+             'AcquisitionRasterXYZ = pyhmsa.io.xmlhandler.condition.acquisition:AcquisitionRasterXYZXMLHandler',
 
-                              'DetectorCamera = pyhmsa.core.condition.detector:DetectorCamera',
-                              'DetectorSpectrometer = pyhmsa.core.condition.detector:DetectorSpectrometer',
-                              'DetectorSpectrometerCL = pyhmsa.core.condition.detector:DetectorSpectrometerCL',
-                              'DetectorSpectrometerWDS = pyhmsa.core.condition.detector:DetectorSpectrometerWDS',
-                              'DetectorSpectrometerXEDS = pyhmsa.core.condition.detector:DetectorSpectrometerXEDS',
+             'DetectorCamera = pyhmsa.io.xmlhandler.condition.detector:DetectorCameraXMLHandler',
+             'DetectorSpectrometer = pyhmsa.io.xmlhandler.condition.detector:DetectorSpectrometerXMLHandler',
+             'DetectorSpectrometerCL = pyhmsa.io.xmlhandler.condition.detector:DetectorSpectrometerCLXMLHandler',
+             'DetectorSpectrometerWDS = pyhmsa.io.xmlhandler.condition.detector:DetectorSpectrometerWDSXMLHandler',
+             'DetectorSpectrometerXEDS = pyhmsa.io.xmlhandler.condition.detector:DetectorSpectrometerXEDSXMLHandler',
 
-                              'ElementID = pyhmsa.core.condition.elementid:ElementID',
-                              'ElementIDXray = pyhmsa.core.condition.elementid:ElementIDXray',
+             'ElementID = pyhmsa.io.xmlhandler.condition.elementid:ElementIDXMLHandler',
+             'ElementIDXray = pyhmsa.io.xmlhandler.condition.elementid:ElementIDXrayXMLHandler',
 
-                              'Instrument = pyhmsa.core.condition.instrument:Instrument',
+             'Instrument = pyhmsa.io.xmlhandler.condition.instrument:InstrumentXMLHandler',
 
-                              'ProbeEM = pyhmsa.core.condition.probe:ProbeEM',
-                              'ProbeTEM = pyhmsa.core.condition.probe:ProbeTEM',
+             'ProbeEM = pyhmsa.io.xmlhandler.condition.probe:ProbeEMXMLHandler',
+             'ProbeTEM = pyhmsa.io.xmlhandler.condition.probe:ProbeTEMXMLHandler',
 
-                              'RegionOfInterest = pyhmsa.core.condition.region:RegionOfInterest',
+             'RegionOfInterest = pyhmsa.io.xmlhandler.condition.region:RegionOfInterestXMLHandler',
 
-                              'SpecimenPosition = pyhmsa.core.condition.specimen:SpecimenPosition',
-                              'Specimen = pyhmsa.core.condition.specimen:Specimen',
-                              'SpecimenMultilayer = pyhmsa.core.condition.specimen:SpecimenMultilayer',
-                              ],
-         'pyhmsa.datum': ['Analysis0D = pyhmsa.core.datum.analysis:Analysis0D',
-                          'Analysis1D = pyhmsa.core.datum.analysis:Analysis1D',
-                          'Analysis2D = pyhmsa.core.datum.analysis:Analysis2D',
+             'SpecimenPosition = pyhmsa.io.xmlhandler.condition.specimen:SpecimenPositionXMLHandler',
+             'Specimen = pyhmsa.io.xmlhandler.condition.specimen:SpecimenXMLHandler',
+             'SpecimenMultilayer = pyhmsa.io.xmlhandler.condition.specimen:SpecimenMultilayerXMLHandler',
+             ],
+         'pyhmsa.io.xmlhandler.condition.calibration':
+            [
+             'CalibrationConstant = pyhmsa.io.xmlhandler.condition.calibration:CalibrationConstantXMLHandler',
+             'CalibrationLinear = pyhmsa.io.xmlhandler.condition.calibration:CalibrationLinearXMLHandler',
+             'CalibrationPolynomial = pyhmsa.io.xmlhandler.condition.calibration:CalibrationPolynomialXMLHandler',
+             'CalibrationExplicit = pyhmsa.io.xmlhandler.condition.calibration:CalibrationExplicitXMLHandler',
+             ],
+         'pyhmsa.io.xmlhandler.datum':
+            [
+            'Analysis0D = pyhmsa.io.xmlhandler.datum.analysis:Analysis0DXMLHandler',
+            'Analysis1D = pyhmsa.io.xmlhandler.datum.analysis:Analysis1DXMLHandler',
+            'Analysis2D = pyhmsa.io.xmlhandler.datum.analysis:Analysis2DXMLHandler',
 
-                          'AnalysisList0D = pyhmsa.core.datum.analysislist:AnalysisList0D',
-                          'AnalysisList1D = pyhmsa.core.datum.analysislist:AnalysisList1D',
-                          'AnalysisList2D = pyhmsa.core.datum.analysislist:AnalysisList2D',
+            'AnalysisList0D = pyhmsa.io.xmlhandler.datum.analysislist:AnalysisList0DXMLHandler',
+            'AnalysisList1D = pyhmsa.io.xmlhandler.datum.analysislist:AnalysisList1DXMLHandler',
+            'AnalysisList2D = pyhmsa.io.xmlhandler.datum.analysislist:AnalysisList2DXMLHandler',
 
-                          'ImageRaster2D = pyhmsa.core.datum.imageraster:ImageRaster2D',
-                          'ImageRaster2DSpectral = pyhmsa.core.datum.imageraster:ImageRaster2DSpectral',
-                          'ImageRaster2DHyperimage = pyhmsa.core.datum.imageraster:ImageRaster2DHyperimage',
-                          ]},
+            'ImageRaster2D = pyhmsa.io.xmlhandler.datum.imageraster:ImageRaster2DXMLHandler',
+            'ImageRaster2DSpectral = pyhmsa.io.xmlhandler.datum.imageraster:ImageRaster2DSpectralXMLHandler',
+            'ImageRaster2DHyperimage = pyhmsa.io.xmlhandler.datum.imageraster:ImageRaster2DHyperimageXMLHandler',
+             ]},
      )

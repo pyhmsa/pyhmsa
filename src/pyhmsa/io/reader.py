@@ -22,18 +22,22 @@ __license__ = "GPL v3"
 import os
 import binascii
 import xml.etree.ElementTree as etree
+import logging
 
 # Third party modules.
 from pkg_resources import iter_entry_points
 
 # Local modules.
 from pyhmsa.io.xmlhandler.header import HeaderXMLHandler
-from pyhmsa.spec.condition import Conditions
-from pyhmsa.spec.datum import Data
+from pyhmsa.spec.condition.conditions import Conditions
+from pyhmsa.spec.datum.data import Data
+from pyhmsa.type.checksum import calculate_checksum
 
 # Globals and constants variables.
 
 class HMSAReader(object):
+
+    VERSION = '1.0'
 
     def __init__(self, filepath):
         base, ext = os.path.splitext(filepath)
@@ -58,33 +62,39 @@ class HMSAReader(object):
         self._data = None
 
     def __enter__(self):
-        self.read()
-        return self
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        self.close()
-        return False
-
-    def read(self):
         # Open files
         self._xml_file = open(self._filepath_xml, 'rt', encoding='utf-8')
         self._hmsa_file = open(self._filepath_hmsa, 'rb')
 
-        # Read content
         root = etree.ElementTree(file=self._xml_file).getroot()
         self._read_root(root)
         self._read_header(root)
         self._read_conditions(root)
         self._read_data(root)
 
+        return self
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        # Close files
+        if self._xml_file is not None:
+            self._xml_file.close()
+            self._xml_file = None
+        if self._hmsa_file is not None:
+            self._hmsa_file.close()
+            self._hmsa_file = None
+
+        return False
+
     def _read_root(self, root):
         self._version = root.attrib['Version']
+        if self._version != self.VERSION:
+            raise ValueError('Unknown version. Can only read version %s.' % self.VERSION)
         self._language = root.get('{http://www.w3.org/XML/1998/namespace}lang', 'en-US')
         self._uid = root.attrib['UID'].encode('ascii')
 
     def _read_header(self, root):
         handler = HeaderXMLHandler(self.version)
-        self._header = handler.from_xml(root.find('Header'))
+        self._header = handler.parse(root.find('Header'))
 
     def _read_conditions(self, root):
         # Load handlers
@@ -93,7 +103,7 @@ class HMSAReader(object):
             handler = entry_point.load()(self.version)
             handlers.add(handler)
 
-        # Load conditions
+        # Parse conditions
         self._conditions = Conditions()
 
         for element in root.findall('Conditions/*'):
@@ -101,15 +111,30 @@ class HMSAReader(object):
 
             for handler in handlers:
                 if handler.can_parse(element):
-                    self._conditions[key] = handler.from_xml(element)
+                    self._conditions[key] = handler.parse(element)
                     break
 
     def _read_data(self, root):
         # Check UID
-        uid = binascii.hexlify(self._hmsa_file.read(8))
-        if self._uid.upper() != uid.upper():
+        xml_uid = self._uid
+        hmsa_uid = binascii.hexlify(self._hmsa_file.read(8))
+        if xml_uid.upper() != hmsa_uid.upper():
             raise ValueError('UID in XML (%s) does not match UID in HMSA (%s)' % \
-                             (self._uid, uid))
+                             (xml_uid, hmsa_uid))
+        logging.debug('Check UID: %s == %s', xml_uid, hmsa_uid)
+
+        # Check checksum
+        if 'checksum' in self.header:
+            xml_checksum = self.header.checksum
+
+            self._hmsa_file.seek(0)
+            buffer = self._hmsa_file.read()
+            hmsa_checksum = calculate_checksum(xml_checksum.algorithm, buffer)
+
+            if xml_checksum.value.upper() != hmsa_checksum.value.upper():
+                raise ValueError('Checksum in XML (%s) does not match checksum in HMSA (%s)' % \
+                                 (xml_checksum.value, hmsa_checksum.value))
+            logging.debug('Check sum: %s == %s', xml_checksum.value, hmsa_checksum.value)
 
         # Load handlers
         handlers = set()
@@ -117,7 +142,7 @@ class HMSAReader(object):
             handler = entry_point.load()(self.version, self._hmsa_file, self.conditions)
             handlers.add(handler)
 
-        # Load data
+        # Parse data
         self._data = Data()
 
         for element in root.findall('Data/*'):
@@ -125,14 +150,8 @@ class HMSAReader(object):
 
             for handler in handlers:
                 if handler.can_parse(element):
-                    self._data[key] = handler.from_xml(element)
+                    self._data[key] = handler.parse(element)
                     break
-
-    def close(self):
-        if self._xml_file is not None:
-            self._xml_file.close()
-        if self._hmsa_file is not None:
-            self._hmsa_file.close()
 
     @property
     def header(self):
