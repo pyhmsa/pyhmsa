@@ -64,6 +64,9 @@ setup(name='pyHMSA',
       install_requires=['numpy'],
       zip_safe=True,
 
+      tests_require=['nose'],
+      test_suite='nose.collector',
+
       cmdclass={'zip_testdata': TestDataCommand},
 
       entry_points=\
