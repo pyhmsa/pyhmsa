@@ -25,7 +25,7 @@ __license__ = "GPL v3"
 from pyhmsa.spec.condition.calibration import \
     (CalibrationConstant, CalibrationLinear,
      CalibrationPolynomial, CalibrationExplicit)
-from pyhmsa.io.xmlhandler import _XMLHandler
+from pyhmsa.io.xmlhandler.xmlhandler import _XMLHandler
 
 # Globals and constants variables.
 

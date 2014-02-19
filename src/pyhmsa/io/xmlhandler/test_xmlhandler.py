@@ -17,7 +17,7 @@ from io import StringIO
 # Third party modules.
 
 # Local modules.
-from pyhmsa.io.xmlhandler import _XMLHandler
+from pyhmsa.io.xmlhandler.xmlhandler import _XMLHandler
 from pyhmsa.util.parameter import Parameter, NumericalAttribute, TextAttribute
 from pyhmsa.type.language import langstr
 

@@ -24,7 +24,7 @@ __license__ = "GPL v3"
 
 # Local modules.
 from pyhmsa.spec.condition.probe import ProbeEM, ProbeTEM
-from pyhmsa.io.xmlhandler import _XMLHandler
+from pyhmsa.io.xmlhandler.xmlhandler import _XMLHandler
 
 # Globals and constants variables.
 

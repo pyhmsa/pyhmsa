@@ -24,7 +24,7 @@ __license__ = "GPL v3"
 
 # Local modules.
 from pyhmsa.spec.condition.region import RegionOfInterest
-from pyhmsa.io.xmlhandler import _XMLHandler
+from pyhmsa.io.xmlhandler.xmlhandler import _XMLHandler
 
 # Globals and constants variables.
 

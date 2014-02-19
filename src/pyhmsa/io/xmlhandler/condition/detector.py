@@ -27,7 +27,7 @@ from pkg_resources import iter_entry_points
 from pyhmsa.spec.condition.detector import \
     (DetectorCamera, DetectorSpectrometer, DetectorSpectrometerCL,
      DetectorSpectrometerWDS, DetectorSpectrometerXEDS, Window, WindowLayer)
-from pyhmsa.io.xmlhandler import _XMLHandler
+from pyhmsa.io.xmlhandler.xmlhandler import _XMLHandler
 
 # Globals and constants variables.
 

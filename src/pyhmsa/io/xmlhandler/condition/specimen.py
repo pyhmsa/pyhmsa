@@ -26,7 +26,7 @@ import xml.etree.ElementTree as etree
 # Local modules.
 from pyhmsa.spec.condition.specimen import \
     SpecimenPosition, Specimen, SpecimenMultilayer, Composition, SpecimenLayer
-from pyhmsa.io.xmlhandler import _XMLHandler
+from pyhmsa.io.xmlhandler.xmlhandler import _XMLHandler
 
 # Globals and constants variables.
 

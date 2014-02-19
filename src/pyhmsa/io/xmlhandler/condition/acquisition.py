@@ -29,7 +29,7 @@ from pyhmsa.spec.condition.acquisition import \
     (AcquisitionPoint, AcquisitionMultipoint,
      AcquisitionRasterLinescan, AcquisitionRasterXY, AcquisitionRasterXYZ)
 from pyhmsa.spec.condition.specimen import SpecimenPosition
-from pyhmsa.io.xmlhandler import _XMLHandler
+from pyhmsa.io.xmlhandler.xmlhandler import _XMLHandler
 from pyhmsa.util.parameter import ObjectAttribute
 
 # Globals and constants variables.
