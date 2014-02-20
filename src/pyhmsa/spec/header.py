@@ -72,7 +72,7 @@ class Header(_BaseHeader):
         return len(self._extras) + len(self.__attributes__)
 
     def __iter__(self):
-        for key in self._extras.keys() | self.__attributes__.keys():
+        for key in set(self._extras.keys()) | set(self.__attributes__.keys()):
             yield key
 
     def __setitem__(self, key, value):

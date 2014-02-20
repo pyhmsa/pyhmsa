@@ -12,7 +12,6 @@ __license__ = "GPL v3"
 import unittest
 import logging
 import xml.etree.ElementTree as etree
-from io import StringIO
 
 # Third party modules.
 
@@ -31,8 +30,8 @@ class TestRegionOfInterestXMLHandler(unittest.TestCase):
 
         self.obj = RegionOfInterest(556, 636)
 
-        source = StringIO('<RegionOfInterest><StartChannel DataType="uint32">556</StartChannel><EndChannel DataType="uint32">636</EndChannel></RegionOfInterest>')
-        self.element = etree.parse(source).getroot()
+        source = u'<RegionOfInterest><StartChannel DataType="uint32">556</StartChannel><EndChannel DataType="uint32">636</EndChannel></RegionOfInterest>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -45,12 +44,12 @@ class TestRegionOfInterestXMLHandler(unittest.TestCase):
         self.assertEqual(556, obj.start_channel)
         self.assertEqual(636, obj.end_channel)
 
-        source = StringIO('<RegionOfInterest><EndChannel DataType="uint32">636</EndChannel></RegionOfInterest>')
-        element = etree.parse(source).getroot()
+        source = u'<RegionOfInterest><EndChannel DataType="uint32">636</EndChannel></RegionOfInterest>'
+        element = etree.fromstring(source.encode('utf-8'))
         self.assertRaises(ValueError, self.h.parse, element)
 
-        source = StringIO('<RegionOfInterest><StartChannel DataType="uint32">556</StartChannel></RegionOfInterest>')
-        element = etree.parse(source).getroot()
+        source = u'<RegionOfInterest><StartChannel DataType="uint32">556</StartChannel></RegionOfInterest>'
+        element = etree.fromstring(source.encode('utf-8'))
         self.assertRaises(ValueError, self.h.parse, element)
 
     def testcan_convert(self):

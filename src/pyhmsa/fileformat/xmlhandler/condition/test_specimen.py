@@ -12,7 +12,6 @@ __license__ = "GPL v3"
 import unittest
 import logging
 import xml.etree.ElementTree as etree
-from io import StringIO
 
 # Third party modules.
 
@@ -34,8 +33,8 @@ class TestSpecimenPositionXMLHandler(unittest.TestCase):
 
         self.obj = SpecimenPosition(0.0, 0.0, 10.0, 90.0, 70.0)
 
-        source = StringIO('<SpecimenPosition><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z><R Unit="\u00b0" DataType="float">90.0</R><T Unit="\u00b0" DataType="float">70.0</T></SpecimenPosition>')
-        self.element = etree.parse(source).getroot()
+        source = u'<SpecimenPosition><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z><R Unit="\u00b0" DataType="float">90.0</R><T Unit="\u00b0" DataType="float">70.0</T></SpecimenPosition>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -80,8 +79,8 @@ class TestCompositionXMLHandler(unittest.TestCase):
         self.obj[13] = 1
         self.obj[9] = 6
 
-        source = StringIO('<Composition><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Composition><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -97,13 +96,13 @@ class TestCompositionXMLHandler(unittest.TestCase):
         self.assertAlmostEqual(1.0, obj[13], 4)
         self.assertAlmostEqual(6.0, obj[9], 4)
 
-        source = StringIO('<Composition></Composition>')
-        element = etree.parse(source)
+        source = u'<Composition></Composition>'
+        element = etree.fromstring(source.encode('utf-8'))
         obj = self.h.parse(element)
         self.assertIsNone(obj)
 
-        source = StringIO('<Composition><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="wt%" DataType="float">1.</Element></Composition>')
-        element = etree.parse(source)
+        source = u'<Composition><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="wt%" DataType="float">1.</Element></Composition>'
+        element = etree.fromstring(source.encode('utf-8'))
         self.assertRaises(ValueError, self.h.parse, element)
 
     def testcan_convert(self):
@@ -126,8 +125,8 @@ class TestSpecimenXMLHandler(unittest.TestCase):
         self.obj = Specimen('Cryolite', 'Natural cryolite standard',
                             'Kitaa, Greenland', 'Na3AlF6', comp, -20.0)
 
-        source = StringIO('<Specimen><Name>Cryolite</Name><Description>Natural cryolite standard</Description><Origin>Kitaa, Greenland</Origin><Formula>Na3AlF6</Formula><Composition><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition><Temperature Unit="\u00b0\u0043" DataType="float">-20.0</Temperature></Specimen>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Specimen><Name>Cryolite</Name><Description>Natural cryolite standard</Description><Origin>Kitaa, Greenland</Origin><Formula>Na3AlF6</Formula><Composition><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition><Temperature Unit="\u00b0\u0043" DataType="float">-20.0</Temperature></Specimen>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -175,8 +174,8 @@ class TestSpecimenMultilayerXMLHandler(unittest.TestCase):
         comp.update({6: 100.0})
         self.obj.append_layer('Carbon coat', 50.0, 'C', comp)
 
-        source = StringIO('<Specimen Class="Multilayer"><Name>Cryolite</Name><Description>Natural cryolite standard</Description><Origin>Kitaa, Greenland</Origin><Formula>Na3AlF6</Formula><Layers><Layer Name="Carbon coat"><Thickness Unit="nm" DataType="float">50</Thickness><Formula>C</Formula><Composition><Element Z="6" Unit="wt%" DataType="float">50.</Element></Composition></Layer></Layers></Specimen>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Specimen Class="Multilayer"><Name>Cryolite</Name><Description>Natural cryolite standard</Description><Origin>Kitaa, Greenland</Origin><Formula>Na3AlF6</Formula><Layers><Layer Name="Carbon coat"><Thickness Unit="nm" DataType="float">50</Thickness><Formula>C</Formula><Composition><Element Z="6" Unit="wt%" DataType="float">50.</Element></Composition></Layer></Layers></Specimen>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)

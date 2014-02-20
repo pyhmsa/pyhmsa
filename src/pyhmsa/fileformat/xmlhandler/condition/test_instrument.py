@@ -12,7 +12,6 @@ __license__ = "GPL v3"
 import unittest
 import logging
 import xml.etree.ElementTree as etree
-from io import StringIO
 
 # Third party modules.
 
@@ -32,8 +31,8 @@ class TestInstrumentXMLHandler(unittest.TestCase):
         self.obj = Instrument('Example Inc.', 'Example Model 123',
                               '12345-abc-67890')
 
-        source = StringIO('<Instrument><Manufacturer>Example Inc.</Manufacturer><Model>Example Model 123</Model><SerialNumber>12345-abc-67890</SerialNumber></Instrument>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Instrument><Manufacturer>Example Inc.</Manufacturer><Model>Example Model 123</Model><SerialNumber>12345-abc-67890</SerialNumber></Instrument>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)

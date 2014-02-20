@@ -94,8 +94,7 @@ class HMSAWriter(object):
             element.append(subelement)
 
             # Write XML file
-            output = b'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-            output += etree.tostring(root, encoding='UTF-8')
+            output = etree.tostring(root, encoding='UTF-8')
             document = minidom.parseString(output)
             output = document.toprettyxml(encoding='UTF-8')
 

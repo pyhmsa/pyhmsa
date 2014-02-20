@@ -87,7 +87,7 @@ class TestHMSAWriter(unittest.TestCase):
         unittest.TestCase.setUp(self)
 
         filepath = os.path.join(self.tmpdir, 'breccia_eds.xml')
-        with open(filepath, 'rt', encoding='utf-8') as fp:
+        with open(filepath, 'rb') as fp:
             self.root = etree.parse(fp).getroot()
 
         filepath = os.path.join(self.tmpdir, 'breccia_eds.hmsa')

@@ -162,7 +162,7 @@ _LANGUGAGES = dict([
     ('ne', 'Nepali'),
     ('nl', 'Dutch; Flemish'),
     ('nn', 'Norwegian Nynorsk; Nynorsk, Norwegian'),
-    ('nb', 'Bokmål, Norwegian; Norwegian Bokmål'),
+    ('nb', u'Bokm\u00E5l, Norwegian; Norwegian Bokm\u00E5l'),
     ('no', 'Norwegian'),
     ('oc', 'Occitan (post 1500)'),
     ('oj', 'Ojibwa'),
@@ -222,7 +222,7 @@ _LANGUGAGES = dict([
     ('uz', 'Uzbek'),
     ('ve', 'Venda'),
     ('vi', 'Vietnamese'),
-    ('vo', 'Volapük'),
+    ('vo', 'Volap\u00FCk'),
     ('cy', 'Welsh'),
     ('wa', 'Walloon'),
     ('wo', 'Wolof'),
@@ -505,14 +505,14 @@ class langstr(str):
 
     def __new__(cls, value, altvalues):
         obj = str.__new__(cls, value)
-        
+
         obj._alternatives = {}
         for language_tag, altvalue in altvalues.items():
             validate_language_tag(language_tag)
             obj._alternatives[language_tag] = altvalue
         return obj
-    
+
     @property
     def alternatives(self):
         return self._alternatives.copy()
-    
+

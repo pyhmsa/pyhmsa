@@ -184,7 +184,9 @@ class _XMLHandler(object):
     def _convert_parameter(self, obj, tag=None, attrib=None):
         if attrib is None:
             attrib = {}
-        element = etree.Element(tag or 'Unknown', attrib)
+        if tag is None:
+            tag = 'Unknown'
+        element = etree.Element(tag, attrib)
 
         for name, attrib in obj.__class__.__attributes__.items():
             if attrib.xmlname is None: # skip, undefined way to convert
@@ -225,7 +227,7 @@ class _XMLHandler(object):
 
     def _convert_text_attribute(self, value, attrib):
         element = etree.Element(attrib.xmlname)
-        element.text = str(value)
+        element.text = value
 
         if isinstance(value, langstr):
             for language_tag, altvalue in value.alternatives.items():

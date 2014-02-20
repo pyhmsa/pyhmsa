@@ -12,7 +12,6 @@ __license__ = "GPL v3"
 import unittest
 import logging
 import xml.etree.ElementTree as etree
-from io import StringIO
 
 # Third party modules.
 
@@ -34,8 +33,8 @@ class TestProbeEMXMLHandler(unittest.TestCase):
         self.obj = ProbeEM(15.0, 47.59, GUN_TYPE_LAB6, 12345.0, 1.234, 4200.0,
                            12345.0, 3.14e-6, 3.14e-10, 2500.0, 10.0)
 
-        source = StringIO('<Probe Class="EM"><BeamVoltage DataType="float" Unit="kV">15.</BeamVoltage><BeamCurrent DataType="float" Unit="nA">47.59</BeamCurrent><GunType>LaB6</GunType><EmissionCurrent DataType="float" Unit="\u00b5A">12345</EmissionCurrent><FilamentCurrent DataType="float" Unit="A">1.234</FilamentCurrent><ExtractorBias DataType="float" Unit="V">4200</ExtractorBias><BeamDiameter DataType="float" Unit="nm">12345</BeamDiameter><ChamberPressure DataType="float" Unit="Pa">3.14E-6</ChamberPressure><GunPressure DataType="float" Unit="Pa">3.14E-10</GunPressure><ScanMagnification DataType="float">2500.</ScanMagnification><WorkingDistance DataType="float" Unit="mm">10</WorkingDistance></Probe>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Probe Class="EM"><BeamVoltage DataType="float" Unit="kV">15.</BeamVoltage><BeamCurrent DataType="float" Unit="nA">47.59</BeamCurrent><GunType>LaB6</GunType><EmissionCurrent DataType="float" Unit="\u00b5A">12345</EmissionCurrent><FilamentCurrent DataType="float" Unit="A">1.234</FilamentCurrent><ExtractorBias DataType="float" Unit="V">4200</ExtractorBias><BeamDiameter DataType="float" Unit="nm">12345</BeamDiameter><ChamberPressure DataType="float" Unit="Pa">3.14E-6</ChamberPressure><GunPressure DataType="float" Unit="Pa">3.14E-10</GunPressure><ScanMagnification DataType="float">2500.</ScanMagnification><WorkingDistance DataType="float" Unit="mm">10</WorkingDistance></Probe>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -98,8 +97,8 @@ class TestProbeTEMXMLHandler(unittest.TestCase):
         self.obj = ProbeTEM(15.0, LENS_MODE_IMAGE,
                             camera_magnification=2.0, convergence_angle=1.5)
 
-        source = StringIO('<Probe Class="TEM"><BeamVoltage DataType="float" Unit="kV">15.</BeamVoltage><LensMode>IMAGE</LensMode><CameraMagnification DataType="float">2</CameraMagnification><ConvergenceAngle Unit = "mrad" DataType="float">1.5</ConvergenceAngle></Probe>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Probe Class="TEM"><BeamVoltage DataType="float" Unit="kV">15.</BeamVoltage><LensMode>IMAGE</LensMode><CameraMagnification DataType="float">2</CameraMagnification><ConvergenceAngle Unit = "mrad" DataType="float">1.5</ConvergenceAngle></Probe>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)

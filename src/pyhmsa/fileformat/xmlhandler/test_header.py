@@ -12,7 +12,6 @@ __license__ = "GPL v3"
 import unittest
 import logging
 import xml.etree.ElementTree as etree
-from io import StringIO
 
 # Third party modules.
 
@@ -34,8 +33,8 @@ class TestHeaderXMLHandler(unittest.TestCase):
                           owner='Acme Inc.', date='1985-10-26', time='20:04:00',
                           extra='Blah', checksum=Checksum('53AAD59C05D59A40AD746D6928EA6D2D526865FD', 'SHA-1'))
 
-        source = StringIO('<Header><Checksum Algorithm="SHA-1">53AAD59C05D59A40AD746D6928EA6D2D526865FD</Checksum><Title>Beep Beep</Title><Author>Wyle E. Coyote</Author><Owner>Acme Inc.</Owner><Date>1985-10-26</Date><Time>20:04:00</Time></Header>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Header><Checksum Algorithm="SHA-1">53AAD59C05D59A40AD746D6928EA6D2D526865FD</Checksum><Title>Beep Beep</Title><Author>Wyle E. Coyote</Author><Owner>Acme Inc.</Owner><Date>1985-10-26</Date><Time>20:04:00</Time></Header>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)

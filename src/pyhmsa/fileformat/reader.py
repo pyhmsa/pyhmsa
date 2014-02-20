@@ -63,7 +63,7 @@ class HMSAReader(object):
 
     def __enter__(self):
         # Open files
-        self._xml_file = open(self._filepath_xml, 'rt', encoding='utf-8')
+        self._xml_file = open(self._filepath_xml, 'rb')
         self._hmsa_file = open(self._filepath_hmsa, 'rb')
 
         root = etree.ElementTree(file=self._xml_file).getroot()

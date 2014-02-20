@@ -12,7 +12,6 @@ __license__ = "GPL v3"
 import unittest
 import logging
 import xml.etree.ElementTree as etree
-from io import StringIO
 
 # Third party modules.
 
@@ -35,8 +34,8 @@ class TestCalibrationConstantXMLHandler(unittest.TestCase):
 
         self.obj = CalibrationConstant('Energy', 'eV', -237.098251)
 
-        source = StringIO('<Calibration Class="Constant"><Quantity>Energy</Quantity><Unit>eV</Unit><Value DataType="float">-237.098251</Value></Calibration>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Calibration Class="Constant"><Quantity>Energy</Quantity><Unit>eV</Unit><Value DataType="float">-237.098251</Value></Calibration>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -73,8 +72,8 @@ class TestCalibrationLinearXMLHandler(unittest.TestCase):
 
         self.obj = CalibrationLinear('Energy', 'eV', 2.49985, -237.098251)
 
-        source = StringIO('<Calibration Class="Linear"><Quantity>Energy</Quantity><Unit>eV</Unit><Gain DataType="float">2.49985</Gain><Offset DataType="float">-237.098251</Offset></Calibration>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Calibration Class="Linear"><Quantity>Energy</Quantity><Unit>eV</Unit><Gain DataType="float">2.49985</Gain><Offset DataType="float">-237.098251</Offset></Calibration>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -113,8 +112,8 @@ class TestCalibrationPolynomialXMLHandler(unittest.TestCase):
 
         self.obj = CalibrationPolynomial('Energy', 'eV', (-2.225, 0.677, 0.134, -0.018))
 
-        source = StringIO('<Calibration Class="Polynomial"><Quantity>Energy</Quantity><Unit>eV</Unit><Coefficients DataType="array:float" Count="4">-2.225, 0.677, 0.134, -0.018</Coefficients></Calibration>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Calibration Class="Polynomial"><Quantity>Energy</Quantity><Unit>eV</Unit><Coefficients DataType="array:float" Count="4">-2.225, 0.677, 0.134, -0.018</Coefficients></Calibration>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -156,8 +155,8 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
 
         self.obj = CalibrationExplicit('Energy', 'eV', (-2.225, 0.677, 0.134, -0.018))
 
-        source = StringIO('<Calibration Class="Explicit"><Quantity>Energy</Quantity><Unit>eV</Unit><Values DataType="array:float" Count="4">-2.225, 0.677, 0.134, -0.018</Values></Calibration>')
-        self.element = etree.parse(source).getroot()
+        source = u'<Calibration Class="Explicit"><Quantity>Energy</Quantity><Unit>eV</Unit><Values DataType="array:float" Count="4">-2.225, 0.677, 0.134, -0.018</Values></Calibration>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)

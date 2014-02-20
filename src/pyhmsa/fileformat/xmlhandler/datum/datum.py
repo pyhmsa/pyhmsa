@@ -39,8 +39,8 @@ class _DatumXMLHandler(_XMLHandler):
         _XMLHandler.__init__(self, version)
         if hmsa_file.closed:
             raise ValueError('HMSA file object is closed')
-        if not hmsa_file.seekable():
-            raise ValueError('HMSA file object is not seekable')
+#        if not hmsa_file.seekable():
+#            raise ValueError('HMSA file object is not seekable')
         self._hmsa_file = hmsa_file
         self._conditions = conditions
 

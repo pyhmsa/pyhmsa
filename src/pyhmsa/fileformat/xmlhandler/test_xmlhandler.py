@@ -46,7 +46,7 @@ class Test_XMLHandler(unittest.TestCase):
         unittest.TestCase.tearDown(self)
 
     def test_parse_parameter_value1(self):
-        source = StringIO('<Mock><Value1 DataType="double" Unit="s">2.0</Value1></Mock>')
+        source = StringIO(u'<Mock><Value1 DataType="double" Unit="s">2.0</Value1></Mock>')
         element = etree.parse(source)
         obj = self.h._parse_parameter(element, MockParameter)
         self.assertAlmostEqual(2.0, obj.value1, 2)
@@ -54,19 +54,19 @@ class Test_XMLHandler(unittest.TestCase):
         self.assertIsNone(obj.value2)
 
     def test_parse_parameter_value2(self):
-        source = StringIO('<Mock><Value1 DataType="double" Unit="s">2.0</Value1><Value2 DataType="double" Unit="nm">4.0</Value2></Mock>')
+        source = StringIO(u'<Mock><Value1 DataType="double" Unit="s">2.0</Value1><Value2 DataType="double" Unit="nm">4.0</Value2></Mock>')
         element = etree.parse(source)
         obj = self.h._parse_parameter(element, MockParameter)
         self.assertAlmostEqual(4.0, obj.value2, 2)
         self.assertEqual('nm', obj.value2.unit)
 
     def test_parse_parameter_value3(self):
-        source = StringIO('<Mock><Value1 DataType="double" Unit="s">2.0</Value1><Value3>ABC</Value3></Mock>')
+        source = StringIO(u'<Mock><Value1 DataType="double" Unit="s">2.0</Value1><Value3>ABC</Value3></Mock>')
         element = etree.parse(source)
         obj = self.h._parse_parameter(element, MockParameter)
         self.assertEqual('ABC', obj.value3)
 
-        source = StringIO('<Mock><Value1 DataType="double" Unit="s">2.0</Value1><Value3 alt-lang-en-US="abc" alt-lang-ru="def">ABC</Value3></Mock>')
+        source = StringIO(u'<Mock><Value1 DataType="double" Unit="s">2.0</Value1><Value3 alt-lang-en-US="abc" alt-lang-ru="def">ABC</Value3></Mock>')
         element = etree.parse(source)
         obj = self.h._parse_parameter(element, MockParameter)
         self.assertEqual('ABC', obj.value3)

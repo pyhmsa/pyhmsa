@@ -228,7 +228,7 @@ class AcquisitionRasterXY(_AcquisitionRaster):
     step_count_x = NumericalAttribute(None, True, 'XStepCount', 'number of steps in x direction')
     step_count_y = NumericalAttribute(None, True, 'YStepCount', 'number of steps in y direction')
     step_size_x = NumericalAttribute(u'\u00b5m', False, 'XStepSize', 'dimension of each step in x direction')
-    step_size_y = NumericalAttribute('\u00b5m', False, 'YStepSize', 'dimension of each step in y direction')
+    step_size_y = NumericalAttribute(u'\u00b5m', False, 'YStepSize', 'dimension of each step in y direction')
     frame_count = NumericalAttribute(None, False, 'FrameCount', 'number of accumulated frames')
 
     def __init__(self, step_count_x, step_count_y,
@@ -284,7 +284,9 @@ class AcquisitionRasterXY(_AcquisitionRaster):
         :arg loc: location, either :const:`POSITION_LOCATION_START` or
             :const:`POSITION_LOCATION_CENTER`
         """
-        value, loc, *_ = list(flatten([value, loc]))
+        values = list(flatten([value, loc]))
+        value = values[0]
+        loc = values[1]
 
         if loc is None:
             loc = POSITION_LOCATION_START
@@ -367,7 +369,9 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
         :arg loc: location, either :const:`POSITION_LOCATION_START` or
             :const:`POSITION_LOCATION_CENTER`
         """
-        value, loc, *_ = list(flatten([value, loc]))
+        values = list(flatten([value, loc]))
+        value = values[0]
+        loc = values[1]
 
         if loc is None:
             loc = POSITION_LOCATION_START

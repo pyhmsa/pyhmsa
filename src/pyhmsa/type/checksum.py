@@ -46,7 +46,10 @@ def calculate_checksum_sha1(buffer):
     return Checksum(value, CHECKSUM_ALGORITHM_SHA1)
 
 def calculate_checksum_sum32(buffer):
-    sumbytes = sum(buffer)
+    try:
+        sumbytes = sum(buffer)
+    except: # Python 2
+        sumbytes = sum(map(ord, buffer))
     value = hex(sumbytes)[2:34].zfill(32)
     return Checksum(value, CHECKSUM_ALGORITHM_SUM32)
 

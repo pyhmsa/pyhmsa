@@ -12,7 +12,6 @@ __license__ = "GPL v3"
 import unittest
 import logging
 import xml.etree.ElementTree as etree
-from io import StringIO
 
 # Third party modules.
 
@@ -32,8 +31,8 @@ class TestElementIDXMLHandler(unittest.TestCase):
 
         self.obj = ElementID(11)
 
-        source = StringIO('<ElementID><Element DataType="uint32" Symbol="Na">11</Element></ElementID>')
-        self.element = etree.parse(source).getroot()
+        source = u'<ElementID><Element DataType="uint32" Symbol="Na">11</Element></ElementID>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -63,8 +62,8 @@ class TestElementIDXrayXMLHandler(unittest.TestCase):
 
         self.obj = ElementIDXray(11, u'M\u03b1', 1234.0)
 
-        source = StringIO('<ElementID Class="X-ray"><Element DataType="uint32" Symbol="Na">11</Element><Line>M\u03b1</Line><Energy Unit="eV" DataType="float">1234</Energy></ElementID>')
-        self.element = etree.parse(source).getroot()
+        source = u'<ElementID Class="X-ray"><Element DataType="uint32" Symbol="Na">11</Element><Line>M\u03b1</Line><Energy Unit="eV" DataType="float">1234</Energy></ElementID>'
+        self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
