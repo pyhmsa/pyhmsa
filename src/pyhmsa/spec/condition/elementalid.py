@@ -40,9 +40,9 @@ _SYMBOLS = [
         "Uut", "Fl" , "Uup", "Lv" , "Uus", "Uuo"
     ]
 
-class ElementID(_Condition):
+class ElementalID(_Condition):
 
-    TEMPLATE = 'ElementID'
+    TEMPLATE = 'ElementalID'
 
     atomic_number = AtomicNumberAttribute(True, 'Element', "atomic number")
 
@@ -65,7 +65,7 @@ class ElementID(_Condition):
 
     symbol = property(get_symbol, doc='Symbol')
 
-class ElementIDXray(ElementID):
+class ElementalIDXray(ElementalID):
 
     CLASS = 'X-ray'
 
@@ -81,7 +81,7 @@ class ElementIDXray(ElementID):
         :arg line: x-ray line (required)
         :arg energy: energy of x-ray line (optional)
         """
-        ElementID.__init__(self, atomic_number)
+        ElementalID.__init__(self, atomic_number)
 
         self.line = line
         self.energy = energy

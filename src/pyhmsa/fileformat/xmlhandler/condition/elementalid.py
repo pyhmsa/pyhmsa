@@ -16,39 +16,39 @@
 # Third party modules.
 
 # Local modules.
-from pyhmsa.spec.condition.elementid import ElementID, ElementIDXray
+from pyhmsa.spec.condition.elementalid import ElementalID, ElementalIDXray
 from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
 
 # Globals and constants variables.
 
-class ElementIDXMLHandler(_XMLHandler):
+class ElementalIDXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
-        return element.tag == 'ElementID'
+        return element.tag == 'ElementalID'
 
     def parse(self, element):
-        return self._parse_parameter(element, ElementID)
+        return self._parse_parameter(element, ElementalID)
 
     def can_convert(self, obj):
-        return isinstance(obj, ElementID)
+        return isinstance(obj, ElementalID)
 
     def convert(self, obj):
-        element = self._convert_parameter(obj, 'ElementID')
+        element = self._convert_parameter(obj, 'ElementalID')
         element.find('Element').set('Symbol', obj.symbol) # manually add symbol
         return element
 
-class ElementIDXrayXMLHandler(_XMLHandler):
+class ElementalIDXrayXMLHandler(_XMLHandler):
 
     def can_parse(self, element):
-        return element.tag == 'ElementID' and element.get('Class') == 'X-ray'
+        return element.tag == 'ElementalID' and element.get('Class') == 'X-ray'
 
     def parse(self, element):
-        return self._parse_parameter(element, ElementIDXray)
+        return self._parse_parameter(element, ElementalIDXray)
 
     def can_convert(self, obj):
-        return isinstance(obj, ElementIDXray)
+        return isinstance(obj, ElementalIDXray)
 
     def convert(self, obj):
-        element = self._convert_parameter(obj, 'ElementID', {'Class': 'X-ray'})
+        element = self._convert_parameter(obj, 'ElementalID', {'Class': 'X-ray'})
         element.find('Element').set('Symbol', obj.symbol) # manually add symbol
         return element

@@ -76,8 +76,8 @@ setup(name='pyHMSA',
              'DetectorSpectrometerWDS = pyhmsa.fileformat.xmlhandler.condition.detector:DetectorSpectrometerWDSXMLHandler',
              'DetectorSpectrometerXEDS = pyhmsa.fileformat.xmlhandler.condition.detector:DetectorSpectrometerXEDSXMLHandler',
 
-             'ElementID = pyhmsa.fileformat.xmlhandler.condition.elementid:ElementIDXMLHandler',
-             'ElementIDXray = pyhmsa.fileformat.xmlhandler.condition.elementid:ElementIDXrayXMLHandler',
+             'ElementalID = pyhmsa.fileformat.xmlhandler.condition.elementalid:ElementalIDXMLHandler',
+             'ElementalIDXray = pyhmsa.fileformat.xmlhandler.condition.elementalid:ElementalIDXrayXMLHandler',
 
              'Instrument = pyhmsa.fileformat.xmlhandler.condition.instrument:InstrumentXMLHandler',
 

@@ -8,16 +8,16 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.spec.condition.elementid import ElementID, ElementIDXray
+from pyhmsa.spec.condition.elementalid import ElementalID, ElementalIDXray
 
 # Globals and constants variables.
 
-class TestElementID(unittest.TestCase):
+class TestElementalID(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.element = ElementID(11)
+        self.element = ElementalID(11)
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -32,12 +32,12 @@ class TestElementID(unittest.TestCase):
     def testsymbol(self):
         self.assertEqual('Na', self.element.symbol)
 
-class TestElementIDXray(unittest.TestCase):
+class TestElementalIDXray(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.element = ElementIDXray(11, u'M\u03b1')
+        self.element = ElementalIDXray(11, u'M\u03b1')
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)

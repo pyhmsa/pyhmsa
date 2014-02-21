@@ -9,22 +9,22 @@ import xml.etree.ElementTree as etree
 # Third party modules.
 
 # Local modules.
-from pyhmsa.fileformat.xmlhandler.condition.elementid import \
-    ElementIDXMLHandler, ElementIDXrayXMLHandler
-from pyhmsa.spec.condition.elementid import ElementID, ElementIDXray
+from pyhmsa.fileformat.xmlhandler.condition.elementalid import \
+    ElementalIDXMLHandler, ElementalIDXrayXMLHandler
+from pyhmsa.spec.condition.elementalid import ElementalID, ElementalIDXray
 
 # Globals and constants variables.
 
-class TestElementIDXMLHandler(unittest.TestCase):
+class TestElementalIDXMLHandler(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = ElementIDXMLHandler(1.0)
+        self.h = ElementalIDXMLHandler(1.0)
 
-        self.obj = ElementID(11)
+        self.obj = ElementalID(11)
 
-        source = u'<ElementID><Element DataType="uint32" Symbol="Na">11</Element></ElementID>'
+        source = u'<ElementalID><Element DataType="uint32" Symbol="Na">11</Element></ElementalID>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -42,20 +42,20 @@ class TestElementIDXMLHandler(unittest.TestCase):
 
     def testconvert(self):
         element = self.h.convert(self.obj)
-        self.assertEqual('ElementID', element.tag)
+        self.assertEqual('ElementalID', element.tag)
         self.assertEqual('11', element.find('Element').text)
         self.assertEqual('Na', element.find('Element').get('Symbol'))
 
-class TestElementIDXrayXMLHandler(unittest.TestCase):
+class TestElementalIDXrayXMLHandler(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.h = ElementIDXrayXMLHandler(1.0)
+        self.h = ElementalIDXrayXMLHandler(1.0)
 
-        self.obj = ElementIDXray(11, u'M\u03b1', 1234.0)
+        self.obj = ElementalIDXray(11, u'M\u03b1', 1234.0)
 
-        source = u'<ElementID Class="X-ray"><Element DataType="uint32" Symbol="Na">11</Element><Line>M\u03b1</Line><Energy Unit="eV" DataType="float">1234</Energy></ElementID>'
+        source = u'<ElementalID Class="X-ray"><Element DataType="uint32" Symbol="Na">11</Element><Line>M\u03b1</Line><Energy Unit="eV" DataType="float">1234</Energy></ElementalID>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -63,7 +63,7 @@ class TestElementIDXrayXMLHandler(unittest.TestCase):
 
     def testcan_parse(self):
         self.assertTrue(self.h.can_parse(self.element))
-        self.assertFalse(self.h.can_parse(etree.Element('ElementID')))
+        self.assertFalse(self.h.can_parse(etree.Element('ElementalID')))
         self.assertFalse(self.h.can_parse(etree.Element('Abc')))
 
     def testparse(self):
@@ -79,7 +79,7 @@ class TestElementIDXrayXMLHandler(unittest.TestCase):
 
     def testconvert(self):
         element = self.h.convert(self.obj)
-        self.assertEqual('ElementID', element.tag)
+        self.assertEqual('ElementalID', element.tag)
         self.assertEqual('X-ray', element.get('Class'))
         self.assertEqual('11', element.find('Element').text)
         self.assertEqual('Na', element.find('Element').get('Symbol'))
