@@ -63,8 +63,11 @@ def generate_uid():
         key = winreg.CreateKeyEx(winreg.HKEY_CURRENT_USER, _REG_KEY,
                                  0, winreg.KEY_READ | winreg.KEY_WRITE)
         with key:
-            lastuid, _ = winreg.QueryValueEx(key, "Counter")
-            lastuid += 1
+            try:
+                lastuid, _ = winreg.QueryValueEx(key, "Counter")
+                lastuid += 1
+            except:
+                lastuid = 0
             winreg.SetValueEx(key, 'Counter', 0, winreg.REG_DWORD, lastuid)
 
         sha1.update(str(lastuid).encode('ascii'))
