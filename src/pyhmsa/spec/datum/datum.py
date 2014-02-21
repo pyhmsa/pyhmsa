@@ -56,12 +56,21 @@ class _Datum(np.ndarray):
 
     @property
     def conditions(self):
+        """
+        Conditions associated to this dataset.
+        """
         return self._conditions
 
     @property
     def datum_dimensions(self):
+        """
+        Dimensions and order of the data.
+        """
         return OrderedDict()
 
     @property
     def collection_dimensions(self):
+        """
+        Dimensions and order of the collections
+        """
         return OrderedDict()

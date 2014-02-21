@@ -23,18 +23,18 @@ from pyhmsa.util.parameter import \
 from pyhmsa.util.cookbook import flatten
 
 # Globals and constants variables.
-RASTER_MODE_STAGE = 'Stage'
-RASTER_MODE_BEAM = 'Beam'
+RASTER_MODE_STAGE = 'Stage' #: Stage raster mode
+RASTER_MODE_BEAM = 'Beam' #: Beam raster mode
 
 _RASTER_MODES = frozenset([RASTER_MODE_BEAM, RASTER_MODE_STAGE])
 
-RASTER_MODE_Z_FIB = 'FIB'
+RASTER_MODE_Z_FIB = 'FIB' #: Z raster mode (FIB)
 
 _RASTER_MODES_Z = frozenset([RASTER_MODE_Z_FIB])
 
-POSITION_LOCATION_START = 'Start'
-POSITION_LOCATION_CENTER = 'Center'
-POSITION_LOCATION_END = 'End'
+POSITION_LOCATION_START = 'Start' #: Start position
+POSITION_LOCATION_CENTER = 'Center' #: Center position
+POSITION_LOCATION_END = 'End' #: End position
 
 _POSITION_LOCATIONS = frozenset([POSITION_LOCATION_START,
                                  POSITION_LOCATION_CENTER,
