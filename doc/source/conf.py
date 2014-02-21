@@ -1,6 +1,7 @@
 
 import sys
 import os
+import runpy
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -42,12 +43,10 @@ copyright = u'2014, Philippe Pinard'
 # built documents.
 #
 # The short X.Y version.
-try:
-    import pyhmsa
-except ImportError:
-    msg = "Error: pyhmsa must be installed before building the documentation"
-    sys.exit(msg)
-version = pyhmsa.__version__
+filepath = os.path.join(os.path.dirname(__file__),
+                        '..', '..', 'src', 'pyhmsa', '__init__.py')
+vars = runpy.run_path(filepath)
+version = vars['__version__']
 
 # The full version, including alpha/beta/rc tags.
 release = version
