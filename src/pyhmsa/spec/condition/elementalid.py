@@ -63,7 +63,10 @@ class ElementalID(_Condition):
         """
         return _SYMBOLS[self.atomic_number - 1]
 
-    symbol = property(get_symbol, doc='Symbol')
+    def set_symbol(self, symbol):
+        self.atomic_number = _SYMBOLS.index(symbol) + 1
+
+    symbol = property(get_symbol, set_symbol, doc='Symbol')
 
 class ElementalIDXray(ElementalID):
 

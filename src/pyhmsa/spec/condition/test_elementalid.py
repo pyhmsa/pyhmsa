@@ -32,6 +32,12 @@ class TestElementalID(unittest.TestCase):
     def testsymbol(self):
         self.assertEqual('Na', self.element.symbol)
 
+        self.element.set_symbol('Fe')
+        self.assertEqual('Fe', self.element.symbol)
+        self.assertEqual(26, self.element.atomic_number)
+
+        self.assertRaises(ValueError, self.element.set_symbol, "Ab")
+
 class TestElementalIDXray(unittest.TestCase):
 
     def setUp(self):
