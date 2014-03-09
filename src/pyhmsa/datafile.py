@@ -36,10 +36,24 @@ class DataFile(object):
 
     VERSION = '1.0'
 
-    def __init__(self, version=VERSION):
+    def __init__(self, version=VERSION, language='en-US'):
+        """
+        Creates a new MSA hyper dimensional data file.
+
+        Conditions and data objects can be added using the attributes
+        :attr:`conditions <.DataFile.conditions>` and
+        :attr:`data <.DataFile.data>`, respectively.
+        Note that conditions part of any datum object will also appear in the
+        global conditions dictionary.
+
+        :arg version: version of the data file
+            (default: to most up-to-date version)
+        :arg language: language of the data file (default and recommended
+            language is ``en-US``)
+        """
         self._version = version
 
-        self._language = 'en-US'
+        self._language = language
 
         self._header = Header()
 
@@ -65,6 +79,14 @@ class DataFile(object):
 
     @classmethod
     def read(cls, filepath):
+        """
+        Reads an existing MSA hyper dimensional data file and returns an
+        object of this class.
+
+        :arg filepath: either the location of the XML or HMSA file.
+            Note that both have to be present.
+        """
+
         # Open files
         filepath_xml, filepath_hmsa = cls._extract_filepath(filepath)
         if not os.path.exists(filepath_xml):
@@ -224,6 +246,11 @@ class DataFile(object):
         self._conditions[identifier] = condition
 
     def write(self, filepath):
+        """
+        Writes this data file to disk.
+
+        :arg filepath: either the location of the XML or HMSA file
+        """
         # Open files
         filepath_xml, filepath_hmsa = self._extract_filepath(filepath)
 
@@ -322,22 +349,37 @@ class DataFile(object):
 
     @property
     def header(self):
+        """
+        Header
+        """
         return self._header
 
     @property
     def conditions(self):
+        """
+        Conditions
+        """
         return self._conditions
 
     @property
     def data(self):
+        """
+        Data
+        """
         return self._data
 
     @property
     def version(self):
+        """
+        Version
+        """
         return self._version
 
     @property
     def language(self):
+        """
+        Language
+        """
         return self._language
 
     @language.setter

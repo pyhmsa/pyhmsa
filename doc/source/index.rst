@@ -12,7 +12,7 @@ API
 ===
 
 The API follows closely the name convention, hierarchy and parameter names of
-the HMSA specifications. 
+the HMSA specifications.
 The type of conditions and datasets available can be found below.
 
 .. toctree::
@@ -21,16 +21,15 @@ The type of conditions and datasets available can be found below.
    spec/header.rst
    spec/condition.rst
    spec/datum.rst
-
-The API also provides reader and writer classes to read and write HMSA files, 
-respectively.
-Examples on how to use these classes are given in the documentation.
+   
+The main object of the library is the :class:`.DataFile` which regroups in a
+single object the :ref:`header`, :ref:`conditions` and :ref:`datasets <data>`.
+HMSA files can be created, read and written from this object.
 
 .. toctree::
-
-   fileformat/reader.rst
-   fileformat/writer.rst
+   :maxdepth: 1
    
+   datafile.rst
 
 Download
 ========
