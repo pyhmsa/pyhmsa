@@ -43,9 +43,9 @@ class _Datum(np.ndarray):
         obj = np.ndarray.__new__(cls, shape, dtype, buffer, offset=offset,
                                  strides=strides, order=order)
 
-        if conditions is None:
-            conditions = Conditions()
-        obj._conditions = conditions
+        obj._conditions = Conditions()
+        if conditions is not None:
+            obj._conditions.update(conditions)
 
         return obj
 

@@ -20,6 +20,7 @@ except ImportError: # pragma: no cover
 # Third party modules.
 
 # Local modules.
+from pyhmsa.util.signal import Signal
 
 # Globals and constants variables.
 
@@ -32,6 +33,28 @@ def validate_identifier(identifier):
 
 class _IdentifierDict(UserDict):
 
+    def __init__(self, adict=None, **kwargs):
+        UserDict.__init__(self, adict, **kwargs)
+
+        self.item_added = Signal()
+        self.item_deleted = Signal()
+        self.item_modified = Signal()
+
     def __setitem__(self, identifier, item):
         validate_identifier(identifier)
+
+        new = identifier not in self
+        if not new:
+            olditem = self[identifier]
+
         UserDict.__setitem__(self, identifier, item)
+
+        if new:
+            self.item_added.fire(identifier, item)
+        else:
+            self.item_modified.fire(identifier, item, olditem)
+
+    def __delitem__(self, identifier):
+        olditem = self[identifier]
+        UserDict.__delitem__(self, identifier)
+        self.item_deleted.fire(identifier, olditem)
