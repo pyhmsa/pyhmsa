@@ -53,6 +53,7 @@ setup(name='pyHMSA',
 
       packages=find_packages('src'),
       package_dir={'':'src'},
+      namespace_packages=['pyhmsa'],
 
       install_requires=['numpy'],
       zip_safe=True,
