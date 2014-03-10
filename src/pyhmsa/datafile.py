@@ -217,7 +217,7 @@ class DataFile(object):
             state = None
             for datum in self._data.values():
                 if condition_identifier in datum.conditions:
-                    if datum == newdatum:
+                    if datum is newdatum: # Same object
                         state = 'replace'
                     else:
                         state = 'remove'
