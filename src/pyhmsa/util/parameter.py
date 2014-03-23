@@ -124,10 +124,10 @@ class NumericalAttribute(_Attribute):
         if isinstance(value, tuple) and \
                 len(value) == 2 and \
                 (isinstance(value[1], str) or value[1] is None):
-            unit = value[1] or self._default_unit
+            unit = value[1] or self.default_unit
             value = value[0]
         else:
-            unit = self._default_unit
+            unit = self.default_unit
         return convert_value(value, unit)
 
     def _new(self, cls, clsname, bases, methods, name):
@@ -136,10 +136,19 @@ class NumericalAttribute(_Attribute):
         # Change set method to allow unit input
         methods['set_%s' % name] = \
             lambda instance, value, unit = None: \
-                self.__set__(instance, (value, unit or self._default_unit))
+                self.__set__(instance, (value, unit or self.default_unit))
+
+    @property
+    def default_unit(self):
+        return self._default_unit
 
 class TextAttribute(_Attribute):
-    pass
+
+    def _validate_value(self, value):
+        _Attribute._validate_value(self, value)
+
+        if value is not None and len(value.strip()) == 0 and self.is_required():
+            raise ValueError('%s is required' % self.name)
 
 class AtomicNumberAttribute(NumericalAttribute):
 
@@ -197,6 +206,11 @@ class EnumAttribute(TextAttribute):
     def __init__(self, values, required=False, xmlname=None, doc=None):
         TextAttribute.__init__(self, required, xmlname, doc)
         self._values = tuple(values)
+
+    def _prepare_value(self, value):
+        if value is not None and len(value.strip()) == 0:
+            value = None
+        return value
 
     def _validate_value(self, value):
         _Attribute._validate_value(self, value)
