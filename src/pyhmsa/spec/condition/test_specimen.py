@@ -9,7 +9,8 @@ import logging
 
 # Local modules.
 from pyhmsa.spec.condition.specimen import \
-    SpecimenPosition, Specimen, Composition, SpecimenLayer, SpecimenMultilayer
+    SpecimenPosition, Specimen, SpecimenLayer, SpecimenMultilayer
+from pyhmsa.spec.condition.composition import CompositionElemental
 
 # Globals and constants variables.
 
@@ -58,30 +59,6 @@ class TestSpecimenPosition(unittest.TestCase):
         self.assertAlmostEqual(4.0, self.position.t, 4)
         self.assertEqual('rad', self.position.t.unit)
 
-class TestComposition(unittest.TestCase):
-
-    def setUp(self):
-        unittest.TestCase.setUp(self)
-
-        self.comp = Composition('atoms', {11: 3})
-        self.comp[13] = 1
-        self.comp.update({9: 6})
-
-    def tearDown(self):
-        unittest.TestCase.tearDown(self)
-
-    def testskeleton(self):
-        self.assertEqual('atoms', self.comp.unit)
-        self.assertAlmostEqual(3, self.comp[11], 4)
-        self.assertAlmostEqual(1, self.comp[13], 4)
-        self.assertAlmostEqual(6, self.comp[9], 4)
-
-        self.assertRaises(ValueError, Composition, 'A')
-
-    def test__setitem__(self):
-        self.assertRaises(ValueError, self.comp.__setitem__, -1, 1)
-        self.assertRaises(ValueError, self.comp.__setitem__, 119, 1)
-
 class TestSpecimen(unittest.TestCase):
 
     def setUp(self):
@@ -109,7 +86,7 @@ class TestSpecimen(unittest.TestCase):
         self.assertEqual('Na3AlF6', self.spc.formula)
 
     def testcomposition(self):
-        comp = Composition('atoms')
+        comp = CompositionElemental('atoms')
         comp[11] = 3
         comp[13] = 1
         comp[9] = 6
@@ -150,7 +127,7 @@ class TestSpecimenLayer(unittest.TestCase):
         self.assertEqual('C', self.layer.formula)
 
     def testcomposition(self):
-        comp = Composition('wt%')
+        comp = CompositionElemental('wt%')
         comp[6] = 100.0
         self.layer.composition = comp
         self.assertAlmostEqual(100.0, self.layer.composition[6], 4)

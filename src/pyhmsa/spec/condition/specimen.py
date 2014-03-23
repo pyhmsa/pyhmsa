@@ -12,27 +12,17 @@
 """
 
 # Standard library modules.
-try:
-    from collections import UserDict
-except ImportError: # pragma: no cover
-    from UserDict import UserDict
-from collections import Mapping
 
 # Third party modules.
-import numpy as np
 
 # Local modules.
 from pyhmsa.spec.condition.condition import _Condition
-from pyhmsa.type.numerical import convert_value
-from pyhmsa.type.unit import validate_unit
+from pyhmsa.spec.condition.composition import _Composition
 from pyhmsa.util.parameter import \
     (Parameter, NumericalAttribute, TextAttribute, ObjectAttribute,
      FrozenAttribute)
 
 # Globals and constants variables.
-_COMPOSITION_UNITS = frozenset(['atoms', 'mol%', 'vol%', 'wt%',
-                                'mol_ppm', 'vol_ppm', 'wt_ppm',
-                                'mol_ppb', 'vol_ppb', 'wt_ppb'])
 
 class SpecimenPosition(_Condition):
 
@@ -65,61 +55,6 @@ class SpecimenPosition(_Condition):
         self.r = r
         self.t = t
 
-class Composition(UserDict):
-
-    def __init__(self, unit, adict=None, **kwargs):
-        """
-        Defines the composition of a specimen.
-        The composition is a :class:`dict` where the keys are atomic numbers
-        and the values the amounts of an element.
-
-        :arg unit: unit in which the composition is defined (required)
-        """
-        UserDict.__init__(self, adict, **kwargs)
-
-        validate_unit(unit)
-        if unit not in _COMPOSITION_UNITS:
-            raise ValueError('Invalid unit for composition')
-        self._unit = unit
-
-    def __setitem__(self, key, item):
-        if key < 1:
-            raise ValueError('Atomic number cannot be less than hydrogen')
-        if key > 118:
-            raise ValueError('Atomic number cannot be greater than Uuo')
-        UserDict.__setitem__(self, np.uint8(key), convert_value(item))
-
-    def update(*args, **kwds): #@NoSelf
-        # Bug fix in Python 2 that update method does not call __setitem__
-        # Method copied literally from Python 3.3
-        if len(args) > 2:
-            raise TypeError("update() takes at most 2 positional "
-                            "arguments ({} given)".format(len(args)))
-        elif not args:
-            raise TypeError("update() takes at least 1 argument (0 given)")
-        self = args[0]
-        other = args[1] if len(args) >= 2 else ()
-
-        if isinstance(other, Mapping):
-            for key in other:
-                self[key] = other[key]
-        elif hasattr(other, "keys"):
-            for key in other.keys():
-                self[key] = other[key]
-        else:
-            for key, value in other:
-                self[key] = value
-        for key, value in kwds.items():
-            self[key] = value
-
-    def get_unit(self):
-        """
-        Returns unit.
-        """
-        return self._unit
-
-    unit = property(get_unit, doc='Unit')
-
 class Specimen(_Condition):
 
     TEMPLATE = 'Specimen'
@@ -128,7 +63,7 @@ class Specimen(_Condition):
     description = TextAttribute(False, 'Description', 'description')
     origin = TextAttribute(False, 'Origin', 'origin')
     formula = TextAttribute(False, 'Formula', 'formula')
-    composition = ObjectAttribute(Composition, False, doc='composition')
+    composition = ObjectAttribute(_Composition, False, doc='composition')
     temperature = NumericalAttribute(u'\u00b0\u0043', False, 'Temperature', 'temperature')
 
     def __init__(self, name, description=None, origin=None, formula=None,
@@ -158,7 +93,7 @@ class SpecimenLayer(Parameter):
     name = TextAttribute(False, doc='name')
     thickness = NumericalAttribute('nm', False, 'Thickness', 'thickness')
     formula = TextAttribute(False, 'Formula', 'formula')
-    composition = ObjectAttribute(Composition, False, doc='composition')
+    composition = ObjectAttribute(_Composition, False, doc='composition')
 
     def __init__(self, name=None, thickness=None, formula=None, composition=None):
         """
