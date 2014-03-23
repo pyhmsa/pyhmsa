@@ -255,7 +255,7 @@ class AcquisitionRasterXY(_AcquisitionRaster):
         self.frame_count = frame_count
         self.position = position
 
-    def get_position(self):
+    def get_position(self, include_location=False):
         """
         Returns the physical location on (or in) the specimen.
 
@@ -263,10 +263,15 @@ class AcquisitionRasterXY(_AcquisitionRaster):
         :rtype: :class:`.SpecimenPosition`
         """
         try:
-            loc = next(iter(self.positions.keys()))
-            return self.positions[loc]
+            location = next(iter(self.positions.keys()))
+            position = self.positions[location]
         except StopIteration:
-            return None
+            location = position = None
+
+        if include_location:
+            return position, location
+        else:
+            return position
 
     def set_position(self, value, loc=None):
         """
@@ -340,7 +345,7 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
         self.position = position
         self.raster_mode_z = raster_mode_z
 
-    def get_position(self):
+    def get_position(self, include_location=False):
         """
         Returns the physical location on (or in) the specimen.
 
@@ -348,10 +353,15 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
         :rtype: :class:`.SpecimenPosition`
         """
         try:
-            loc = next(iter(self.positions.keys()))
-            return self.positions[loc]
+            location = next(iter(self.positions.keys()))
+            position = self.positions[location]
         except StopIteration:
-            return None
+            location = position = None
+
+        if include_location:
+            return position, location
+        else:
+            return position
 
     def set_position(self, value, loc=None):
         """
