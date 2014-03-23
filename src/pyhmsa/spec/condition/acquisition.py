@@ -17,7 +17,7 @@
 
 # Local modules.
 from pyhmsa.spec.condition.condition import _Condition
-from pyhmsa.spec.condition.specimen import SpecimenPosition
+from pyhmsa.spec.condition.specimenposition import SpecimenPosition
 from pyhmsa.util.parameter import \
     NumericalAttribute, ObjectAttribute, EnumAttribute, FrozenAttribute
 from pyhmsa.util.cookbook import flatten

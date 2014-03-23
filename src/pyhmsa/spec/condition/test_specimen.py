@@ -9,55 +9,10 @@ import logging
 
 # Local modules.
 from pyhmsa.spec.condition.specimen import \
-    SpecimenPosition, Specimen, SpecimenLayer, SpecimenMultilayer
+    Specimen, SpecimenLayer, SpecimenMultilayer
 from pyhmsa.spec.condition.composition import CompositionElemental
 
 # Globals and constants variables.
-
-class TestSpecimenPosition(unittest.TestCase):
-
-    def setUp(self):
-        unittest.TestCase.setUp(self)
-
-        self.position = SpecimenPosition(y=5.0, r=90.0)
-
-    def tearDown(self):
-        unittest.TestCase.tearDown(self)
-
-    def testx(self):
-        self.assertFalse(self.position.x)
-
-        self.position.set_x(4.0, 'm')
-        self.assertAlmostEqual(4.0, self.position.x, 4)
-        self.assertEqual('m', self.position.x.unit)
-
-    def testy(self):
-        self.assertTrue(self.position.y)
-
-        self.position.set_y(4.0, 'mm')
-        self.assertAlmostEqual(4.0, self.position.y, 4)
-        self.assertEqual('mm', self.position.y.unit)
-
-    def testz(self):
-        self.assertFalse(self.position.z)
-
-        self.position.set_z(4.0, 'nm')
-        self.assertAlmostEqual(4.0, self.position.z, 4)
-        self.assertEqual('nm', self.position.z.unit)
-
-    def testr(self):
-        self.assertTrue(self.position.r)
-
-        self.position.set_r(4.0, 'rad')
-        self.assertAlmostEqual(4.0, self.position.r, 4)
-        self.assertEqual('rad', self.position.r.unit)
-
-    def testt(self):
-        self.assertFalse(self.position.t)
-
-        self.position.set_t(4.0, 'rad')
-        self.assertAlmostEqual(4.0, self.position.t, 4)
-        self.assertEqual('rad', self.position.t.unit)
 
 class TestSpecimen(unittest.TestCase):
 

@@ -9,3 +9,4 @@ from pyhmsa.spec.condition.instrument import *
 from pyhmsa.spec.condition.probe import *
 from pyhmsa.spec.condition.region import *
 from pyhmsa.spec.condition.specimen import *
+from pyhmsa.spec.condition.specimenposition import *

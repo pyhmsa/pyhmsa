@@ -24,37 +24,6 @@ from pyhmsa.util.parameter import \
 
 # Globals and constants variables.
 
-class SpecimenPosition(_Condition):
-
-    TEMPLATE = 'SpecimenPosition'
-
-    x = NumericalAttribute('mm', False, 'X', 'x coordinate')
-    y = NumericalAttribute('mm', False, 'Y', 'y coordinate')
-    z = NumericalAttribute('mm', False, 'Z', 'z coordinate')
-    r = NumericalAttribute(u'\u00b0', False, 'R', 'rotation')
-    t = NumericalAttribute(u'\u00b0', False, 'T', 'tilt')
-
-    def __init__(self, x=None, y=None, z=None, r=None, t=None):
-        """
-        Defines a physical location on (or in) the specimen.
-        The position shall be defined in the coordinate system of the instrument.
-        This version of the HMSA standard does not specify a template or
-        definition of coordinate systems.
-
-        :arg x: x coordinate
-        :arg y: y coordinate
-        :arg z: z coordinate
-        :arg r: rotation
-        :arg t: tilt
-        """
-        _Condition.__init__(self)
-
-        self.x = x
-        self.y = y
-        self.z = z
-        self.r = r
-        self.t = t
-
 class Specimen(_Condition):
 
     TEMPLATE = 'Specimen'
