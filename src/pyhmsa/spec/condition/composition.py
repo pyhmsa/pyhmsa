@@ -23,10 +23,10 @@ from collections import Mapping
 import numpy as np
 
 # Local modules.
-from pyhmsa.util.parameter import ParameterMetaclass
+from pyhmsa.util.parameter import ParameterMetaclass, UnitAttribute
 from pyhmsa.spec.condition.condition import _Condition
 from pyhmsa.type.numerical import convert_value
-from pyhmsa.type.unit import validate_unit
+from pyhmsa.util.element_properties import get_symbol
 
 # Globals and constants variables.
 _COMPOSITION_UNITS = frozenset(['atoms', 'mol%', 'vol%', 'wt%',
@@ -37,6 +37,8 @@ class _Composition(_Condition):
 
     TEMPLATE = 'Composition'
 
+    unit = UnitAttribute(None, True, 'Unit', 'unit in which the composition is defined')
+
     def __init__(self, unit):
         """
         Defines the composition of a material.
@@ -45,18 +47,9 @@ class _Composition(_Condition):
         """
         _Condition.__init__(self)
 
-        validate_unit(unit)
-        if unit not in _COMPOSITION_UNITS:
+        if unit not in _COMPOSITION_UNITS: # FIXME
             raise ValueError('Invalid unit for composition')
-        self._unit = unit
-
-    def get_unit(self):
-        """
-        Returns unit.
-        """
-        return self._unit
-
-    unit = property(get_unit, doc='Unit')
+        self.unit = unit
 
 class _CompositionElementalMetaclass(ABCMeta, ParameterMetaclass):
     pass
@@ -69,7 +62,7 @@ class CompositionElemental(_BaseCompositionElemental):
 
     CLASS = 'Elemental'
 
-    def __init__(self, unit, adict=None, **kwargs):
+    def __init__(self, unit, values=None, **kwargs):
         """
         Defines the composition of a material in terms of its constituent
         elements.
@@ -79,14 +72,27 @@ class CompositionElemental(_BaseCompositionElemental):
         :arg unit: unit in which the composition is defined (required)
         """
         _Composition.__init__(self, unit)
-        UserDict.__init__(self, adict, **kwargs)
+        UserDict.__init__(self, values, **kwargs)
 
     def __setitem__(self, key, item):
+        if key is None:
+            return
         if key < 1:
             raise ValueError('Atomic number cannot be less than hydrogen')
         if key > 118:
             raise ValueError('Atomic number cannot be greater than Uuo')
         UserDict.__setitem__(self, np.uint8(key), convert_value(item))
+
+    def __repr__(self):
+        r = _Composition.__repr__(self)[:-2]
+
+        if len(self) > 0:
+            for z, fraction in self.items():
+                r += ', %s=%s' % (get_symbol(z), fraction)
+
+        return r + ')>'
+
+    __str__ = __repr__
 
     def update(*args, **kwds): #@NoSelf
         # Bug fix in Python 2 that update method does not call __setitem__
