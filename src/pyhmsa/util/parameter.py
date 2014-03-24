@@ -177,13 +177,17 @@ class UnitAttribute(TextAttribute):
 
     def _prepare_value(self, value):
         value = TextAttribute._prepare_value(self, value)
-        value = value or self._default_unit
+        value = value or self.default_unit
         return value
 
     def _validate_value(self, value):
         TextAttribute._validate_value(self, value)
         if value is not None:
             validate_unit(value)
+
+    @property
+    def default_unit(self):
+        return self._default_unit
 
 class ObjectAttribute(_Attribute):
 
