@@ -18,76 +18,23 @@ import xml.etree.ElementTree as etree
 
 # Local modules.
 from pyhmsa.spec.condition.specimen import \
-    SpecimenPosition, Specimen, SpecimenMultilayer, Composition, SpecimenLayer
+    Specimen, SpecimenMultilayer, SpecimenLayer
+from pyhmsa.spec.condition.composition import CompositionElemental
 from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
+from pyhmsa.fileformat.xmlhandler.condition.composition import CompositionElementalXMLHandler
 
 # Globals and constants variables.
-
-class SpecimenPositionXMLHandler(_XMLHandler):
-
-    def can_parse(self, element):
-        return element.tag == 'SpecimenPosition'
-
-    def parse(self, element):
-        return self._parse_parameter(element, SpecimenPosition)
-
-    def can_convert(self, obj):
-        return isinstance(obj, SpecimenPosition)
-
-    def convert(self, obj):
-        return self._convert_parameter(obj, 'SpecimenPosition')
-
-class CompositionXMLHandler(_XMLHandler):
-
-    def can_parse(self, element):
-        return element.tag == 'Composition'
-
-    def parse(self, element):
-        units = []
-        tmpcomposition = {}
-        for subelement in element.findall('Element'):
-            z = int(subelement.attrib['Z'])
-            value = self._parse_numerical_attribute(subelement)
-            units.append(value.unit)
-            tmpcomposition.setdefault(z, value)
-
-        # Check units
-        units = set(units)
-        if not units:
-            return None
-        if len(units) > 1:
-            raise ValueError('Incompatible unit in composition')
-        unit = list(units)[0]
-
-        composition = Composition(unit)
-        composition.update(tmpcomposition)
-        return composition
-
-    def can_convert(self, obj):
-        return isinstance(obj, Composition)
-
-    def convert(self, obj):
-        element = etree.Element('Composition')
-
-        attrib = type('MockAttribute', (object,), {'xmlname': 'Element'})
-        for z, fraction in obj.items():
-            subelement = self._convert_numerical_attribute(fraction, attrib)[0]
-            subelement.set('Unit', obj.unit)
-            subelement.set('Z', str(z))
-            element.append(subelement)
-
-        return element
 
 class _SpecimenXMLHandler(_XMLHandler):
 
     def __init__(self, version):
         _XMLHandler.__init__(self, version)
-        self._handler_composition = CompositionXMLHandler(version)
+        self._handler_composition = CompositionElementalXMLHandler(version)
 
     def _parse_composition(self, element):
         subelement = element.find('Composition')
         if subelement is None:
-            return Composition("wt%")
+            return CompositionElemental("wt%")
         return self._handler_composition.parse(subelement)
 
     def _convert_composition(self, obj):

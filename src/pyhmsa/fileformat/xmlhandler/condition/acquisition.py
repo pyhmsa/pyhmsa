@@ -21,7 +21,7 @@ import numpy as np
 from pyhmsa.spec.condition.acquisition import \
     (AcquisitionPoint, AcquisitionMultipoint,
      AcquisitionRasterLinescan, AcquisitionRasterXY, AcquisitionRasterXYZ)
-from pyhmsa.spec.condition.specimen import SpecimenPosition
+from pyhmsa.spec.condition.specimenposition import SpecimenPosition
 from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
 from pyhmsa.util.parameter import ObjectAttribute
 

@@ -10,101 +10,11 @@ import xml.etree.ElementTree as etree
 
 # Local modules.
 from pyhmsa.fileformat.xmlhandler.condition.specimen import \
-    (CompositionXMLHandler, SpecimenPositionXMLHandler,
-     SpecimenXMLHandler, SpecimenMultilayerXMLHandler)
-from pyhmsa.spec.condition.specimen import \
-    (Composition, SpecimenPosition, Specimen, SpecimenMultilayer)
+     SpecimenXMLHandler, SpecimenMultilayerXMLHandler
+from pyhmsa.spec.condition.specimen import Specimen, SpecimenMultilayer
+from pyhmsa.spec.condition.composition import CompositionElemental
 
 # Globals and constants variables.
-
-class TestSpecimenPositionXMLHandler(unittest.TestCase):
-
-    def setUp(self):
-        unittest.TestCase.setUp(self)
-
-        self.h = SpecimenPositionXMLHandler(1.0)
-
-        self.obj = SpecimenPosition(0.0, 0.0, 10.0, 90.0, 70.0)
-
-        source = u'<SpecimenPosition><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z><R Unit="\u00b0" DataType="float">90.0</R><T Unit="\u00b0" DataType="float">70.0</T></SpecimenPosition>'
-        self.element = etree.fromstring(source.encode('utf-8'))
-
-    def tearDown(self):
-        unittest.TestCase.tearDown(self)
-
-    def testcan_parse(self):
-        self.assertTrue(self.h.can_parse(self.element))
-
-    def testparse(self):
-        obj = self.h.parse(self.element)
-        self.assertAlmostEqual(0.0, obj.x, 4)
-        self.assertEqual('mm', obj.x.unit)
-        self.assertAlmostEqual(0.0, obj.y, 4)
-        self.assertEqual('mm', obj.y.unit)
-        self.assertAlmostEqual(10.0, obj.z, 4)
-        self.assertEqual('mm', obj.z.unit)
-        self.assertAlmostEqual(90.0, obj.r, 4)
-        self.assertEqual(u'\u00b0', obj.r.unit)
-        self.assertAlmostEqual(70.0, obj.t, 4)
-        self.assertEqual(u'\u00b0', obj.t.unit)
-
-    def testcan_convert(self):
-        self.assertTrue(self.h.can_convert(self.obj))
-
-    def testconvert(self):
-        element = self.h.convert(self.obj)
-        self.assertEqual('SpecimenPosition', element.tag)
-        self.assertEqual('0.0', element.find('X').text)
-        self.assertEqual('0.0', element.find('Y').text)
-        self.assertEqual('10.0', element.find('Z').text)
-        self.assertEqual('90.0', element.find('R').text)
-        self.assertEqual('70.0', element.find('T').text)
-
-class TestCompositionXMLHandler(unittest.TestCase):
-
-    def setUp(self):
-        unittest.TestCase.setUp(self)
-
-        self.h = CompositionXMLHandler(1.0)
-
-        self.obj = Composition('atoms')
-        self.obj[11] = 3
-        self.obj[13] = 1
-        self.obj[9] = 6
-
-        source = u'<Composition><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition>'
-        self.element = etree.fromstring(source.encode('utf-8'))
-
-    def tearDown(self):
-        unittest.TestCase.tearDown(self)
-
-    def testcan_parse(self):
-        self.assertTrue(self.h.can_parse(self.element))
-
-    def testparse(self):
-        obj = self.h.parse(self.element)
-        self.assertEqual('atoms', obj.unit)
-        self.assertEqual(3, len(obj))
-        self.assertAlmostEqual(3.0, obj[11], 4)
-        self.assertAlmostEqual(1.0, obj[13], 4)
-        self.assertAlmostEqual(6.0, obj[9], 4)
-
-        source = u'<Composition></Composition>'
-        element = etree.fromstring(source.encode('utf-8'))
-        obj = self.h.parse(element)
-        self.assertIsNone(obj)
-
-        source = u'<Composition><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="wt%" DataType="float">1.</Element></Composition>'
-        element = etree.fromstring(source.encode('utf-8'))
-        self.assertRaises(ValueError, self.h.parse, element)
-
-    def testcan_convert(self):
-        self.assertTrue(self.h.can_convert(self.obj))
-
-    def testconvert(self):
-        element = self.h.convert(self.obj)
-        self.assertEqual('Composition', element.tag)
-        self.assertEqual(3, len(element.findall('Element')))
 
 class TestSpecimenXMLHandler(unittest.TestCase):
 
@@ -113,12 +23,12 @@ class TestSpecimenXMLHandler(unittest.TestCase):
 
         self.h = SpecimenXMLHandler(1.0)
 
-        comp = Composition('atoms')
+        comp = CompositionElemental('atoms')
         comp.update({11: 3, 13: 1, 9: 6})
         self.obj = Specimen('Cryolite', 'Natural cryolite standard',
                             'Kitaa, Greenland', 'Na3AlF6', comp, -20.0)
 
-        source = u'<Specimen><Name>Cryolite</Name><Description>Natural cryolite standard</Description><Origin>Kitaa, Greenland</Origin><Formula>Na3AlF6</Formula><Composition><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition><Temperature Unit="\u00b0\u0043" DataType="float">-20.0</Temperature></Specimen>'
+        source = u'<Specimen><Name>Cryolite</Name><Description>Natural cryolite standard</Description><Origin>Kitaa, Greenland</Origin><Formula>Na3AlF6</Formula><Composition Class="Elemental"><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition><Temperature Unit="\u00b0\u0043" DataType="float">-20.0</Temperature></Specimen>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -163,11 +73,11 @@ class TestSpecimenMultilayerXMLHandler(unittest.TestCase):
         self.obj = SpecimenMultilayer('Cryolite', 'Natural cryolite standard',
                             'Kitaa, Greenland', 'Na3AlF6')
 
-        comp = Composition('wt%')
+        comp = CompositionElemental('wt%')
         comp.update({6: 100.0})
         self.obj.append_layer('Carbon coat', 50.0, 'C', comp)
 
-        source = u'<Specimen Class="Multilayer"><Name>Cryolite</Name><Description>Natural cryolite standard</Description><Origin>Kitaa, Greenland</Origin><Formula>Na3AlF6</Formula><Layers><Layer Name="Carbon coat"><Thickness Unit="nm" DataType="float">50</Thickness><Formula>C</Formula><Composition><Element Z="6" Unit="wt%" DataType="float">50.</Element></Composition></Layer></Layers></Specimen>'
+        source = u'<Specimen Class="Multilayer"><Name>Cryolite</Name><Description>Natural cryolite standard</Description><Origin>Kitaa, Greenland</Origin><Formula>Na3AlF6</Formula><Layers><Layer Name="Carbon coat"><Thickness Unit="nm" DataType="float">50</Thickness><Formula>C</Formula><Composition Class="Elemental"><Element Z="6" Unit="wt%" DataType="float">50.</Element></Composition></Layer></Layers></Specimen>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):

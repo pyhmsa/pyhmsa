@@ -87,7 +87,10 @@ setup(name='pyHMSA',
 
              'RegionOfInterest = pyhmsa.fileformat.xmlhandler.condition.region:RegionOfInterestXMLHandler',
 
-             'SpecimenPosition = pyhmsa.fileformat.xmlhandler.condition.specimen:SpecimenPositionXMLHandler',
+             'SpecimenPosition = pyhmsa.fileformat.xmlhandler.condition.specimenposition:SpecimenPositionXMLHandler',
+
+             'CompositionElemental = pyhmsa.fileformat.xmlhandler.condition.composition:CompositionElementalXMLHandler',
+
              'Specimen = pyhmsa.fileformat.xmlhandler.condition.specimen:SpecimenXMLHandler',
              'SpecimenMultilayer = pyhmsa.fileformat.xmlhandler.condition.specimen:SpecimenMultilayerXMLHandler',
              ],
