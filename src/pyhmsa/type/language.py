@@ -505,6 +505,9 @@ class langstr(str):
             obj._alternatives[language_tag] = altvalue
         return obj
 
+    def __reduce__(self):
+        return (self.__class__, (str(self), self.alternatives))
+
     @property
     def alternatives(self):
         return self._alternatives.copy()
