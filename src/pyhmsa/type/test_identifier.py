@@ -23,6 +23,7 @@ class TestModule(unittest.TestCase):
     def testvalidate_identifier(self):
         self.assertTrue(validate_identifier('abc'))
         self.assertTrue(validate_identifier('abc_asda-|(sadfa)'))
+        self.assertRaises(ValueError, validate_identifier, '')
         self.assertRaises(ValueError, validate_identifier, u'\u00b0C')
 
 class Test_IdentifierDict(unittest.TestCase):

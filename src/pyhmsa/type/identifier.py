@@ -25,6 +25,8 @@ from pyhmsa.util.signal import Signal
 # Globals and constants variables.
 
 def validate_identifier(identifier):
+    if len(identifier.strip()) == 0:
+        raise ValueError('Identifier cannot be an empty string')
     try:
         identifier.encode('ascii')
         return True
