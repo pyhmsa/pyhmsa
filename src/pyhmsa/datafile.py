@@ -36,7 +36,7 @@ class DataFile(object):
 
     VERSION = '1.0'
 
-    def __init__(self, version=VERSION, language='en-US'):
+    def __init__(self, filepath=None, version=VERSION, language='en-US'):
         """
         Creates a new MSA hyper dimensional data file.
 
@@ -51,6 +51,8 @@ class DataFile(object):
         :arg language: language of the data file (default and recommended
             language is ``en-US``)
         """
+        self._filepath = filepath
+
         self._version = version
 
         self._language = language
@@ -101,7 +103,7 @@ class DataFile(object):
         root = etree.ElementTree(file=xml_file).getroot()
 
         # Create object
-        obj = cls(root.attrib['Version'])
+        obj = cls(filepath, root.attrib['Version'])
 
         # Read
         cls._read_root(obj, root)
@@ -245,12 +247,15 @@ class DataFile(object):
     def _on_datum_condition_modified(self, identifier, condition, oldcondition):
         self._conditions[identifier] = condition
 
-    def write(self, filepath):
+    def write(self, filepath=None):
         """
         Writes this data file to disk.
 
         :arg filepath: either the location of the XML or HMSA file
         """
+        if filepath is None:
+            filepath = self._filepath
+
         # Open files
         filepath_xml, filepath_hmsa = self._extract_filepath(filepath)
 
@@ -294,6 +299,9 @@ class DataFile(object):
 
         # Close XML file
         xml_file.close()
+
+        # Update internal file path
+        self._filepath = filepath
 
         return binascii.hexlify(uid).upper()
 
@@ -386,3 +394,7 @@ class DataFile(object):
     def language(self, language):
         validate_language_tag(language)
         self._language = language
+
+    @property
+    def filepath(self):
+        return self._filepath
