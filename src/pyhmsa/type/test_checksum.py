@@ -4,6 +4,7 @@
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 
@@ -29,6 +30,13 @@ class TestChecksum(unittest.TestCase):
         self.assertEqual(CHECKSUM_ALGORITHM_SHA1, self.checksum.algorithm)
 
         self.assertRaises(ValueError, Checksum, 'aBc', 'Algorithm')
+
+    def testpickle(self):
+        s = pickle.dumps(self.checksum)
+        checksum = pickle.loads(s)
+
+        self.assertEqual('ABC', checksum.value)
+        self.assertEqual(CHECKSUM_ALGORITHM_SHA1, checksum.algorithm)
 
 class TestModule(unittest.TestCase):
 
