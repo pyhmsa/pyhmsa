@@ -58,6 +58,9 @@ class Header(_BaseHeader):
         self._extras = {}
         self._extras.update(kwargs)
 
+    def __hash__(self):
+        return hash(tuple(self.items()))
+
     def __reduce__(self):
         return (self.__class__, ())
 
