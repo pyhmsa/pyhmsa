@@ -60,3 +60,15 @@ class _IdentifierDict(UserDict):
         olditem = self[identifier]
         UserDict.__delitem__(self, identifier)
         self.item_deleted.fire(identifier, olditem)
+
+    def findkeys(self, clasz):
+        return frozenset(key for key, value in self.items() \
+                         if isinstance(value, clasz))
+
+    def findvalues(self, clasz):
+        return frozenset(value for value in self.values() \
+                         if isinstance(value, clasz))
+
+    def finditems(self, clasz):
+        return frozenset((key, value) for key, value in self.items() \
+                         if isinstance(value, clasz))
