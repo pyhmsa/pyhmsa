@@ -31,6 +31,8 @@ class _AnalysisList(_Datum):
     Each row (first index) represents a point measurement.
     """
 
+    TEMPLATE = 'AnalysisList'
+
     @property
     def analysis_count(self):
         return np.uint32(len(self))
@@ -48,6 +50,8 @@ class AnalysisList0D(_AnalysisList):
     BSE yield, vacuum pressure).
     """
 
+    CLASS = "0D"
+
     def __new__(cls, analysis_count, dtype=np.float32,
                 buffer=None, offset=0, strides=None, order=None,
                 conditions=None):
@@ -64,6 +68,8 @@ class AnalysisList1D(_AnalysisList):
     Represents a sequence of point measurements with one datum dimension,
     such as a spectrum.
     """
+
+    CLASS = "1D"
 
     def __new__(cls, analysis_count, channels, dtype=np.float32,
                 buffer=None, offset=0, strides=None, order=None,
@@ -91,6 +97,8 @@ class AnalysisList2D(_AnalysisList):
     Represents a sequence of point measurements with two datum dimensions,
     such as a diffraction pattern.
     """
+
+    CLASS = "2D"
 
     def __new__(cls, analysis_count, u, v, dtype=np.float32,
                 buffer=None, offset=0, strides=None, order=None,

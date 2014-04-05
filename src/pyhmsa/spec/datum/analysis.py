@@ -28,11 +28,15 @@ class _Analysis(_Datum):
     """
     pass
 
+    TEMPLATE = "Analysis"
+
 class Analysis0D(_Analysis):
     """
     Data with 0 collection dimensions and 0 datum dimensions implies a dataset
     comprising of one single-valued measurement.
     """
+
+    CLASS = "0D"
 
     def __new__(cls, value, dtype=np.float32,
                 offset=0, strides=None, order=None,
@@ -46,6 +50,8 @@ class Analysis1D(_Analysis):
     Stores a measurement of a specimen at a single point in space or time
     with one datum dimension.
     """
+
+    CLASS = "1D"
 
     def __new__(cls, channels, dtype=np.float32,
                 buffer=None, offset=0, strides=None, order=None,
@@ -77,6 +83,8 @@ class Analysis2D(_Analysis):
        rastered over the specimen, such as a conventional TEM or SEM image.
        Instead, such data shall be stored using the :class:`ImageRaster2D`.
     """
+
+    CLASS = "2D"
 
     def __new__(cls, u, v, dtype=np.float32,
                 buffer=None, offset=0, strides=None, order=None,

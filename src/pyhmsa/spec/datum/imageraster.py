@@ -29,6 +29,8 @@ class _ImageRaster(_Datum):
     serial section.
     """
 
+    TEMPLATE = "ImageRaster"
+
 class _ImageRaster2D(_ImageRaster):
     """
     Abstract class for image raster 2D classes.
@@ -54,6 +56,8 @@ class ImageRaster2D(_ImageRaster2D):
     Represents a dataset that has been raster mapped in 2D (x/y dimensions).
     """
 
+    CLASS = "2D"
+
     def __new__(cls, x, y, dtype=np.float32,
                 buffer=None, offset=0, strides=None, order=None,
                 conditions=None):
@@ -71,6 +75,8 @@ class ImageRaster2DSpectral(_ImageRaster2D):
     (channel dimension).
     An example of this type of dataset is a SEM-XEDS map.
     """
+
+    CLASS = "2D/Spectral"
 
     def __new__(cls, x, y, channels, dtype=np.float32,
                 buffer=None, offset=0, strides=None, order=None,
@@ -99,6 +105,8 @@ class ImageRaster2DHyperimage(_ImageRaster2D):
     where for each raster coordinate, the datum collected was a 2D image
     (U/V dimensions.
     """
+
+    CLASS = "2D/Hyperimage"
 
     def __new__(cls, x, y, u, v, dtype=np.float32,
                 buffer=None, offset=0, strides=None, order=None,

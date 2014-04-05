@@ -32,6 +32,9 @@ from pyhmsa.type.numerical import validate_dtype
 
 class _Datum(np.ndarray):
 
+    TEMPLATE = None
+    CLASS = None
+
     def __new__(cls, shape, dtype=np.float32,
                 buffer=None, offset=0, strides=None, order=None,
                 conditions=None):
