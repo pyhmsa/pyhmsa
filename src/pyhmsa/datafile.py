@@ -154,7 +154,8 @@ class DataFile(object):
         logging.debug('Check UID: %s == %s', xml_uid, hmsa_uid)
 
         # Check checksum
-        if 'checksum' in obj.header:
+        xml_checksum = getattr(obj.header, 'checksum', None)
+        if xml_checksum is not None:
             xml_checksum = obj.header.checksum
 
             hmsa_file.seek(0)
