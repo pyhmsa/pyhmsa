@@ -40,7 +40,7 @@ class WindowXMLHandler(_XMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, Window)
+        return type(obj) is Window
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Window')
@@ -63,7 +63,7 @@ class DetectorCameraXMLHandler(_XMLHandler):
         return self._parse_parameter(element, DetectorCamera)
 
     def can_convert(self, obj):
-        return isinstance(obj, DetectorCamera)
+        return type(obj) is DetectorCamera
 
     def convert(self, obj):
         return self._convert_parameter(obj, 'Detector', {'Class': 'Camera'})
@@ -126,7 +126,7 @@ class DetectorSpectrometerXMLHandler(_DetectorSpectrometerXMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, DetectorSpectrometer)
+        return type(obj) is DetectorSpectrometer
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Detector', {'Class': 'Spectrometer'})
@@ -144,7 +144,7 @@ class DetectorSpectrometerCLXMLHandler(_DetectorSpectrometerXMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, DetectorSpectrometerCL)
+        return type(obj) is DetectorSpectrometerCL
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Detector', {'Class': 'Spectrometer/CL'})
@@ -163,7 +163,7 @@ class DetectorSpectrometerWDSXMLHandler(_DetectorSpectrometerXMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, DetectorSpectrometerWDS)
+        return type(obj) is DetectorSpectrometerWDS
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Detector', {'Class': 'Spectrometer/WDS'})
@@ -183,7 +183,7 @@ class DetectorSpectrometerXEDSXMLHandler(_DetectorSpectrometerXMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, DetectorSpectrometerXEDS)
+        return type(obj) is DetectorSpectrometerXEDS
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Detector', {'Class': 'Spectrometer/XEDS'})

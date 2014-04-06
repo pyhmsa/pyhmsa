@@ -36,7 +36,7 @@ class AcquisitionPointXMLHandler(_XMLHandler):
         return self._parse_parameter(element, AcquisitionPoint)
 
     def can_convert(self, obj):
-        return isinstance(obj, AcquisitionPoint)
+        return type(obj) is AcquisitionPoint
 
     def convert(self, obj):
         return self._convert_parameter(obj, 'Acquisition', {'Class': 'Point'})
@@ -67,7 +67,7 @@ class AcquisitionMultipointXMLHandler(_XMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, AcquisitionMultipoint)
+        return type(obj) is AcquisitionMultipoint
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Multipoint'})
@@ -129,7 +129,7 @@ class AcquisitionRasterLinescanXMLHandler(_AcquisitionRasterXMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, AcquisitionRasterLinescan)
+        return type(obj) is AcquisitionRasterLinescan
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Raster/Linescan'})
@@ -147,7 +147,7 @@ class AcquisitionRasterXYXMLHandler(_AcquisitionRasterXMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, AcquisitionRasterXY)
+        return type(obj) is AcquisitionRasterXY
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Raster/XY'})
@@ -165,7 +165,7 @@ class AcquisitionRasterXYZXMLHandler(_AcquisitionRasterXMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, AcquisitionRasterXYZ)
+        return type(obj) is AcquisitionRasterXYZ
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Raster/XYZ'})

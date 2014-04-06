@@ -43,7 +43,7 @@ class RegionOfInterestXMLHandler(_XMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, RegionOfInterest)
+        return type(obj) is RegionOfInterest
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'RegionOfInterest')

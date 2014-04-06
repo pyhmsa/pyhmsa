@@ -53,7 +53,7 @@ class SpecimenXMLHandler(_SpecimenXMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, Specimen)
+        return type(obj) is Specimen
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Specimen')
@@ -72,7 +72,7 @@ class SpecimenLayerXMLHandler(_SpecimenXMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, Specimen)
+        return type(obj) is Specimen
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Layer')
@@ -101,7 +101,7 @@ class SpecimenMultilayerXMLHandler(_SpecimenXMLHandler):
         return obj
 
     def can_convert(self, obj):
-        return isinstance(obj, SpecimenMultilayer)
+        return type(obj) is SpecimenMultilayer
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'Specimen', {'Class': 'Multilayer'})

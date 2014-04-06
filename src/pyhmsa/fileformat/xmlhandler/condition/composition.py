@@ -56,7 +56,7 @@ class CompositionElementalXMLHandler(_XMLHandler):
         return composition
 
     def can_convert(self, obj):
-        return isinstance(obj, CompositionElemental)
+        return type(obj) is CompositionElemental
 
     def convert(self, obj):
         element = etree.Element('Composition', {'Class': 'Elemental'})

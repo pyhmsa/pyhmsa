@@ -30,7 +30,7 @@ class ElementalIDXMLHandler(_XMLHandler):
         return self._parse_parameter(element, ElementalID)
 
     def can_convert(self, obj):
-        return isinstance(obj, ElementalID)
+        return type(obj) is ElementalID
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'ElementalID')
@@ -46,7 +46,7 @@ class ElementalIDXrayXMLHandler(_XMLHandler):
         return self._parse_parameter(element, ElementalIDXray)
 
     def can_convert(self, obj):
-        return isinstance(obj, ElementalIDXray)
+        return type(obj) is ElementalIDXray
 
     def convert(self, obj):
         element = self._convert_parameter(obj, 'ElementalID', {'Class': 'X-ray'})

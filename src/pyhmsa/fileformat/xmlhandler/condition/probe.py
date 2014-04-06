@@ -30,7 +30,7 @@ class ProbeEMXMLHandler(_XMLHandler):
         return self._parse_parameter(element, ProbeEM)
 
     def can_convert(self, obj):
-        return isinstance(obj, ProbeEM)
+        return type(obj) is ProbeEM
 
     def convert(self, obj):
         return self._convert_parameter(obj, 'Probe', {'Class': 'EM'})
@@ -44,7 +44,7 @@ class ProbeTEMXMLHandler(_XMLHandler):
         return self._parse_parameter(element, ProbeTEM)
 
     def can_convert(self, obj):
-        return isinstance(obj, ProbeTEM)
+        return type(obj) is ProbeTEM
 
     def convert(self, obj):
         return self._convert_parameter(obj, 'Probe', {'Class': 'TEM'})

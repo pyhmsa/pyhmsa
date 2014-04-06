@@ -31,7 +31,7 @@ class CalibrationConstantXMLHandler(_XMLHandler):
         return self._parse_parameter(element, CalibrationConstant)
 
     def can_convert(self, obj):
-        return isinstance(obj, CalibrationConstant)
+        return type(obj) is CalibrationConstant
 
     def convert(self, obj):
         return self._convert_parameter(obj, 'Calibration', {'Class': 'Constant'})
@@ -45,7 +45,7 @@ class CalibrationLinearXMLHandler(_XMLHandler):
         return self._parse_parameter(element, CalibrationLinear)
 
     def can_convert(self, obj):
-        return isinstance(obj, CalibrationLinear)
+        return type(obj) is CalibrationLinear
 
     def convert(self, obj):
         return self._convert_parameter(obj, 'Calibration', {'Class': 'Linear'})
@@ -59,7 +59,7 @@ class CalibrationPolynomialXMLHandler(_XMLHandler):
         return self._parse_parameter(element, CalibrationPolynomial)
 
     def can_convert(self, obj):
-        return isinstance(obj, CalibrationPolynomial)
+        return type(obj) is CalibrationPolynomial
 
     def convert(self, obj):
         return self._convert_parameter(obj, 'Calibration', {'Class': 'Polynomial'})
@@ -73,7 +73,7 @@ class CalibrationExplicitXMLHandler(_XMLHandler):
         return self._parse_parameter(element, CalibrationExplicit)
 
     def can_convert(self, obj):
-        return isinstance(obj, CalibrationExplicit)
+        return type(obj) is CalibrationExplicit
 
     def convert(self, obj):
         return self._convert_parameter(obj, 'Calibration', {'Class': 'Explicit'})

@@ -30,7 +30,7 @@ class SpecimenPositionXMLHandler(_XMLHandler):
         return self._parse_parameter(element, SpecimenPosition)
 
     def can_convert(self, obj):
-        return isinstance(obj, SpecimenPosition)
+        return type(obj) is SpecimenPosition
 
     def convert(self, obj):
         return self._convert_parameter(obj, 'SpecimenPosition')

@@ -30,7 +30,7 @@ class InstrumentXMLHandler(_XMLHandler):
         return self._parse_parameter(element, Instrument)
 
     def can_convert(self, obj):
-        return isinstance(obj, Instrument)
+        return type(obj) is Instrument
 
     def convert(self, obj):
         return self._convert_parameter(obj, 'Instrument')
