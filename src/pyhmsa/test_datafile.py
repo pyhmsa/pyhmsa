@@ -105,7 +105,7 @@ class TestDataFile(unittest.TestCase):
         del datum.conditions['cond']
 
         self.assertEqual(0, len(self.datafile.data['datum'].conditions))
-        self.assertEqual(0, len(self.datafile.conditions))
+        self.assertEqual(1, len(self.datafile.conditions))
 
     def testdelete_datum_condition2(self):
         datum = Analysis0D(1.0, conditions={'cond': ElementalID(13)})
@@ -135,7 +135,7 @@ class TestDataFile(unittest.TestCase):
         del self.datafile.data['datum']
 
         self.assertEqual(0, len(self.datafile.data))
-        self.assertEqual(0, len(self.datafile.conditions))
+        self.assertEqual(1, len(self.datafile.conditions))
 
     def testread(self):
         # Read

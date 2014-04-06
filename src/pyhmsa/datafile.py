@@ -65,7 +65,6 @@ class DataFile(object):
 
         self._data = Data()
         self._data.item_added.connect(self._on_datum_added)
-        self._data.item_deleted.connect(self._on_datum_deleted)
         self._data.item_modified.connect(self._on_datum_modified)
 
     @staticmethod
@@ -196,23 +195,12 @@ class DataFile(object):
 
     def _on_datum_added(self, identifier, datum):
         datum.conditions.item_added.connect(self._on_datum_condition_added)
-        datum.conditions.item_deleted.connect(self._on_datum_condition_deleted)
         datum.conditions.item_modified.connect(self._on_datum_condition_modified)
 
         # Re-add conditions (to allow signal to be propagated)
         conditions = datum.conditions.copy()
         datum.conditions.clear()
         datum.conditions.update(conditions)
-
-    def _on_datum_deleted(self, identifier, olddatum):
-        for condition_identifier in olddatum.conditions.keys():
-            keep = False
-            for datum in self._data.values():
-                if condition_identifier in datum.conditions:
-                    keep = True
-
-            if not keep and condition_identifier in self._conditions:
-                del self._conditions[condition_identifier]
 
     def _on_datum_modified(self, identifier, newdatum, olddatum):
         # Remove old conditions
@@ -240,10 +228,6 @@ class DataFile(object):
 
         if condition != self._conditions[identifier]:
             raise ValueError('Condition with ID "%s" already exists' % identifier)
-
-    def _on_datum_condition_deleted(self, identifier, oldcondition):
-        if identifier in self._conditions:
-            del self._conditions[identifier]
 
     def _on_datum_condition_modified(self, identifier, condition, oldcondition):
         self._conditions[identifier] = condition
