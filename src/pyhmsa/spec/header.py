@@ -41,7 +41,7 @@ class Header(_BaseHeader):
     checksum = ChecksumAttribute(False, 'Checksum', 'checksum')
 
     def __init__(self, title=None, author=None, owner=None, date=None,
-                 time=None, checksum=None, **kwargs):
+                 time=None, timezone=None, checksum=None, **kwargs):
         """
         Contains metadata that principally identifies the title of the document,
         the author/ownership of the data, and the date/time of collection.
@@ -53,6 +53,7 @@ class Header(_BaseHeader):
         self.owner = owner
         self.date = date
         self.time = time
+        self.timezone = timezone
         self.checksum = checksum
 
         self._extras = {}
