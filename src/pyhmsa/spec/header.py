@@ -12,7 +12,7 @@
 """
 
 # Standard library modules.
-from collections import MutableMapping
+from collections import MutableMapping, Mapping
 from abc import ABCMeta
 
 # Third party modules.
@@ -90,3 +90,33 @@ class Header(_BaseHeader):
             delattr(self, key.lower())
         else:
             del self._extras[key]
+
+    def update(*args, **kwds): #@NoSelf
+        """"
+        .. note::
+           Override MutableMapping update method to prevent update of values
+           which are equal to ``None``.
+        """
+        if len(args) > 2:
+            raise TypeError("update() takes at most 2 positional "
+                            "arguments ({} given)".format(len(args)))
+        elif not args:
+            raise TypeError("update() takes at least 1 argument (0 given)")
+        self = args[0]
+        other = args[1] if len(args) >= 2 else ()
+
+        if isinstance(other, Mapping):
+            for key in other:
+                if other[key] is not None:
+                    self[key] = other[key]
+        elif hasattr(other, "keys"):
+            for key in other.keys():
+                if other[key] is not None:
+                    self[key] = other[key]
+        else:
+            for key, value in other:
+                if value is not None:
+                    self[key] = value
+        for key, value in kwds.items():
+            if value is not None:
+                self[key] = value
