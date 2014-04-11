@@ -81,6 +81,13 @@ class Test_IdentifierDict(unittest.TestCase):
         self.assertEqual(1, len(keys))
         self.assertEqual('c', next(iter(keys)))
 
+        keys = self.d.findkeys('a*')
+        self.assertEqual(1, len(keys))
+        self.assertEqual('a', next(iter(keys)))
+
+        keys = self.d.findkeys('*')
+        self.assertEqual(3, len(keys))
+
     def testfindvalues(self):
         self.d['a'] = 1
         self.d['b'] = 2.0
@@ -98,6 +105,13 @@ class Test_IdentifierDict(unittest.TestCase):
         self.assertEqual(1, len(values))
         self.assertEqual('3', next(iter(values)))
 
+        values = self.d.findvalues('a*')
+        self.assertEqual(1, len(values))
+        self.assertEqual(1, next(iter(values)))
+
+        values = self.d.findvalues('*')
+        self.assertEqual(3, len(values))
+
     def testfinditems(self):
         self.d['a'] = 1
         self.d['b'] = 2.0
@@ -114,6 +128,13 @@ class Test_IdentifierDict(unittest.TestCase):
         items = self.d.finditems(str)
         self.assertEqual(1, len(items))
         self.assertEqual(('c', '3'), next(iter(items)))
+
+        items = self.d.finditems('a*')
+        self.assertEqual(1, len(items))
+        self.assertEqual(('a', 1), next(iter(items)))
+
+        items = self.d.finditems('*')
+        self.assertEqual(3, len(items))
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

@@ -16,6 +16,8 @@ try:
     from collections import UserDict
 except ImportError: # pragma: no cover
     from UserDict import UserDict
+import fnmatch
+import inspect
 
 # Third party modules.
 
@@ -61,14 +63,32 @@ class _IdentifierDict(UserDict):
         UserDict.__delitem__(self, identifier)
         self.item_deleted.fire(identifier, olditem)
 
-    def findkeys(self, clasz):
-        return frozenset(key for key, value in self.items() \
-                         if isinstance(value, clasz))
+    def findkeys(self, match):
+        if isinstance(match, str):
+            return frozenset(key for key, value in self.items() \
+                             if fnmatch.fnmatch(key, match))
+        elif inspect.isclass(match):
+            return frozenset(key for key, value in self.items() \
+                             if isinstance(value, match))
+        else:
+            raise ValueError("Specify an identifier or class")
 
-    def findvalues(self, clasz):
-        return frozenset(value for value in self.values() \
-                         if isinstance(value, clasz))
+    def findvalues(self, match):
+        if isinstance(match, str):
+            return frozenset(value for key, value in self.items() \
+                             if fnmatch.fnmatch(key, match))
+        elif inspect.isclass(match):
+            return frozenset(value for value in self.values() \
+                             if isinstance(value, match))
+        else:
+            raise ValueError("Specify an identifier or class")
 
-    def finditems(self, clasz):
-        return frozenset((key, value) for key, value in self.items() \
-                         if isinstance(value, clasz))
+    def finditems(self, match):
+        if isinstance(match, str):
+            return frozenset((key, value) for key, value in self.items() \
+                             if fnmatch.fnmatch(key, match))
+        elif inspect.isclass(match):
+            return frozenset((key, value) for key, value in self.items() \
+                             if isinstance(value, match))
+        else:
+            raise ValueError("Specify an identifier or class")
