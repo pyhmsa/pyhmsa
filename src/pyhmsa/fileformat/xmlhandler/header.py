@@ -30,7 +30,7 @@ class HeaderXMLHandler(_XMLHandler):
     def parse(self, element):
         obj = self._parse_parameter(element, Header)
 
-        for subelement in element.iter():
+        for subelement in element:
             name = subelement.tag
             if name in obj:
                 continue # already parsed
