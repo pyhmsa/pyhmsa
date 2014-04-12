@@ -40,30 +40,25 @@ class Header(_BaseHeader):
     timezone = TextAttribute(False, 'Timezone', 'timezone')
     checksum = ChecksumAttribute(False, 'Checksum', 'checksum')
 
-    def __init__(self, title=None, author=None, owner=None, date=None,
-                 time=None, timezone=None, checksum=None, **kwargs):
-        """
-        Contains metadata that principally identifies the title of the document,
-        the author/ownership of the data, and the date/time of collection.
-        Header information shall not contain parameters that are required for
-        the interpretation of the experimental data.
-        """
-        self.title = title
-        self.author = author
-        self.owner = owner
-        self.date = date
-        self.time = time
-        self.timezone = timezone
-        self.checksum = checksum
+    def __new__(cls, title=None, author=None, owner=None, date=None,
+                time=None, timezone=None, checksum=None, **kwargs):
+        obj = _BaseHeader.__new__(cls)
 
-        self._extras = {}
-        self._extras.update(kwargs)
+        obj.title = title
+        obj.author = author
+        obj.owner = owner
+        obj.date = date
+        obj.time = time
+        obj.timezone = timezone
+        obj.checksum = checksum
+
+        obj._extras = {}
+        obj._extras.update(kwargs)
+
+        return obj
 
     def __hash__(self):
         return hash(tuple(self.items()))
-
-    def __reduce__(self):
-        return (self.__class__, ())
 
     def __len__(self):
         return len(self._extras) + len(self.__attributes__)

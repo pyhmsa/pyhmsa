@@ -4,6 +4,7 @@
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 
@@ -55,6 +56,30 @@ class TestSpecimen(unittest.TestCase):
         self.assertAlmostEqual(-20.0, self.spc.temperature, 4)
         self.assertEqual(u'\u00b0\u0043', self.spc.temperature.unit)
 
+    def testpickle(self):
+        self.spc.description = 'Natural cryolite standard'
+        self.spc.origin = 'Kitaa, Greenland'
+        self.spc.formula = 'Na3AlF6'
+        comp = CompositionElemental('atoms')
+        comp[11] = 3
+        comp[13] = 1
+        comp[9] = 6
+        self.spc.composition = comp
+        self.spc.temperature = -20.0
+
+        s = pickle.dumps(self.spc)
+        spc = pickle.loads(s)
+
+        self.assertEqual('Cryolite', spc.name)
+        self.assertEqual('Natural cryolite standard', spc.description)
+        self.assertEqual('Kitaa, Greenland', spc.origin)
+        self.assertEqual('Na3AlF6', spc.formula)
+        self.assertAlmostEqual(3, spc.composition[11], 4)
+        self.assertAlmostEqual(1, spc.composition[13], 4)
+        self.assertAlmostEqual(6, spc.composition[9], 4)
+        self.assertAlmostEqual(-20.0, spc.temperature, 4)
+        self.assertEqual(u'\u00b0\u0043', spc.temperature.unit)
+
 class TestSpecimenLayer(unittest.TestCase):
 
     def setUp(self):
@@ -87,6 +112,22 @@ class TestSpecimenLayer(unittest.TestCase):
         self.layer.composition = comp
         self.assertAlmostEqual(100.0, self.layer.composition[6], 4)
 
+    def testpickle(self):
+        self.layer.name = 'Carbon coat'
+        self.layer.thickness = 50.0
+        self.layer.formula = 'C'
+        comp = CompositionElemental('wt%')
+        comp[6] = 100.0
+        self.layer.composition = comp
+
+        s = pickle.dumps(self.layer)
+        layer = pickle.loads(s)
+
+        self.assertEqual('Carbon coat', layer.name)
+        self.assertAlmostEqual(50.0, layer.thickness, 4)
+        self.assertEqual('nm', layer.thickness.unit)
+        self.assertAlmostEqual(100.0, layer.composition[6], 4)
+
 class TestSpecimenMultilayer(unittest.TestCase):
 
     def setUp(self):
@@ -103,6 +144,13 @@ class TestSpecimenMultilayer(unittest.TestCase):
     def testlayers(self):
         self.assertEqual(1, len(self.spc.layers))
         self.assertEqual('Carbon coat', self.spc.layers[0].name)
+
+    def testpickle(self):
+        s = pickle.dumps(self.spc)
+        spc = pickle.loads(s)
+
+        self.assertEqual(1, len(spc.layers))
+        self.assertEqual('Carbon coat', spc.layers[0].name)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

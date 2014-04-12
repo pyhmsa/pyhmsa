@@ -4,6 +4,7 @@
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 
@@ -31,6 +32,13 @@ class TestRegionOfInterest(unittest.TestCase):
         self.assertRaises(ValueError, self.roi.set_channels, 556, None)
         self.assertRaises(ValueError, self.roi.set_channels, -1, 636)
         self.assertRaises(ValueError, self.roi.set_channels, 636, 556)
+
+    def testpickle(self):
+        s = pickle.dumps(self.roi)
+        roi = pickle.loads(s)
+
+        self.assertEqual(556, roi.start_channel)
+        self.assertEqual(636, roi.end_channel)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

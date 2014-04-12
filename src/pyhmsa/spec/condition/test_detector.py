@@ -4,6 +4,7 @@
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 
@@ -53,6 +54,19 @@ class TestPulseHeightAnalyser(unittest.TestCase):
 
         self.assertRaises(ValueError, self.pha.set_mode, 'ABC')
 
+    def testpickle(self):
+        s = pickle.dumps(self.pha)
+        pha = pickle.loads(s)
+
+        self.assertAlmostEqual(1750, pha.bias, 4)
+        self.assertEqual('V', pha.bias.unit, 4)
+        self.assertAlmostEqual(32, pha.gain, 4)
+        self.assertAlmostEqual(0.5, pha.base_level, 4)
+        self.assertEqual('V', pha.base_level.unit, 4)
+        self.assertAlmostEqual(4.5, pha.window, 4)
+        self.assertEqual('V', pha.window.unit, 4)
+        self.assertEqual(PHA_MODE_DIFFERENTIAL, pha.mode)
+
 class TestWindowLayer(unittest.TestCase):
 
     def setUp(self):
@@ -73,6 +87,14 @@ class TestWindowLayer(unittest.TestCase):
         self.assertEqual('nm', self.layer.thickness.unit)
 
         self.assertRaises(ValueError, self.layer.set_thickness, None)
+
+    def testpickle(self):
+        s = pickle.dumps(self.layer)
+        layer = pickle.loads(s)
+
+        self.assertEqual('Al', layer.material)
+        self.assertAlmostEqual(100.0, layer.thickness, 4)
+        self.assertEqual('nm', layer.thickness.unit)
 
 class TestWindow(unittest.TestCase):
 
@@ -96,6 +118,15 @@ class TestWindow(unittest.TestCase):
         self.assertEqual('Be', self.window.layers[1].material)
         self.assertAlmostEqual(0.3, self.window.layers[1].thickness, 4)
         self.assertEqual(u'\u00b5m', self.window.layers[1].thickness.unit, 4)
+
+    def testpickle(self):
+        s = pickle.dumps(self.window)
+        window = pickle.loads(s)
+
+        self.assertEqual(1, len(window.layers))
+        self.assertEqual('Al', window.layers[0].material)
+        self.assertAlmostEqual(0.5, window.layers[0].thickness, 4)
+        self.assertEqual(u'\u00b5m', window.layers[0].thickness.unit, 4)
 
 class Test_Detector(unittest.TestCase):
 
@@ -167,6 +198,40 @@ class Test_Detector(unittest.TestCase):
         self.assertAlmostEqual(-20.0, self.det.temperature, 4)
         self.assertEqual(u'\u00b0\u0043', self.det.temperature.unit)
 
+    def testpickle(self):
+        self.det.model = 'Example Model 123'
+        self.det.serial_number = '12345-abc-67890'
+        self.det.measurement_unit = 'A'
+        self.det.elevation = 45.0
+        self.det.azimuth = 0.0
+        self.det.distance = 50.0
+        self.det.area = 20.0
+        self.det.solid_angle = 1.0
+        self.det.semi_angle = 3.4
+        self.det.temperature = -20.0
+
+        s = pickle.dumps(self.det)
+        det = pickle.loads(s)
+
+        self.assertEqual('Example Model 123', det.model)
+        self.assertEqual('12345-abc-67890', det.serial_number)
+        self.assertEqual('A', det.measurement_unit)
+        self.assertEqual('A', det.measurement_unit)
+        self.assertAlmostEqual(45.0, det.elevation, 4)
+        self.assertEqual(u'\u00b0', det.elevation.unit)
+        self.assertAlmostEqual(0.0, det.azimuth, 4)
+        self.assertEqual(u'\u00b0', det.azimuth.unit)
+        self.assertAlmostEqual(50.0, det.distance, 4)
+        self.assertEqual('mm', det.distance.unit)
+        self.assertAlmostEqual(20.0, det.area, 4)
+        self.assertEqual('mm2', det.area.unit)
+        self.assertAlmostEqual(1.0, det.solid_angle, 4)
+        self.assertEqual('sr', det.solid_angle.unit)
+        self.assertAlmostEqual(3.4, det.semi_angle, 4)
+        self.assertEqual('mrad', det.semi_angle.unit)
+        self.assertAlmostEqual(-20.0, det.temperature, 4)
+        self.assertEqual(u'\u00b0\u0043', det.temperature.unit)
+
 class TestDetectorCamera(unittest.TestCase):
 
     def setUp(self):
@@ -201,6 +266,22 @@ class TestDetectorCamera(unittest.TestCase):
         self.assertAlmostEqual(80.0, self.det.focal_length, 4)
         self.assertEqual('mm', self.det.focal_length.unit)
 
+    def testpickle(self):
+        self.det.exposure_time = 200.0
+        self.det.magnification = 4.5
+        self.det.focal_length = 80.0
+
+        s = pickle.dumps(self.det)
+        det = pickle.loads(s)
+
+        self.assertEqual(512, det.pixel_count_u)
+        self.assertEqual(400, det.pixel_count_v)
+        self.assertAlmostEqual(200.0, det.exposure_time, 4)
+        self.assertEqual('ms', det.exposure_time.unit)
+        self.assertAlmostEqual(4.5, det.magnification, 4)
+        self.assertAlmostEqual(80.0, det.focal_length, 4)
+        self.assertEqual('mm', det.focal_length.unit)
+
 class TestDetectorSpectrometer(unittest.TestCase):
 
     def setUp(self):
@@ -230,6 +311,18 @@ class TestDetectorSpectrometer(unittest.TestCase):
 
         self.assertRaises(ValueError, self.det.set_collection_mode, 'ABC')
 
+    def testpickle(self):
+        self.det.collection_mode = COLLECTION_MODE_PARALLEL
+
+        s = pickle.dumps(self.det)
+        det = pickle.loads(s)
+
+        self.assertEqual(4096, det.channel_count)
+        self.assertEqual('Energy', det.calibration.quantity)
+        self.assertEqual('eV', det.calibration.unit)
+        self.assertAlmostEqual(-237.098251, det.calibration.value, 4)
+        self.assertEqual(COLLECTION_MODE_PARALLEL, det.collection_mode)
+
 class TestDetectorSpectrometerCL(unittest.TestCase):
 
     def setUp(self):
@@ -242,9 +335,18 @@ class TestDetectorSpectrometerCL(unittest.TestCase):
         unittest.TestCase.tearDown(self)
 
     def testgrating_d(self):
-        self.det.grating_d = 800.
+        self.det.grating_d = 800.0
         self.assertAlmostEqual(800.0, self.det.grating_d, 4)
         self.assertEqual('mm-1', self.det.grating_d.unit)
+
+    def testpickle(self):
+        self.det.grating_d = 800.0
+
+        s = pickle.dumps(self.det)
+        det = pickle.loads(s)
+
+        self.assertAlmostEqual(800.0, det.grating_d, 4)
+        self.assertEqual('mm-1', det.grating_d.unit)
 
 class TestDetectorSpectrometerWDS(unittest.TestCase):
 
@@ -266,7 +368,7 @@ class TestDetectorSpectrometerWDS(unittest.TestCase):
         self.assertAlmostEqual(8.742, self.det.crystal_2d, 4)
         self.assertEqual(u'\u00c5', self.det.crystal_2d.unit)
 
-    def testrowland_cricle_diameter(self):
+    def testrowland_circle_diameter(self):
         self.det.rowland_circle_diameter = 140.0
         self.assertAlmostEqual(140.0, self.det.rowland_circle_diameter, 4)
         self.assertEqual('mm', self.det.rowland_circle_diameter.unit)
@@ -286,6 +388,32 @@ class TestDetectorSpectrometerWDS(unittest.TestCase):
         self.det.window = window
         self.assertEqual('Al', self.det.window.layers[0].material)
         self.assertEqual(1.0, self.det.window.layers[0].thickness)
+
+    def testpickle(self):
+        self.det.dispersion_element = 'TAP'
+        self.det.crystal_2d = 8.742
+        self.det.rowland_circle_diameter = 140.0
+        pha = PulseHeightAnalyser(1700.0, 16, 0.7, 9.3, PHA_MODE_DIFFERENTIAL)
+        self.det.pulse_height_analyser = pha
+        window = Window()
+        window.append_layer('Al', 1.0)
+        self.det.window = window
+
+        s = pickle.dumps(self.det)
+        det = pickle.loads(s)
+
+        self.assertEqual('TAP', det.dispersion_element)
+        self.assertAlmostEqual(8.742, det.crystal_2d, 4)
+        self.assertEqual(u'\u00c5', det.crystal_2d.unit)
+        self.assertAlmostEqual(140.0, det.rowland_circle_diameter, 4)
+        self.assertEqual('mm', det.rowland_circle_diameter.unit)
+        self.assertAlmostEqual(1700.0, det.pulse_height_analyser.bias, 4)
+        self.assertAlmostEqual(16.0, det.pulse_height_analyser.gain, 4)
+        self.assertAlmostEqual(0.7, det.pulse_height_analyser.base_level, 4)
+        self.assertAlmostEqual(9.3, det.pulse_height_analyser.window, 4)
+        self.assertEqual(PHA_MODE_DIFFERENTIAL, det.pulse_height_analyser.mode)
+        self.assertEqual('Al', det.window.layers[0].material)
+        self.assertEqual(1.0, det.window.layers[0].thickness)
 
 class TestDetectorSpectrometerXEDS(unittest.TestCase):
 
@@ -325,6 +453,28 @@ class TestDetectorSpectrometerXEDS(unittest.TestCase):
         self.det.window = window
         self.assertEqual('Al', self.det.window.layers[0].material)
         self.assertEqual(1.0, self.det.window.layers[0].thickness)
+
+    def testpickle(self):
+        self.det.technology = XEDS_TECHNOLOGY_SILI
+        self.det.nominal_throughput = 180000
+        self.det.time_constant = 11.1
+        self.det.strobe_rate = 2000
+        window = Window()
+        window.append_layer('Al', 1.0)
+        self.det.window = window
+
+        s = pickle.dumps(self.det)
+        det = pickle.loads(s)
+
+        self.assertEqual(XEDS_TECHNOLOGY_SILI, det.technology)
+        self.assertAlmostEqual(180000, det.nominal_throughput, 4)
+        self.assertEqual('counts', det.nominal_throughput.unit)
+        self.assertAlmostEqual(11.1, det.time_constant, 4)
+        self.assertEqual(u'\u00b5s', det.time_constant.unit)
+        self.assertAlmostEqual(2000, det.strobe_rate, 4)
+        self.assertEqual('Hz', det.strobe_rate.unit)
+        self.assertEqual('Al', det.window.layers[0].material)
+        self.assertEqual(1.0, det.window.layers[0].thickness)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

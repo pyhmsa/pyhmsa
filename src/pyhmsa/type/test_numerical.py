@@ -4,6 +4,7 @@
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 import numpy as np
@@ -71,6 +72,23 @@ class TestModule(unittest.TestCase):
         self.assertEqual(np.uint32, x.dtype.type)
 
         self.assertRaises(ValueError, convert_value, np.int8(5.0))
+
+class Testarrayunit(unittest.TestCase):
+
+    def setUp(self):
+        unittest.TestCase.setUp(self)
+
+        self.v = convert_value(5.0, 's')
+
+    def tearDown(self):
+        unittest.TestCase.tearDown(self)
+
+    def testpickle(self):
+        s = pickle.dumps(self.v)
+        v = pickle.loads(s)
+
+        self.assertAlmostEqual(5.0, v, 4)
+        self.assertEqual('s', v.unit)
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

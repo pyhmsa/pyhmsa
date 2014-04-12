@@ -4,6 +4,7 @@
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 
@@ -38,6 +39,13 @@ class TestElementalID(unittest.TestCase):
 
         self.assertRaises(ValueError, self.element.set_symbol, "Ab")
 
+    def testpickle(self):
+        s = pickle.dumps(self.element)
+        element = pickle.loads(s)
+
+        self.assertEqual(11, element.atomic_number)
+        self.assertEqual('Na', element.symbol)
+
 class TestElementalIDXray(unittest.TestCase):
 
     def setUp(self):
@@ -56,6 +64,17 @@ class TestElementalIDXray(unittest.TestCase):
         self.element.energy = 1234
         self.assertAlmostEqual(1234, self.element.energy, 4)
         self.assertEqual('eV', self.element.energy.unit)
+
+    def testpickle(self):
+        self.element.energy = 1234
+
+        s = pickle.dumps(self.element)
+        element = pickle.loads(s)
+
+        self.assertEqual(11, element.atomic_number)
+        self.assertEqual('Na', element.symbol)
+        self.assertEqual(u'M\u03b1', element.line)
+        self.assertAlmostEqual(1234, element.energy, 4)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

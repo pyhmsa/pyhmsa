@@ -11,6 +11,7 @@ __license__ = "GPL v3"
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 
@@ -42,6 +43,15 @@ class TestCompositionElemental(unittest.TestCase):
     def test__setitem__(self):
         self.assertRaises(ValueError, self.comp.__setitem__, -1, 1)
         self.assertRaises(ValueError, self.comp.__setitem__, 119, 1)
+
+    def testpickle(self):
+        s = pickle.dumps(self.comp)
+        comp = pickle.loads(s)
+
+        self.assertEqual('atoms', comp.unit)
+        self.assertAlmostEqual(3, comp[11], 4)
+        self.assertAlmostEqual(1, comp[13], 4)
+        self.assertAlmostEqual(6, comp[9], 4)
 
 
 if __name__ == '__main__': #pragma: no cover

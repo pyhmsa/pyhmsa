@@ -4,6 +4,7 @@
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 
@@ -74,6 +75,12 @@ class Test_Acquisition(unittest.TestCase):
         self.assertAlmostEqual(7.0, self.acq.dwell_time_live, 4)
         self.assertEqual('ms', self.acq.dwell_time_live.unit)
 
+    def testpickle(self):
+        s = pickle.dumps(self.acq)
+        acq = pickle.loads(s)
+
+        self.assertAlmostEqual(5.0, acq.dwell_time, 4)
+
 class TestAcquisitionPosition(unittest.TestCase):
 
     def setUp(self):
@@ -91,6 +98,15 @@ class TestAcquisitionPosition(unittest.TestCase):
         self.assertAlmostEqual(11.0, self.acq.position.z, 4)
 
         self.assertRaises(ValueError, self.acq.set_position, None)
+
+    def testpickle(self):
+        s = pickle.dumps(self.acq)
+        acq = pickle.loads(s)
+
+        self.assertAlmostEqual(10.0, acq.total_time, 4)
+        self.assertAlmostEqual(5.0, acq.position.x, 4)
+        self.assertAlmostEqual(5.0, acq.position.y, 4)
+        self.assertAlmostEqual(11.0, acq.position.z, 4)
 
 class TestAcquisitionMultipoint(unittest.TestCase):
 
@@ -115,6 +131,20 @@ class TestAcquisitionMultipoint(unittest.TestCase):
         self.assertAlmostEqual(6.0, self.acq.positions[1].y, 4)
         self.assertAlmostEqual(11.0, self.acq.positions[1].z, 4)
 
+    def testpickle(self):
+        s = pickle.dumps(self.acq)
+        acq = pickle.loads(s)
+
+        self.assertEqual(2, len(acq.positions))
+
+        self.assertAlmostEqual(5.0, acq.positions[0].x, 4)
+        self.assertAlmostEqual(5.0, acq.positions[0].y, 4)
+        self.assertAlmostEqual(11.0, acq.positions[0].z, 4)
+
+        self.assertAlmostEqual(6.0, acq.positions[1].x, 4)
+        self.assertAlmostEqual(6.0, acq.positions[1].y, 4)
+        self.assertAlmostEqual(11.0, acq.positions[1].z, 4)
+
 class Test_AcquisitionRaster(unittest.TestCase):
 
     def setUp(self):
@@ -129,6 +159,12 @@ class Test_AcquisitionRaster(unittest.TestCase):
         self.assertEqual(RASTER_MODE_STAGE, self.acq.raster_mode)
 
         self.assertRaises(ValueError, self.acq.set_raster_mode, 'ABC')
+
+    def testpickle(self):
+        s = pickle.dumps(self.acq)
+        acq = pickle.loads(s)
+
+        self.assertEqual(RASTER_MODE_STAGE, acq.raster_mode)
 
 class TestAcquisitionRasterLinescan(unittest.TestCase):
 
@@ -171,6 +207,14 @@ class TestAcquisitionRasterLinescan(unittest.TestCase):
         self.assertEqual(1, len(self.acq.positions))
         self.assertAlmostEqual(2.0, self.acq.positions[POSITION_LOCATION_END].y, 4)
         self.assertEqual('mm', self.acq.positions[POSITION_LOCATION_END].y.unit)
+
+    def testpickle(self):
+        s = pickle.dumps(self.acq)
+        acq = pickle.loads(s)
+
+        self.assertEqual(100, acq.step_count)
+        self.assertAlmostEqual(0.5, acq.step_size, 4)
+        self.assertEqual('nm', acq.step_size.unit)
 
 class TestAcquisitionRasterXY(unittest.TestCase):
 
@@ -229,6 +273,13 @@ class TestAcquisitionRasterXY(unittest.TestCase):
 
         self.acq.frame_count = 30
         self.assertEqual(30, self.acq.frame_count)
+
+    def testpickle(self):
+        s = pickle.dumps(self.acq)
+        acq = pickle.loads(s)
+
+        self.assertEqual(4, acq.step_count_x)
+        self.assertEqual(5, acq.step_count_y)
 
 class TestAcquisitionRasterXYZ(unittest.TestCase):
 
@@ -291,6 +342,14 @@ class TestAcquisitionRasterXYZ(unittest.TestCase):
         self.assertEqual(RASTER_MODE_Z_FIB, self.acq.raster_mode_z)
 
         self.assertRaises(ValueError, self.acq.set_raster_mode_z, 'ABC')
+
+    def testpickle(self):
+        s = pickle.dumps(self.acq)
+        acq = pickle.loads(s)
+
+        self.assertEqual(4, acq.step_count_x)
+        self.assertEqual(5, acq.step_count_y)
+        self.assertEqual(6, acq.step_count_z)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

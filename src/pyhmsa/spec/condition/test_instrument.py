@@ -4,6 +4,7 @@
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 
@@ -33,6 +34,16 @@ class TestInstrument(unittest.TestCase):
     def testserial_number(self):
         self.instrument.serial_number = '12345-abc-67890'
         self.assertEqual('12345-abc-67890', self.instrument.serial_number)
+
+    def testpickle(self):
+        self.instrument.serial_number = '12345-abc-67890'
+
+        s = pickle.dumps(self.instrument)
+        instrument = pickle.loads(s)
+
+        self.assertEqual('Example Inc', instrument.manufacturer)
+        self.assertEqual('Example Model 123', instrument.model)
+        self.assertEqual('12345-abc-67890', instrument.serial_number)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

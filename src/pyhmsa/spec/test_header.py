@@ -4,6 +4,7 @@
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 
@@ -35,6 +36,15 @@ class TestHeader(unittest.TestCase):
         self.assertNotIn('Extra2', header)
         self.assertNotIn('Extra1', header2)
         self.assertIn('Extra2', header2)
+
+    def testpickle(self):
+        self.header.title = 'Beep beep'
+        s = pickle.dumps(self.header)
+        header = pickle.loads(s)
+
+        self.assertEqual('Beep beep', header.title)
+        self.assertIn('Extra1', self.header)
+        self.assertEqual('Test', self.header['Extra1'])
 
     def test__len__(self):
         self.assertEqual(8, len(self.header))

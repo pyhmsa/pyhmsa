@@ -11,6 +11,7 @@ __license__ = "GPL v3"
 # Standard library modules.
 import unittest
 import logging
+import pickle
 
 # Third party modules.
 
@@ -63,6 +64,15 @@ class TestSpecimenPosition(unittest.TestCase):
         self.position.set_t(4.0, 'rad')
         self.assertAlmostEqual(4.0, self.position.t, 4)
         self.assertEqual('rad', self.position.t.unit)
+
+    def testpickle(self):
+        s = pickle.dumps(self.position)
+        position = pickle.loads(s)
+
+        self.assertAlmostEqual(5.0, position.y, 4)
+        self.assertEqual('mm', position.y.unit)
+        self.assertAlmostEqual(90.0, position.r, 4)
+        self.assertEqual(u'\u00b0', position.r.unit)
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

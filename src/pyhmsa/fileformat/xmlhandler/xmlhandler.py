@@ -85,28 +85,28 @@ class _XMLHandler(object):
         # Create object
         obj = klass.__new__(klass)
 
-        if hasattr(obj, '__reduce__'):
-            reduce = obj.__reduce__()
-
-            func = reduce[0]
-            args = reduce[1]
-            obj = func(*args)
-
-            # State
-            if len(reduce) > 2:
-                state = reduce[2]
-                if hasattr(obj, '__setstate__'):
-                    obj.__setstate__(state)
-                else:
-                    obj.__dict__.update(state)
-
-            # List items
-            if len(reduce) > 3:
-                obj.extend(reduce[3])
-
-            # Dict items
-            if len(reduce) > 4:
-                obj.update(reduce[4])
+#        if hasattr(obj, '__reduce__'):
+#            reduce = obj.__reduce__()
+#
+#            func = reduce[0]
+#            args = reduce[1]
+#            obj = func(*args)
+#
+#            # State
+#            if len(reduce) > 2:
+#                state = reduce[2]
+#                if hasattr(obj, '__setstate__'):
+#                    obj.__setstate__(state)
+#                else:
+#                    obj.__dict__.update(state)
+#
+#            # List items
+#            if len(reduce) > 3:
+#                obj.extend(reduce[3])
+#
+#            # Dict items
+#            if len(reduce) > 4:
+#                obj.update(reduce[4])
 
         # Load attributes
         for name, attrib in klass.__attributes__.items():

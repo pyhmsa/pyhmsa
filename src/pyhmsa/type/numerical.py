@@ -54,6 +54,11 @@ class arrayunit(np.ndarray):
 
         return obj
 
+    def __reduce__(self):
+        order = 'C' if self.flags['C_CONTIGUOUS'] else 'F'
+        return self.__class__, (self.shape, self.dtype, np.ravel(self),
+                                0, None, order, self.unit)
+
     def __array_finalize__(self, obj):
         if obj is None:
             return
@@ -61,7 +66,7 @@ class arrayunit(np.ndarray):
 
     def __array_wrap__(self, out_arr, context=None):
         ret_arr = np.ndarray.__array_wrap__(self, out_arr, context)
-        return np.array(ret_arr)  # Cast as regular array
+        return np.array(ret_arr) # Cast as regular array
 
     def __str__(self):
         if self._unit is not None:
