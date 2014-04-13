@@ -134,7 +134,6 @@ class DataFile(object):
         writer = DataFileWriter()
         writer.write(self, filepath)
         writer.wait()
-        self._filepath = filepath
 
     @property
     def header(self):

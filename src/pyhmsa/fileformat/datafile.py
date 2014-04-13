@@ -137,7 +137,6 @@ class DataFileReader(object):
             if xml_file is not None:
                 xml_file.close()
 
-        # Close files
         self._status = 'Completed'
         self._progress = 1.0
         self._datafile = datafile
@@ -362,6 +361,7 @@ class DataFileWriter(object):
 
         self._status = 'Completed'
         self._progress = 1.0
+        datafile._filepath = filepath
 
     def _write_root(self, datafile, root, uid):
         root.set('Version', datafile.version)
