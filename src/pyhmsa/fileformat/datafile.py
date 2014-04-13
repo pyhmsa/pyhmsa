@@ -88,8 +88,11 @@ class DataFileReader(object):
         self._progress = 0.0
         if self._cancel_event.is_set(): return
 
+        xml_file = None
+        hmsa_file = None
         try:
             filepath_xml, filepath_hmsa = _extract_filepath(filepath)
+
             xml_file = open(filepath_xml, 'rb')
             hmsa_file = open(filepath_hmsa, 'rb')
 
@@ -129,8 +132,10 @@ class DataFileReader(object):
             self._exception = ex
             return
         finally:
-            xml_file.close()
-            hmsa_file.close()
+            if hmsa_file is not None:
+                hmsa_file.close()
+            if xml_file is not None:
+                xml_file.close()
 
         # Close files
         self._status = 'Completed'
@@ -273,6 +278,8 @@ class DataFileWriter(object):
         self._progress = 0.0
         if self._cancel_event.is_set(): return
 
+        xml_file = None
+        hmsa_file = None
         try:
             filepath_xml, filepath_hmsa = _extract_filepath(filepath)
 
@@ -348,8 +355,10 @@ class DataFileWriter(object):
             self._exception = ex
             return
         finally:
-            hmsa_file.close()
-            xml_file.close()
+            if hmsa_file is not None:
+                hmsa_file.close()
+            if xml_file is not None:
+                xml_file.close()
 
         self._status = 'Completed'
         self._progress = 1.0
