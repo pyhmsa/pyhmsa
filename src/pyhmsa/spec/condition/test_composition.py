@@ -44,6 +44,10 @@ class TestCompositionElemental(unittest.TestCase):
         self.assertRaises(ValueError, self.comp.__setitem__, -1, 1)
         self.assertRaises(ValueError, self.comp.__setitem__, 119, 1)
 
+        self.comp['Al'] = 4
+        self.assertEqual(4, self.comp['Al'])
+        self.assertEqual(4, self.comp[13])
+
     def testpickle(self):
         s = pickle.dumps(self.comp)
         comp = pickle.loads(s)

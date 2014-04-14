@@ -13,11 +13,7 @@
 
 # Standard library modules.
 from abc import ABCMeta
-try:
-    from collections import UserDict
-except ImportError: # pragma: no cover
-    from UserDict import UserDict
-from collections import Mapping
+from collections import MutableMapping
 
 # Third party modules.
 import numpy as np
@@ -26,7 +22,7 @@ import numpy as np
 from pyhmsa.util.parameter import ParameterMetaclass, UnitAttribute
 from pyhmsa.spec.condition.condition import _Condition
 from pyhmsa.type.numerical import convert_value
-from pyhmsa.util.element_properties import get_symbol
+from pyhmsa.util.element_properties import get_symbol, get_atomic_number
 
 # Globals and constants variables.
 _COMPOSITION_UNITS = frozenset(['atoms', 'mol%', 'vol%', 'wt%',
@@ -56,7 +52,7 @@ class _CompositionElementalMetaclass(ABCMeta, ParameterMetaclass):
 
 _BaseCompositionElemental = \
     _CompositionElementalMetaclass('_CompositionElementalMetaclass',
-                                   (UserDict, _Composition), {})
+                                   (MutableMapping, _Composition), {})
 
 class CompositionElemental(_BaseCompositionElemental):
 
@@ -72,16 +68,39 @@ class CompositionElemental(_BaseCompositionElemental):
         :arg unit: unit in which the composition is defined (required)
         """
         _Composition.__init__(self, unit)
-        UserDict.__init__(self, values, **kwargs)
+
+        self._data = {}
+
+        if values is not None:
+            self.update(values)
+        self.update(**kwargs)
+
+    def __iter__(self):
+        return iter(self._data)
+
+    def __len__(self):
+        return len(self._data)
+
+    def __getitem__(self, key):
+        if isinstance(key, str):
+            key = get_atomic_number(key)
+        return self._data[key]
 
     def __setitem__(self, key, item):
         if key is None:
             return
+        if isinstance(key, str):
+            key = get_atomic_number(key)
         if key < 1:
             raise ValueError('Atomic number cannot be less than hydrogen')
         if key > 118:
             raise ValueError('Atomic number cannot be greater than Uuo')
-        UserDict.__setitem__(self, np.uint8(key), convert_value(item))
+        self._data[np.uint8(key)] = convert_value(item)
+
+    def __delitem__(self, key):
+        if isinstance(key, str):
+            key = get_atomic_number(key)
+        del self._data[key]
 
     def __repr__(self):
         r = _Composition.__repr__(self)[:-2]
@@ -94,25 +113,3 @@ class CompositionElemental(_BaseCompositionElemental):
 
     __str__ = __repr__
 
-    def update(*args, **kwds): #@NoSelf
-        # Bug fix in Python 2 that update method does not call __setitem__
-        # Method copied literally from Python 3.3
-        if len(args) > 2:
-            raise TypeError("update() takes at most 2 positional "
-                            "arguments ({} given)".format(len(args)))
-        elif not args:
-            raise TypeError("update() takes at least 1 argument (0 given)")
-        self = args[0]
-        other = args[1] if len(args) >= 2 else ()
-
-        if isinstance(other, Mapping):
-            for key in other:
-                self[key] = other[key]
-        elif hasattr(other, "keys"):
-            for key in other.keys():
-                self[key] = other[key]
-        else:
-            for key, value in other:
-                self[key] = value
-        for key, value in kwds.items():
-            self[key] = value
