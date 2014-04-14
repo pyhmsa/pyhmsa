@@ -77,6 +77,8 @@ class arrayunit(np.ndarray):
     def __format__(self, spec):
         if spec[-1].lower() in ['f', 'e', 'g', 'n']:
             return format(float(self), spec)
+        elif spec[-1] in ['d']:
+            return format(int(self), spec)
         else:
             return format(np.ndarray.__str__(self), spec)
 
