@@ -12,6 +12,16 @@ from pyhmsa.type.identifier import validate_identifier, _IdentifierDict
 
 # Globals and constants variables.
 
+class Wrapper(object):
+
+    def __init__(self, func):
+        self.func = func
+        self.called = False
+
+    def __call__(self, *args, **kwargs):
+        self.called = True
+        return self.func(*args, **kwargs)
+
 class TestModule(unittest.TestCase):
 
     def setUp(self):
@@ -40,9 +50,12 @@ class Test_IdentifierDict(unittest.TestCase):
         def handler(key, value):
             self.assertEqual('abc', key)
             self.assertEqual(1, value)
-        self.d.item_added.connect(handler)
+
+        w = Wrapper(handler)
+        self.d.item_added.connect(w)
 
         self.d['abc'] = 1
+        self.assertTrue(w.called)
 
     def test__setitem__modified(self):
         self.d['abc'] = 1
@@ -51,18 +64,80 @@ class Test_IdentifierDict(unittest.TestCase):
             self.assertEqual('abc', key)
             self.assertEqual(2, value)
             self.assertEqual(1, oldvalue)
-        self.d.item_modified.connect(handler)
+
+        w = Wrapper(handler)
+        self.d.item_modified.connect(w)
 
         self.d['abc'] = 2
+        self.assertTrue(w.called)
 
     def test__delitem__(self):
         def handler(key, oldvalue):
             self.assertEqual('abc', key)
             self.assertEqual(1, oldvalue)
-        self.d.item_deleted.connect(handler)
+
+        w = Wrapper(handler)
+        self.d.item_deleted.connect(w)
 
         self.d['abc'] = 1
         del self.d['abc']
+        self.assertTrue(w.called)
+
+    def testupdate(self):
+        def handler(key, value):
+            self.assertEqual('abc', key)
+            self.assertEqual(1, value)
+
+        w = Wrapper(handler)
+        self.d.item_added.connect(w)
+
+        self.d.update(abc=1)
+        self.assertTrue(w.called)
+
+    def testsetdefault(self):
+        def handler(key, value):
+            self.assertEqual('abc', key)
+            self.assertEqual(1, value)
+
+        w = Wrapper(handler)
+        self.d.item_added.connect(w)
+
+        self.d.setdefault('abc', 1)
+        self.assertTrue(w.called)
+
+    def testpop(self):
+        def handler(key, oldvalue):
+            self.assertEqual('abc', key)
+            self.assertEqual(1, oldvalue)
+
+        w = Wrapper(handler)
+        self.d.item_deleted.connect(w)
+
+        self.d['abc'] = 1
+        self.d.pop('abc')
+        self.assertTrue(w.called)
+
+    def testpopitem(self):
+        def handler(key, oldvalue):
+            self.assertEqual('abc', key)
+            self.assertEqual(1, oldvalue)
+
+        w = Wrapper(handler)
+        self.d.item_deleted.connect(w)
+
+        self.d['abc'] = 1
+        self.d.popitem()
+        self.assertTrue(w.called)
+
+    def testcopy(self):
+        self.d['abc'] = 1
+        d = self.d.copy()
+
+        self.assertEqual(1, d['abc'])
+
+        d['def'] = 2
+        self.assertIn('def', d)
+        self.assertNotIn('def', self.d)
 
     def testfindkeys(self):
         self.d['a'] = 1

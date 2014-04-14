@@ -12,12 +12,10 @@
 """
 
 # Standard library modules.
-try:
-    from collections import UserDict
-except ImportError: # pragma: no cover
-    from UserDict import UserDict
+from collections import MutableMapping
 import fnmatch
 import inspect
+import copy
 
 # Third party modules.
 
@@ -35,14 +33,27 @@ def validate_identifier(identifier):
     except UnicodeEncodeError:
         raise ValueError('Identifier contains non-ascii characters')
 
-class _IdentifierDict(UserDict):
+class _IdentifierDict(MutableMapping):
 
     def __init__(self, adict=None, **kwargs):
-        UserDict.__init__(self, adict, **kwargs)
+        self._data = {}
+
+        if adict is not None:
+            self.update(adict)
+        self.update(**kwargs)
 
         self.item_added = Signal()
         self.item_deleted = Signal()
         self.item_modified = Signal()
+
+    def __iter__(self):
+        return iter(self._data)
+
+    def __len__(self):
+        return len(self._data)
+
+    def __getitem__(self, identifier):
+        return self._data[identifier]
 
     def __setitem__(self, identifier, item):
         validate_identifier(identifier)
@@ -51,7 +62,7 @@ class _IdentifierDict(UserDict):
         if not new:
             olditem = self[identifier]
 
-        UserDict.__setitem__(self, identifier, item)
+        self._data[identifier] = item
 
         if new:
             self.item_added.fire(identifier, item)
@@ -60,8 +71,18 @@ class _IdentifierDict(UserDict):
 
     def __delitem__(self, identifier):
         olditem = self[identifier]
-        UserDict.__delitem__(self, identifier)
+        del self._data[identifier]
         self.item_deleted.fire(identifier, olditem)
+
+    def copy(self):
+        data = self._data
+        try:
+            self._data = {}
+            c = copy.copy(self)
+        finally:
+            self._data = data
+        c.update(self)
+        return c
 
     def findkeys(self, match):
         if isinstance(match, str):
