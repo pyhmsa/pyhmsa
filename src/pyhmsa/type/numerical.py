@@ -74,6 +74,12 @@ class arrayunit(np.ndarray):
         else:
             return np.ndarray.__str__(self)
 
+    def __format__(self, spec):
+        if spec[-1].lower() in ['f', 'e', 'g', 'n']:
+            return format(float(self), spec)
+        else:
+            return format(np.ndarray.__str__(self), spec)
+
     @property
     def unit(self):
         return self._unit

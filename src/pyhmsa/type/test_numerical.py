@@ -90,6 +90,11 @@ class Testarrayunit(unittest.TestCase):
         self.assertAlmostEqual(5.0, v, 4)
         self.assertEqual('s', v.unit)
 
+    def testformat(self):
+        self.assertEqual('5.0', '{0:s}'.format(self.v))
+        self.assertEqual('5.000', '{0:.3f}'.format(self.v))
+        self.assertEqual('5.000 s', '{0:.3f} {0.unit:s}'.format(self.v))
+
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()
