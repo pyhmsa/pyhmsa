@@ -25,28 +25,30 @@ import os
 
 # Local modules.
 from pyhmsa.datafile import DataFile
+from pyhmsa.util.monitorable import _Monitorable, _MonitorableThread
 
 # Globals and constants variables.
 
-class _Importer(object):
+class _ImporterThread(_MonitorableThread):
 
-    def __init__(self, supported_extensions, extra_datafile=None):
-        if not supported_extensions:
-            raise ValueError('At least one extension is required')
-        self._supported_extensions = frozenset(supported_extensions)
+    def __init__(self, filepath, *args, **kwargs):
+        args = (filepath,) + args
+        _MonitorableThread.__init__(self, args=args, kwargs=kwargs)
 
+    def _run(self, filepath, *args, **kwargs):
+        raise NotImplementedError
+
+class _Importer(_Monitorable):
+
+    SUPPORTED_EXTENSIONS = ()
+
+    def __init__(self, extra_datafile=None):
+        _Monitorable.__init__(self)
         if extra_datafile is None:
-            filepath = os.path.expanduser('~/.pyhmsa/extra.xml')
-            if os.path.exists(filepath):
-                extra_datafile = DataFile.read(filepath)
-            else:
-                extra_datafile = DataFile()
+            extra_datafile = DataFile()
         self._extra_datafile = extra_datafile
 
     def _update_extra(self, datafile):
-        if self._extra_datafile is None:
-            return
-
         # Header
         for key, value in self._extra_datafile.header.items():
             if datafile.header[key] is None:
@@ -65,17 +67,16 @@ class _Importer(object):
                         value = getattr(extra_condition, attr, None)
                         setattr(condition, attr, value)
 
-    def _import(self, filepath):
-        raise NotImplementedError
-
     def can_import(self, filepath):
-        return os.path.splitext(filepath)[1] in self.supported_extensions
+        return os.path.splitext(filepath)[1] in self.SUPPORTED_EXTENSIONS
 
     def import_(self, filepath):
-        datafile = self._import(filepath)
+        """
+        Should create appropriate importer thread and starts it.
+        """
+        self._start(filepath)
+
+    def get(self):
+        datafile = _Monitorable.get(self)
         self._update_extra(datafile)
         return datafile
-
-    @property
-    def supported_extensions(self):
-        return self._supported_extensions

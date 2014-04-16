@@ -15,20 +15,24 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.fileformat.importer import _Importer
+from pyhmsa.fileformat.importer.importer import _Importer, _ImporterThread
 from pyhmsa.datafile import DataFile
 
 # Globals and constants variables.
 
-class ImporterMock(_Importer):
+class ImporterThreadMock(_ImporterThread):
 
-    def __init__(self, extra_datafile=None):
-        _Importer.__init__(self, ('.abc',), extra_datafile)
-
-    def _import(self, filepath):
+    def _run(self, filepath, *args, **kwargs):
         datafile = DataFile(filepath)
         datafile.header.title = 'Imported'
         return datafile
+
+class ImporterMock(_Importer):
+
+    SUPPORTED_EXTENSIONS = ('.abc',)
+
+    def _create_thread(self, filepath, *args, **kwargs):
+        return ImporterThreadMock(filepath)
 
 class TestImporter(unittest.TestCase):
 
@@ -41,12 +45,9 @@ class TestImporter(unittest.TestCase):
     def tearDown(self):
         unittest.TestCase.tearDown(self)
 
-    def testsupported_extensions(self):
-        self.assertEqual(1, len(self.imp.supported_extensions))
-        self.assertIn('.abc', self.imp.supported_extensions)
-
     def testimport_(self):
-        datafile = self.imp.import_('file.abc')
+        self.imp.import_('file.abc')
+        datafile = self.imp.get()
         self.assertEqual('Imported', datafile.header.title)
 
     def test_update_extra(self):
@@ -54,7 +55,8 @@ class TestImporter(unittest.TestCase):
         extra_datafile.header.author = 'Me'
         imp = ImporterMock(extra_datafile)
 
-        datafile = imp.import_('file.abc')
+        imp.import_('file.abc')
+        datafile = imp.get()
         self.assertEqual('Imported', datafile.header.title)
         self.assertEqual('Me', datafile.header.author)
 

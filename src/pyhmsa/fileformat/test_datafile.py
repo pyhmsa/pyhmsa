@@ -177,7 +177,7 @@ class TestDataFileWriter(unittest.TestCase):
         xmlfilepath = os.path.join(tmpdir, 'breccia_eds.xml')
         hmsafilepath = os.path.join(tmpdir, 'breccia_eds.hmsa')
         self.writer.write(self.datafile, xmlfilepath)
-        self.writer.wait()
+        self.writer.join()
 
         self.assertEqual(1.0, self.writer.progress)
         self.assertEqual('Completed', self.writer.status)
