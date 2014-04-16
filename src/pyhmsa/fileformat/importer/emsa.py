@@ -26,6 +26,7 @@ import numpy as np
 
 # Local modules.
 from pyhmsa.fileformat.importer.importer import _Importer, _ImporterThread
+from pyhmsa.fileformat.common.emsa import calculate_checksum
 
 from pyhmsa.datafile import DataFile
 from pyhmsa.spec.header import Header
@@ -46,31 +47,27 @@ from pyhmsa.spec.condition.detector import \
      XEDS_TECHNOLOGY_GE, XEDS_TECHNOLOGY_SILI, XEDS_TECHNOLOGY_SDD,
      XEDS_TECHNOLOGY_UCAL,
      SIGNAL_TYPE_EDS, SIGNAL_TYPE_WDS, SIGNAL_TYPE_CLS)
+from pyhmsa.fileformat.common.emsa import \
+    (EMSA_ELS_DETECTOR_SERIAL, EMSA_ELS_DETECTOR_PARALL,
+     EMSA_EDS_DETECTOR_SIBEW, EMSA_EDS_DETECTOR_SIUTW, EMSA_EDS_DETECTOR_SIWLS,
+     EMSA_EDS_DETECTOR_GEBEW, EMSA_EDS_DETECTOR_GEUTW, EMSA_EDS_DETECTOR_GEWLS,
+     EMSA_EDS_DETECTOR_SDBEW, EMSA_EDS_DETECTOR_SDUTW, EMSA_EDS_DETECTOR_SDWLS,
+     EMSA_EDS_DETECTOR_UCALUTW)
 
 _ELSDET_TO_COLLECTION_MODE = \
-    {"PARALL": COLLECTION_MODE_PARALLEL, "SERIAL": COLLECTION_MODE_SERIAL}
+    {EMSA_ELS_DETECTOR_PARALL: COLLECTION_MODE_PARALLEL,
+     EMSA_ELS_DETECTOR_SERIAL: COLLECTION_MODE_SERIAL}
 _EDSDET_TO_XEDS_TECHNOLOGY = \
-    {'SIBEW': XEDS_TECHNOLOGY_SILI,
-     'SIUTW': XEDS_TECHNOLOGY_SILI,
-     'SIWLS': XEDS_TECHNOLOGY_SILI,
-     'GEBEW': XEDS_TECHNOLOGY_GE,
-     'GEUTW': XEDS_TECHNOLOGY_GE,
-     'GEWLS': XEDS_TECHNOLOGY_GE,
-     'SDBEW': XEDS_TECHNOLOGY_SDD,
-     'SDUTW': XEDS_TECHNOLOGY_SDD,
-     'SDWLS': XEDS_TECHNOLOGY_SDD,
-     'UCALUTW': XEDS_TECHNOLOGY_UCAL}
-
-def _calculate_checksum(lines):
-    checksum = 0
-
-    for line in lines:
-        if line.startswith('#CHECKSUM'):
-            continue
-        for character in line:
-            checksum += ord(character)
-
-    return checksum
+    {EMSA_EDS_DETECTOR_SIBEW: XEDS_TECHNOLOGY_SILI,
+     EMSA_EDS_DETECTOR_SIUTW: XEDS_TECHNOLOGY_SILI,
+     EMSA_EDS_DETECTOR_SIWLS: XEDS_TECHNOLOGY_SILI,
+     EMSA_EDS_DETECTOR_GEBEW: XEDS_TECHNOLOGY_GE,
+     EMSA_EDS_DETECTOR_GEUTW: XEDS_TECHNOLOGY_GE,
+     EMSA_EDS_DETECTOR_GEWLS: XEDS_TECHNOLOGY_GE,
+     EMSA_EDS_DETECTOR_SDBEW: XEDS_TECHNOLOGY_SDD,
+     EMSA_EDS_DETECTOR_SDUTW: XEDS_TECHNOLOGY_SDD,
+     EMSA_EDS_DETECTOR_SDWLS: XEDS_TECHNOLOGY_SDD,
+     EMSA_EDS_DETECTOR_UCALUTW: XEDS_TECHNOLOGY_UCAL}
 
 class _ImporterEMSAThread(_ImporterThread):
 
@@ -132,7 +129,7 @@ class _ImporterEMSAThread(_ImporterThread):
             if tag == 'CHECKSUM':
                 break
 
-        actual_checksum = _calculate_checksum(lines)
+        actual_checksum = calculate_checksum(lines)
         if actual_checksum != expected_checksum:
             raise IOError("The checksums don't match: %i != %i " % \
                           (actual_checksum, expected_checksum))
