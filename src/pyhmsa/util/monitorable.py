@@ -65,6 +65,7 @@ class _MonitorableThread(threading.Thread):
             self._update_status(1.0, 'Error')
             self._cancel_event.set()
             self._exception = ex
+            return
 
         self._update_status(1.0, 'Completed')
         self._result = result
@@ -80,7 +81,11 @@ class _MonitorableThread(threading.Thread):
     def join(self, timeout=None):
         if self._exception is not None:
             raise self._exception
+
         threading.Thread.join(self, timeout)
+
+        if self._exception is not None:
+            raise self._exception
 
     def cancel(self):
         self._update_status(1.0, 'Cancelled')
