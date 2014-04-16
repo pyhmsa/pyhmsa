@@ -115,5 +115,6 @@ setup(name='pyHMSA',
             'ImageRaster2DSpectral = pyhmsa.fileformat.xmlhandler.datum.imageraster:ImageRaster2DSpectralXMLHandler',
             'ImageRaster2DHyperimage = pyhmsa.fileformat.xmlhandler.datum.imageraster:ImageRaster2DHyperimageXMLHandler',
              ],
-         'pyhmsa.fileformat.importer': []},
+         'pyhmsa.fileformat.importer':
+            ['ESMA = pyhmsa.fileformat.importer.emsa:ImporterEMSA']},
      )
