@@ -67,6 +67,10 @@ class _Importer(_Monitorable):
                         value = getattr(extra_condition, attr, None)
                         setattr(condition, attr, value)
 
+    def _create_thread(self, filepath, *args, **kwargs):
+        args = (filepath,) + args
+        _Monitorable._create_thread(self, *args, **kwargs)
+
     def can_import(self, filepath):
         return os.path.splitext(filepath)[1] in self.SUPPORTED_EXTENSIONS
 

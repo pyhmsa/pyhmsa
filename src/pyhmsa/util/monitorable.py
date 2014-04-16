@@ -89,6 +89,9 @@ class _MonitorableThread(threading.Thread):
     def get(self):
         self.join()
 
+        if self._exception is not None:
+            raise self._exception
+
         if self._result is None:
             raise RuntimeError('No result')
 
