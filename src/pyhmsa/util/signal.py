@@ -19,7 +19,6 @@ __copyright__ = "Copyright (c) 2014 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
-from weakref import WeakSet
 
 # Third party modules.
 
