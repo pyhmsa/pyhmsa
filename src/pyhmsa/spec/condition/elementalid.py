@@ -18,10 +18,11 @@
 # Local modules.
 from pyhmsa.spec.condition.condition import _Condition
 from pyhmsa.util.parameter import \
-    NumericalAttribute, TextAttribute, AtomicNumberAttribute
+    NumericalAttribute, XRayLineAttribute, AtomicNumberAttribute
 from pyhmsa.util.element_properties import get_symbol, get_atomic_number
 
 # Globals and constants variables.
+from pyhmsa.type.xrayline import NOTATION_SIEGBAHN
 
 class ElementalID(_Condition):
 
@@ -55,7 +56,7 @@ class ElementalIDXray(ElementalID):
 
     CLASS = 'X-ray'
 
-    line = TextAttribute(True, 'Line', 'x-ray line')
+    line = XRayLineAttribute(NOTATION_SIEGBAHN, True, 'Line', 'x-ray line')
     energy = NumericalAttribute('eV', False, 'Energy', 'energy of x-ray line')
 
     def __init__(self, atomic_number, line, energy=None):

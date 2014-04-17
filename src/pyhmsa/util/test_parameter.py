@@ -11,11 +11,14 @@ import datetime
 # Local modules.
 from pyhmsa.util.parameter import \
     (Parameter, _Attribute, FrozenAttribute, NumericalAttribute, TextAttribute,
-     AtomicNumberAttribute, UnitAttribute, ObjectAttribute, EnumAttribute,
-     NumericalRangeAttribute, DateAttribute, TimeAttribute, ChecksumAttribute)
+     AtomicNumberAttribute, UnitAttribute, XRayLineAttribute, ObjectAttribute,
+     EnumAttribute, NumericalRangeAttribute, DateAttribute, TimeAttribute,
+     ChecksumAttribute)
 from pyhmsa.type.checksum import Checksum
+from pyhmsa.type.xrayline import xrayline
 
 # Globals and constants variables.
+from pyhmsa.type.xrayline import NOTATION_IUPAC, NOTATION_SIEGBAHN
 
 class MockParameter(Parameter):
 
@@ -26,6 +29,7 @@ class MockParameter(Parameter):
     text = TextAttribute()
     atomic_number = AtomicNumberAttribute()
     unit = UnitAttribute()
+    line = XRayLineAttribute()
     object = ObjectAttribute(int)
     enum = EnumAttribute(['a', 'b', 'c'])
     numerical_range = NumericalRangeAttribute('s', -4.0, 4.0)
@@ -104,6 +108,24 @@ class TestModule(unittest.TestCase):
         self.assertIsNone(self.mock.unit)
 
         self.assertRaises(ValueError, self.mock.set_unit, 'mmHg')
+
+    def testline_attribute(self):
+        self.mock.line = 'Ma'
+        self.assertEqual('Ma', self.mock.line)
+        self.assertEqual(NOTATION_SIEGBAHN, self.mock.line.notation)
+
+        self.mock.line = ('M5-N6,7', NOTATION_IUPAC)
+        self.assertEqual('M5-N6,7', self.mock.line)
+        self.assertEqual(NOTATION_IUPAC, self.mock.line.notation)
+
+        self.mock.line = xrayline('Ma', NOTATION_SIEGBAHN, 'M5-N6,7')
+        self.assertEqual('Ma', self.mock.line)
+        self.assertEqual(NOTATION_SIEGBAHN, self.mock.line.notation)
+        self.assertEqual('M5-N6,7', self.mock.line.alternative)
+        self.assertEqual(NOTATION_IUPAC, self.mock.line.alternative.notation)
+
+        self.mock.line = None
+        self.assertIsNone(self.mock.line)
 
     def testobject_attribute(self):
         self.mock.object = 5

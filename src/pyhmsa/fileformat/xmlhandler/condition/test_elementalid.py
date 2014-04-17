@@ -69,7 +69,7 @@ class TestElementalIDXrayXMLHandler(unittest.TestCase):
     def testparse(self):
         obj = self.h.parse(self.element)
         self.assertEqual(11, obj.atomic_number)
-        self.assertEqual(u'M\u03b1', obj.line)
+        self.assertEqual('Ma', obj.line)
         self.assertAlmostEqual(1234.0, obj.energy, 4)
         self.assertEqual('eV', obj.energy.unit)
 
@@ -83,7 +83,7 @@ class TestElementalIDXrayXMLHandler(unittest.TestCase):
         self.assertEqual('X-ray', element.get('Class'))
         self.assertEqual('11', element.find('Element').text)
         self.assertEqual('Na', element.find('Element').get('Symbol'))
-        self.assertEqual(u'M\u03b1', element.find('Line').text)
+        self.assertEqual('Ma', element.find('Line').text)
         self.assertEqual('1234.0', element.find('Energy').text)
 
 if __name__ == '__main__': # pragma: no cover

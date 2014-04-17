@@ -22,11 +22,14 @@ import numpy as np
 from pyhmsa.type.numerical import convert_value
 from pyhmsa.type.language import langstr
 from pyhmsa.type.checksum import Checksum
+from pyhmsa.type.xrayline import xrayline
 from pyhmsa.util.parameter import \
     (NumericalAttribute, TextAttribute, ObjectAttribute, DateAttribute,
-     TimeAttribute, ChecksumAttribute)
+     TimeAttribute, ChecksumAttribute, XRayLineAttribute)
 
 # Globals and constants variables.
+from pyhmsa.type.xrayline import NOTATION_SIEGBAHN
+
 DTYPES_LOOKUP_PARSE = {'byte': np.dtype(np.uint8),
                        'int16': np.dtype(np.int16),
                        'uint16': np.dtype(np.uint16),
@@ -56,6 +59,7 @@ class _XMLHandler(object):
                          DateAttribute: self._parse_date_attribute,
                          TimeAttribute: self._parse_time_attribute,
                          ChecksumAttribute: self._parse_checksum_attribute,
+                         XRayLineAttribute: self._parse_xrayline_attribute,
                          }
         self._converters = {NumericalAttribute: self._convert_numerical_attribute,
                             TextAttribute: self._convert_text_attribute,
@@ -63,6 +67,7 @@ class _XMLHandler(object):
                             DateAttribute: self._convert_date_attribute,
                             TimeAttribute: self._convert_time_attribute,
                             ChecksumAttribute: self._convert_checksum_attribute,
+                            XRayLineAttribute: self._convert_xrayline_attribute,
                             }
 
     def _find_method(self, lookup, attrib):
@@ -144,9 +149,9 @@ class _XMLHandler(object):
         attribs = list(filter(lambda s: s.startswith('alt-lang-'), element.keys()))
         if any(attribs):
             alternatives = {}
-            for attrib in attribs:
-                language_tag = attrib[9:]
-                altvalue = element.get(attrib)
+            for subattrib in attribs:
+                language_tag = subattrib[9:]
+                altvalue = element.get(subattrib)
                 alternatives[language_tag] = altvalue
             return langstr(element.text, alternatives)
         else:
@@ -162,6 +167,19 @@ class _XMLHandler(object):
     def _parse_time_attribute(self, element, attrib=None):
         dt = datetime.datetime.strptime(element.text, '%H:%M:%S')
         return datetime.time(dt.hour, dt.minute, dt.second)
+
+    def _parse_xrayline_attribute(self, element, attrib=None):
+        value = element.text
+        notation = element.get('Notation', NOTATION_SIEGBAHN)
+
+        attribs = list(filter(lambda s: s.startswith('alt-'), element.keys()))
+        if any(attribs):
+            attrib = attribs[0]
+            altvalue = element.get(attrib)
+        else:
+            altvalue = None
+
+        return xrayline(value, notation, altvalue)
 
     def _parse_checksum_attribute(self, element, attrib=None):
         value = element.text
@@ -239,6 +257,15 @@ class _XMLHandler(object):
     def _convert_time_attribute(self, value, attrib):
         element = etree.Element(attrib.xmlname)
         element.text = value.strftime('%H:%M:%S')
+        return [element]
+
+    def _convert_xrayline_attribute(self, value, attrib):
+        element = etree.Element(attrib.xmlname)
+        element.set('Notation', value.notation)
+        if value.alternative is not None:
+            element.set('alt-%s' % value.alternative.notation,
+                        str(value.alternative))
+        element.text = str(value)
         return [element]
 
     def _convert_checksum_attribute(self, value, attrib):

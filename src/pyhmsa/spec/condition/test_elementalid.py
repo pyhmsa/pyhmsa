@@ -51,13 +51,13 @@ class TestElementalIDXray(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.element = ElementalIDXray(11, u'M\u03b1')
+        self.element = ElementalIDXray(11, 'Ma')
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
 
     def testline(self):
-        self.assertEqual(u'M\u03b1', self.element.line)
+        self.assertEqual('Ma', self.element.line)
         self.assertRaises(ValueError, self.element.set_line, None)
 
     def testenergy(self):
@@ -73,7 +73,7 @@ class TestElementalIDXray(unittest.TestCase):
 
         self.assertEqual(11, element.atomic_number)
         self.assertEqual('Na', element.symbol)
-        self.assertEqual(u'M\u03b1', element.line)
+        self.assertEqual('Ma', element.line)
         self.assertAlmostEqual(1234, element.energy, 4)
 
 if __name__ == '__main__': # pragma: no cover

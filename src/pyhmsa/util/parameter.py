@@ -23,6 +23,7 @@ import numpy as np
 from pyhmsa.type.numerical import convert_value
 from pyhmsa.type.unit import validate_unit
 from pyhmsa.type.checksum import Checksum
+from pyhmsa.type.xrayline import xrayline, NOTATION_SIEGBAHN
 
 # Globals and constants variables.
 
@@ -192,6 +193,42 @@ class UnitAttribute(TextAttribute):
     @property
     def default_unit(self):
         return self._default_unit
+
+class XRayLineAttribute(_Attribute):
+
+    def __init__(self, default_notation=NOTATION_SIEGBAHN,
+                 required=False, xmlname=None, doc=None):
+        _Attribute.__init__(self, required, xmlname, doc)
+        self._default_notation = default_notation
+
+    def _prepare_value(self, value):
+        if isinstance(value, xrayline):
+            return value
+
+        if isinstance(value, tuple) and \
+                len(value) == 2 and \
+                (isinstance(value[1], str) or value[1] is None):
+            notation = value[1] or self.default_notation
+            value = value[0]
+        else:
+            notation = self.default_notation
+
+        if value is None:
+            return None
+
+        return xrayline(value, notation)
+
+    def _new(self, cls, clsname, bases, methods, name):
+        _Attribute._new(self, cls, clsname, bases, methods, name)
+
+        # Change set method to allow unit input
+        methods['set_%s' % name] = \
+            lambda instance, value, notation = None: \
+                self.__set__(instance, (value, notation or self.default_notation))
+
+    @property
+    def default_notation(self):
+        return self._default_notation
 
 class ObjectAttribute(_Attribute):
 
