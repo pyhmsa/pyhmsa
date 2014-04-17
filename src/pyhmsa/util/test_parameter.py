@@ -103,7 +103,7 @@ class TestModule(unittest.TestCase):
         self.mock.unit = None
         self.assertIsNone(self.mock.unit)
 
-        self.assertRaises(ValueError, self.mock.set_unit, 'Wb')
+        self.assertRaises(ValueError, self.mock.set_unit, 'mmHg')
 
     def testobject_attribute(self):
         self.mock.object = 5

@@ -33,7 +33,7 @@ class Specimen(_Condition):
     origin = TextAttribute(False, 'Origin', 'origin')
     formula = TextAttribute(False, 'Formula', 'formula')
     composition = ObjectAttribute(_Composition, False, doc='composition')
-    temperature = NumericalAttribute(u'\u00b0\u0043', False, 'Temperature', 'temperature')
+    temperature = NumericalAttribute('degreesC', False, 'Temperature', 'temperature')
 
     def __init__(self, name, description=None, origin=None, formula=None,
                   composition=None, temperature=None):

@@ -135,7 +135,7 @@ class AcquisitionRasterLinescan(_AcquisitionRaster):
     CLASS = 'Raster/Linescan'
 
     step_count = NumericalAttribute(None, True, 'StepCount', 'number of steps')
-    step_size = NumericalAttribute(u'\u00b5m', False, 'StepSize', 'dimension of each step')
+    step_size = NumericalAttribute('um', False, 'StepSize', 'dimension of each step')
 
     def __init__(self, step_count, step_size=None,
                   position_start=None, position_end=None,
@@ -220,8 +220,8 @@ class AcquisitionRasterXY(_AcquisitionRaster):
 
     step_count_x = NumericalAttribute(None, True, 'XStepCount', 'number of steps in x direction')
     step_count_y = NumericalAttribute(None, True, 'YStepCount', 'number of steps in y direction')
-    step_size_x = NumericalAttribute(u'\u00b5m', False, 'XStepSize', 'dimension of each step in x direction')
-    step_size_y = NumericalAttribute(u'\u00b5m', False, 'YStepSize', 'dimension of each step in y direction')
+    step_size_x = NumericalAttribute('um', False, 'XStepSize', 'dimension of each step in x direction')
+    step_size_y = NumericalAttribute('um', False, 'YStepSize', 'dimension of each step in y direction')
     frame_count = NumericalAttribute(None, False, 'FrameCount', 'number of accumulated frames')
 
     def __init__(self, step_count_x, step_count_y,
@@ -304,9 +304,9 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
     step_count_x = NumericalAttribute(None, True, 'XStepCount', 'number of steps in x direction')
     step_count_y = NumericalAttribute(None, True, 'YStepCount', 'number of steps in y direction')
     step_count_z = NumericalAttribute(None, True, 'ZStepCount', 'number of steps in z direction')
-    step_size_x = NumericalAttribute(u'\u00b5m', False, 'XStepSize', 'dimension of each step in x direction')
-    step_size_y = NumericalAttribute(u'\u00b5m', False, 'YStepSize', 'dimension of each step in y direction')
-    step_size_z = NumericalAttribute(u'\u00b5m', False, 'ZStepSize', 'dimension of each step in z direction')
+    step_size_x = NumericalAttribute('um', False, 'XStepSize', 'dimension of each step in x direction')
+    step_size_y = NumericalAttribute('um', False, 'YStepSize', 'dimension of each step in y direction')
+    step_size_z = NumericalAttribute('um', False, 'ZStepSize', 'dimension of each step in z direction')
     raster_mode_z = EnumAttribute(_RASTER_MODES_Z, False, 'ZRasterMode', 'mode of rastering in z direction')
 
     def __init__(self, step_count_x, step_count_y, step_count_z,

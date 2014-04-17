@@ -72,7 +72,7 @@ class TestSpecimenPosition(unittest.TestCase):
         self.assertAlmostEqual(5.0, position.y, 4)
         self.assertEqual('mm', position.y.unit)
         self.assertAlmostEqual(90.0, position.r, 4)
-        self.assertEqual(u'\u00b0', position.r.unit)
+        self.assertEqual('degrees', position.r.unit)
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

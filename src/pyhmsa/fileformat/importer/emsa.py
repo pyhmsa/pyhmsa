@@ -248,7 +248,7 @@ class _ImporterEMSAThread(_ImporterThread):
         kwargs = {}
         kwargs['beam_voltage'] = (keywords.getfloat('BEAMKV'), 'kV')
         kwargs['beam_current'] = (keywords.getfloat('PROBECUR'), 'nA')
-        kwargs['emission_current'] = (keywords.getfloat('EMISSION'), u'\u00b5A')
+        kwargs['emission_current'] = (keywords.getfloat('EMISSION'), 'uA')
         kwargs['beam_diameter'] = (keywords.getfloat('BEAMDIAM'), 'nm')
         kwargs['scan_magnification'] = keywords.getint('MAGCAM')
 
@@ -299,8 +299,8 @@ class _ImporterEMSAThread(_ImporterThread):
         kwargs['calibration'] = CalibrationLinear(quantity, unit, gain, offset)
 
         kwargs['measurement_unit'] = keywords.get('yunits')
-        kwargs['elevation'] = (keywords.getfloat('ELEVANGLE'), u'\u00b0')
-        kwargs['azimuth'] = (keywords.getfloat('AZIMANGLE'), u'\u00b0')
+        kwargs['elevation'] = (keywords.getfloat('ELEVANGLE'), 'degrees')
+        kwargs['azimuth'] = (keywords.getfloat('AZIMANGLE'), 'degrees')
         kwargs['solid_angle'] = (keywords.getfloat('SOLIDANGLE'), 'sr')
         kwargs['semi_angle'] = (keywords.getfloat('COLLANGLE'), 'mrad')
 
@@ -310,23 +310,23 @@ class _ImporterEMSAThread(_ImporterThread):
         if signal_type in [SIGNAL_TYPE_EDS, SIGNAL_TYPE_WDS]:
             window = Window()
             if 'TDEADLYR' in keywords:
-                window.append_layer('Dead layer', (keywords.getfloat('TDEADLYR') * 1e4, u'\u00b5m'))
+                window.append_layer('Dead layer', (keywords.getfloat('TDEADLYR') * 1e4, 'um'))
             if 'TACTLYR' in keywords:
-                window.append_layer('Active Layer', (keywords.getfloat('TACTLYR') * 1e4, u'\u00b5m'))
+                window.append_layer('Active Layer', (keywords.getfloat('TACTLYR') * 1e4, 'um'))
             if 'TBEWIND' in keywords:
-                window.append_layer('Be window', (keywords.getfloat('TBEWIND') * 1e4, u'\u00b5m'))
+                window.append_layer('Be window', (keywords.getfloat('TBEWIND') * 1e4, 'um'))
             if 'TAUWIND' in keywords:
-                window.append_layer('Au window', (keywords.getfloat('TAUWIND') * 1e4, u'\u00b5m'))
+                window.append_layer('Au window', (keywords.getfloat('TAUWIND') * 1e4, 'um'))
             if 'TALWIND' in keywords:
-                window.append_layer('Al window', (keywords.getfloat('TALWIND') * 1e4, u'\u00b5m'))
+                window.append_layer('Al window', (keywords.getfloat('TALWIND') * 1e4, 'um'))
             if 'TPYWIND' in keywords:
-                window.append_layer('Pyrolene window', (keywords.getfloat('TPYWIND') * 1e4, u'\u00b5m'))
+                window.append_layer('Pyrolene window', (keywords.getfloat('TPYWIND') * 1e4, 'um'))
             if 'TBNWIND' in keywords:
-                window.append_layer('Boron-Nitride window', (keywords.getfloat('TBNWIND') * 1e4, u'\u00b5m'))
+                window.append_layer('Boron-Nitride window', (keywords.getfloat('TBNWIND') * 1e4, 'um'))
             if 'TDIWIND' in keywords:
-                window.append_layer('Diamond window', (keywords.getfloat('TDIWIND') * 1e4, u'\u00b5m'))
+                window.append_layer('Diamond window', (keywords.getfloat('TDIWIND') * 1e4, 'um'))
             if 'THCWIND' in keywords:
-                window.append_layer('HydroCarbon window', (keywords.getfloat('TDIWIND') * 1e4, u'\u00b5m'))
+                window.append_layer('HydroCarbon window', (keywords.getfloat('TDIWIND') * 1e4, 'um'))
             if window.layers:
                 kwargs['window'] = window
 

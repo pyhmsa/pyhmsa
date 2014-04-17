@@ -178,6 +178,10 @@ class UnitAttribute(TextAttribute):
     def _prepare_value(self, value):
         value = TextAttribute._prepare_value(self, value)
         value = value or self.default_unit
+        try:
+            value = validate_unit(value)
+        except:
+            pass
         return value
 
     def _validate_value(self, value):

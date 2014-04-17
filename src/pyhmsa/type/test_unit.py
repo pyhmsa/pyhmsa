@@ -23,16 +23,22 @@ class TestModule(unittest.TestCase):
     def testvalidate_unit(self):
         for unit in _UNITS:
             if unit in [u'\u00c5', 's', 'g']:
-                self.assertTrue(validate_unit(unit))
+                validate_unit(unit)
             else:
                 for prefix in _PREFIXES:
-                    self.assertTrue(validate_unit(prefix + unit))
+                    validate_unit(prefix + unit)
 
-        self.assertRaises(ValueError, validate_unit, 'Wb')
         self.assertRaises(ValueError, validate_unit, 'Mg')
         self.assertRaises(ValueError, validate_unit, 'ks')
         self.assertRaises(ValueError, validate_unit, u'k\u00c5')
         self.assertRaises(ValueError, validate_unit, 'Km')
+        self.assertRaises(ValueError, validate_unit, 'u')
+
+        self.assertEqual('um', validate_unit(u'\u00b5m'))
+        self.assertEqual('um', validate_unit('um'))
+        self.assertEqual('um3', validate_unit(u'\u00b5m+3'))
+        self.assertEqual('um-3', validate_unit(u'\u00b5m-3'))
+        self.assertEqual('degrees', validate_unit(u'\u00b0'))
 
     def testparse_unit(self):
         p, b, e = parse_unit('km2')

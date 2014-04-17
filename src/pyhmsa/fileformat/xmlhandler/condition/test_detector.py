@@ -35,7 +35,7 @@ class TestWindowXMLHandler(unittest.TestCase):
         self.obj = Window()
         self.obj.append_layer('Al', 1.0)
 
-        source = u'<Window><Layer Material="Al" Unit="\u00b5m" DataType="float">1.</Layer></Window>'
+        source = '<Window><Layer Material="Al" Unit="um" DataType="float">1.</Layer></Window>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -50,7 +50,7 @@ class TestWindowXMLHandler(unittest.TestCase):
         self.assertEqual(1, len(obj.layers))
         self.assertEqual('Al', obj.layers[0].material)
         self.assertAlmostEqual(1.0, obj.layers[0].thickness, 4)
-        self.assertEqual(u'\u00b5m', obj.layers[0].thickness.unit, 4)
+        self.assertEqual('um', obj.layers[0].thickness.unit, 4)
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
@@ -75,7 +75,7 @@ class TestDetectorCameraXMLHandler(unittest.TestCase):
                                   '12345-abc-67890', 'counts', 45.0, 0.0, 50.0,
                                   20.0, 1.0, 3.4, -20.0)
 
-        source = u'<Detector Class="Camera"><SignalType>ELS</SignalType><Manufacturer>Example Inc.</Manufacturer><Model>Example Model 123</Model><SerialNumber>12345-abc-67890</SerialNumber><MeasurementUnit>counts</MeasurementUnit><Elevation Unit="\u00b0" DataType = "float">45.</Elevation><Azimuth Unit="\u00b0" DataType = "float">0.</Azimuth><Distance Unit="mm" DataType = "float">50</Distance><Area Unit="mm2" DataType = "float">20</Area><SolidAngle Unit="sr" DataType = "float">1.</SolidAngle><SemiAngle Unit="mrad" DataType = "float">3.4</SemiAngle><Temperature Unit="\u00b0\u0043" DataType="float">-20.0</Temperature><UPixelCount DataType="uint32">512</UPixelCount><ExposureTime Unit="ms" DataType="float">200.</ExposureTime><Magnification DataType="float">4.5</Magnification><FocalLength Unit="mm" DataType="float">80.</FocalLength><VPixelCount DataType="uint32">400</VPixelCount></Detector>'
+        source = '<Detector Class="Camera"><SignalType>ELS</SignalType><Manufacturer>Example Inc.</Manufacturer><Model>Example Model 123</Model><SerialNumber>12345-abc-67890</SerialNumber><MeasurementUnit>counts</MeasurementUnit><Elevation Unit="degrees" DataType = "float">45.</Elevation><Azimuth Unit="degrees" DataType = "float">0.</Azimuth><Distance Unit="mm" DataType = "float">50</Distance><Area Unit="mm2" DataType = "float">20</Area><SolidAngle Unit="sr" DataType = "float">1.</SolidAngle><SemiAngle Unit="mrad" DataType = "float">3.4</SemiAngle><Temperature Unit="degreesC" DataType="float">-20.0</Temperature><UPixelCount DataType="uint32">512</UPixelCount><ExposureTime Unit="ms" DataType="float">200.</ExposureTime><Magnification DataType="float">4.5</Magnification><FocalLength Unit="mm" DataType="float">80.</FocalLength><VPixelCount DataType="uint32">400</VPixelCount></Detector>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -94,9 +94,9 @@ class TestDetectorCameraXMLHandler(unittest.TestCase):
         self.assertEqual('12345-abc-67890', obj.serial_number)
         self.assertEqual('counts', obj.measurement_unit)
         self.assertAlmostEqual(45.0, obj.elevation, 4)
-        self.assertEqual(u'\u00b0', obj.elevation.unit)
+        self.assertEqual('degrees', obj.elevation.unit)
         self.assertAlmostEqual(0.0, obj.azimuth, 4)
-        self.assertEqual(u'\u00b0', obj.azimuth.unit)
+        self.assertEqual('degrees', obj.azimuth.unit)
         self.assertAlmostEqual(50.0, obj.distance, 4)
         self.assertEqual('mm', obj.distance.unit)
         self.assertAlmostEqual(20.0, obj.area, 4)
@@ -106,7 +106,7 @@ class TestDetectorCameraXMLHandler(unittest.TestCase):
         self.assertAlmostEqual(3.4, obj.semi_angle, 4)
         self.assertEqual('mrad', obj.semi_angle.unit)
         self.assertAlmostEqual(-20.0, obj.temperature, 4)
-        self.assertEqual(u'\u00b0\u0043', obj.temperature.unit)
+        self.assertEqual('degreesC', obj.temperature.unit)
 
         self.assertEqual(512, obj.pixel_count_u)
         self.assertEqual(400, obj.pixel_count_v)
@@ -154,7 +154,7 @@ class TestDetectorSpectrometerXMLHandler(unittest.TestCase):
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
         self.obj = DetectorSpectrometer(4096, calibration, COLLECTION_MODE_PARALLEL)
 
-        source = u'<Detector Class="Spectrometer"><ChannelCount DataType="uint32">4096</ChannelCount><Calibration Class="Constant"><Quantity>Energy</Quantity><Unit>eV</Unit><Value DataType="float">-237.098251</Value></Calibration><CollectionMode>Parallel</CollectionMode></Detector>'
+        source = '<Detector Class="Spectrometer"><ChannelCount DataType="uint32">4096</ChannelCount><Calibration Class="Constant"><Quantity>Energy</Quantity><Unit>eV</Unit><Value DataType="float">-237.098251</Value></Calibration><CollectionMode>Parallel</CollectionMode></Detector>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -198,7 +198,7 @@ class TestDetectorSpectrometerCLXMLHandler(unittest.TestCase):
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
         self.obj = DetectorSpectrometerCL(4096, calibration, 800.0)
 
-        source = u'<Detector Class="Spectrometer/CL"><ChannelCount DataType="uint32">4096</ChannelCount><Calibration Class="Constant"><Quantity>Energy</Quantity><Unit>eV</Unit><Value DataType="float">-237.098251</Value></Calibration><Grating-d Unit="mm-1" DataType="float">800</Grating-d></Detector>'
+        source = '<Detector Class="Spectrometer/CL"><ChannelCount DataType="uint32">4096</ChannelCount><Calibration Class="Constant"><Quantity>Energy</Quantity><Unit>eV</Unit><Value DataType="float">-237.098251</Value></Calibration><Grating-d Unit="mm-1" DataType="float">800</Grating-d></Detector>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -237,7 +237,7 @@ class TestDetectorSpectrometerWDSXMLHandler(unittest.TestCase):
                                            'TAP', 8.742, 140.0, pha)
         self.obj.window.append_layer('Al', 1.0)
 
-        source = u'<Detector Class="Spectrometer/WDS"><ChannelCount DataType="uint32">4096</ChannelCount><Calibration Class="Constant"><Quantity>Energy</Quantity><Unit>eV</Unit><Value DataType="float">-237.098251</Value></Calibration><DispersionElement>TAP</DispersionElement><Crystal-2d Unit="\u00c5" DataType="float">8.742</Crystal-2d><RowlandCircleDiameter Unit="mm" DataType="float">140.</RowlandCircleDiameter><PulseHeightAnalyser><Bias Unit="V" DataType="float">1700.</Bias><Gain DataType="float">16.</Gain><BaseLevel Unit="V" DataType="float">0.7</BaseLevel><Window Unit="V" DataType="float">9.3</Window><Mode>Differential</Mode></PulseHeightAnalyser><Window><Layer Material="Al" Unit="\u00b5m" DataType="float">1.</Layer></Window></Detector>'
+        source = u'<Detector Class="Spectrometer/WDS"><ChannelCount DataType="uint32">4096</ChannelCount><Calibration Class="Constant"><Quantity>Energy</Quantity><Unit>eV</Unit><Value DataType="float">-237.098251</Value></Calibration><DispersionElement>TAP</DispersionElement><Crystal-2d Unit="\u00c5" DataType="float">8.742</Crystal-2d><RowlandCircleDiameter Unit="mm" DataType="float">140.</RowlandCircleDiameter><PulseHeightAnalyser><Bias Unit="V" DataType="float">1700.</Bias><Gain DataType="float">16.</Gain><BaseLevel Unit="V" DataType="float">0.7</BaseLevel><Window Unit="V" DataType="float">9.3</Window><Mode>Differential</Mode></PulseHeightAnalyser><Window><Layer Material="Al" Unit="um" DataType="float">1.</Layer></Window></Detector>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -265,7 +265,7 @@ class TestDetectorSpectrometerWDSXMLHandler(unittest.TestCase):
         self.assertEqual(PHA_MODE_DIFFERENTIAL, obj.pulse_height_analyser.mode)
         self.assertEqual(1, len(obj.window.layers))
         self.assertAlmostEqual(1.0, obj.window.layers[0].thickness, 4)
-        self.assertEqual(u'\u00b5m', obj.window.layers[0].thickness.unit)
+        self.assertEqual('um', obj.window.layers[0].thickness.unit)
         self.assertEqual('Al', obj.window.layers[0].material)
 
     def testcan_convert(self):
@@ -298,7 +298,7 @@ class TestDetectorSpectrometerXEDSXMLHandler(unittest.TestCase):
                                             XEDS_TECHNOLOGY_SILI, 180000.0, 11.1, 2000.0)
         self.obj.window.append_layer('Al', 1.0)
 
-        source = u'<Detector Class="Spectrometer/XEDS"><ChannelCount DataType="uint32">4096</ChannelCount><Calibration Class="Constant"><Quantity>Energy</Quantity><Unit>eV</Unit><Value DataType="float">-237.098251</Value></Calibration><Technology>SiLi</Technology><NominalThroughput Unit="counts" DataType="float">180000.</NominalThroughput><TimeConstant Unit="\u00b5s" DataType="float">11.1</TimeConstant><StrobeRate Unit="Hz" DataType="float">2000</StrobeRate><Window><Layer Material="Al" Unit="\u00b5m" DataType="float">1.</Layer></Window></Detector>'
+        source = '<Detector Class="Spectrometer/XEDS"><ChannelCount DataType="uint32">4096</ChannelCount><Calibration Class="Constant"><Quantity>Energy</Quantity><Unit>eV</Unit><Value DataType="float">-237.098251</Value></Calibration><Technology>SiLi</Technology><NominalThroughput Unit="counts" DataType="float">180000.</NominalThroughput><TimeConstant Unit="us" DataType="float">11.1</TimeConstant><StrobeRate Unit="Hz" DataType="float">2000</StrobeRate><Window><Layer Material="Al" Unit="um" DataType="float">1.</Layer></Window></Detector>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -316,11 +316,11 @@ class TestDetectorSpectrometerXEDSXMLHandler(unittest.TestCase):
         self.assertAlmostEqual(180000.0, obj.nominal_throughput, 4)
         self.assertEqual('counts', obj.nominal_throughput.unit)
         self.assertAlmostEqual(11.1, obj.time_constant, 4)
-        self.assertEqual(u'\u00b5s', obj.time_constant.unit)
+        self.assertEqual('us', obj.time_constant.unit)
         self.assertAlmostEqual(2000, obj.strobe_rate, 4)
         self.assertEqual('Hz', obj.strobe_rate.unit)
         self.assertAlmostEqual(1.0, obj.window.layers[0].thickness, 4)
-        self.assertEqual(u'\u00b5m', obj.window.layers[0].thickness.unit)
+        self.assertEqual('um', obj.window.layers[0].thickness.unit)
         self.assertEqual('Al', obj.window.layers[0].material)
 
     def testcan_convert(self):

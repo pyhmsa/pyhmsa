@@ -50,7 +50,7 @@ class arrayunit(np.ndarray):
                                  order)
 
         if unit is not None:
-            validate_unit(unit)
+            unit = validate_unit(unit)
         obj._unit = unit
 
         return obj

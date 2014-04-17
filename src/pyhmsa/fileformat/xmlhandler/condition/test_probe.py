@@ -26,7 +26,7 @@ class TestProbeEMXMLHandler(unittest.TestCase):
         self.obj = ProbeEM(15.0, 47.59, GUN_TYPE_LAB6, 12345.0, 1.234, 4200.0,
                            12345.0, 3.14e-6, 3.14e-10, 2500.0, 10.0)
 
-        source = u'<Probe Class="EM"><BeamVoltage DataType="float" Unit="kV">15.</BeamVoltage><BeamCurrent DataType="float" Unit="nA">47.59</BeamCurrent><GunType>LaB6</GunType><EmissionCurrent DataType="float" Unit="\u00b5A">12345</EmissionCurrent><FilamentCurrent DataType="float" Unit="A">1.234</FilamentCurrent><ExtractorBias DataType="float" Unit="V">4200</ExtractorBias><BeamDiameter DataType="float" Unit="nm">12345</BeamDiameter><ChamberPressure DataType="float" Unit="Pa">3.14E-6</ChamberPressure><GunPressure DataType="float" Unit="Pa">3.14E-10</GunPressure><ScanMagnification DataType="float">2500.</ScanMagnification><WorkingDistance DataType="float" Unit="mm">10</WorkingDistance></Probe>'
+        source = '<Probe Class="EM"><BeamVoltage DataType="float" Unit="kV">15.</BeamVoltage><BeamCurrent DataType="float" Unit="nA">47.59</BeamCurrent><GunType>LaB6</GunType><EmissionCurrent DataType="float" Unit="uA">12345</EmissionCurrent><FilamentCurrent DataType="float" Unit="A">1.234</FilamentCurrent><ExtractorBias DataType="float" Unit="V">4200</ExtractorBias><BeamDiameter DataType="float" Unit="nm">12345</BeamDiameter><ChamberPressure DataType="float" Unit="Pa">3.14E-6</ChamberPressure><GunPressure DataType="float" Unit="Pa">3.14E-10</GunPressure><ScanMagnification DataType="float">2500.</ScanMagnification><WorkingDistance DataType="float" Unit="mm">10</WorkingDistance></Probe>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -45,7 +45,7 @@ class TestProbeEMXMLHandler(unittest.TestCase):
         self.assertEqual('nA', obj.beam_current.unit)
         self.assertEqual(GUN_TYPE_LAB6, obj.gun_type)
         self.assertAlmostEqual(12345.0, obj.emission_current, 4)
-        self.assertEqual(u'\u00b5A', obj.emission_current.unit)
+        self.assertEqual('uA', obj.emission_current.unit)
         self.assertAlmostEqual(1.234, obj.filament_current, 4)
         self.assertEqual('A', obj.filament_current.unit)
         self.assertAlmostEqual(4200.0, obj.extractor_bias, 4)
@@ -90,7 +90,7 @@ class TestProbeTEMXMLHandler(unittest.TestCase):
         self.obj = ProbeTEM(15.0, LENS_MODE_IMAGE,
                             camera_magnification=2.0, convergence_angle=1.5)
 
-        source = u'<Probe Class="TEM"><BeamVoltage DataType="float" Unit="kV">15.</BeamVoltage><LensMode>IMAGE</LensMode><CameraMagnification DataType="float">2</CameraMagnification><ConvergenceAngle Unit = "mrad" DataType="float">1.5</ConvergenceAngle></Probe>'
+        source = '<Probe Class="TEM"><BeamVoltage DataType="float" Unit="kV">15.</BeamVoltage><LensMode>IMAGE</LensMode><CameraMagnification DataType="float">2</CameraMagnification><ConvergenceAngle Unit = "mrad" DataType="float">1.5</ConvergenceAngle></Probe>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):

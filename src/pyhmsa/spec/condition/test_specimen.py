@@ -54,7 +54,7 @@ class TestSpecimen(unittest.TestCase):
     def testtemperature(self):
         self.spc.temperature = -20.0
         self.assertAlmostEqual(-20.0, self.spc.temperature, 4)
-        self.assertEqual(u'\u00b0\u0043', self.spc.temperature.unit)
+        self.assertEqual('degreesC', self.spc.temperature.unit)
 
     def testpickle(self):
         self.spc.description = 'Natural cryolite standard'
@@ -78,7 +78,7 @@ class TestSpecimen(unittest.TestCase):
         self.assertAlmostEqual(1, spc.composition[13], 4)
         self.assertAlmostEqual(6, spc.composition[9], 4)
         self.assertAlmostEqual(-20.0, spc.temperature, 4)
-        self.assertEqual(u'\u00b0\u0043', spc.temperature.unit)
+        self.assertEqual('degreesC', spc.temperature.unit)
 
 class TestSpecimenLayer(unittest.TestCase):
 

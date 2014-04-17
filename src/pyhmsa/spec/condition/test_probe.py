@@ -55,7 +55,7 @@ class TestProbeEM(unittest.TestCase):
     def testemission_current(self):
         self.probe.emission_current = 12345
         self.assertAlmostEqual(12345, self.probe.emission_current, 4)
-        self.assertEqual(u'\u00b5A', self.probe.emission_current.unit)
+        self.assertEqual('uA', self.probe.emission_current.unit)
 
     def testfilament_current(self):
         self.probe.filament_current = 1.234
@@ -70,7 +70,7 @@ class TestProbeEM(unittest.TestCase):
     def testbeam_diameter(self):
         self.probe.beam_diameter = 12345
         self.assertAlmostEqual(12345, self.probe.beam_diameter, 4)
-        self.assertEqual(u'\u00b5m', self.probe.beam_diameter.unit)
+        self.assertEqual('um', self.probe.beam_diameter.unit)
 
     def testchamber_pressure(self):
         self.probe.chamber_pressure = 3.14e-6
@@ -112,13 +112,13 @@ class TestProbeEM(unittest.TestCase):
         self.assertEqual('nA', probe.beam_current.unit)
         self.assertEqual(GUN_TYPE_LAB6, probe.gun_type)
         self.assertAlmostEqual(12345, probe.emission_current, 4)
-        self.assertEqual(u'\u00b5A', probe.emission_current.unit)
+        self.assertEqual('uA', probe.emission_current.unit)
         self.assertAlmostEqual(1.234, probe.filament_current, 4)
         self.assertEqual('A', probe.filament_current.unit)
         self.assertAlmostEqual(4200, probe.extractor_bias, 4)
         self.assertEqual('V', probe.extractor_bias.unit)
         self.assertAlmostEqual(12345, probe.beam_diameter, 4)
-        self.assertEqual(u'\u00b5m', probe.beam_diameter.unit)
+        self.assertEqual('um', probe.beam_diameter.unit)
         self.assertAlmostEqual(3.14e-6, probe.chamber_pressure, 10)
         self.assertEqual('Pa', probe.chamber_pressure.unit)
         self.assertAlmostEqual(3.14e-10, probe.gun_pressure, 14)

@@ -28,7 +28,7 @@ class TestSpecimenXMLHandler(unittest.TestCase):
         self.obj = Specimen('Cryolite', 'Natural cryolite standard',
                             'Kitaa, Greenland', 'Na3AlF6', comp, -20.0)
 
-        source = u'<Specimen><Name>Cryolite</Name><Description>Natural cryolite standard</Description><Origin>Kitaa, Greenland</Origin><Formula>Na3AlF6</Formula><Composition Class="Elemental"><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition><Temperature Unit="\u00b0\u0043" DataType="float">-20.0</Temperature></Specimen>'
+        source = '<Specimen><Name>Cryolite</Name><Description>Natural cryolite standard</Description><Origin>Kitaa, Greenland</Origin><Formula>Na3AlF6</Formula><Composition Class="Elemental"><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition><Temperature Unit="degreesC" DataType="float">-20.0</Temperature></Specimen>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -48,7 +48,7 @@ class TestSpecimenXMLHandler(unittest.TestCase):
         self.assertAlmostEqual(1.0, obj.composition[13], 4)
         self.assertAlmostEqual(6.0, obj.composition[9], 4)
         self.assertAlmostEqual(-20.0, obj.temperature, 4)
-        self.assertEqual(u'\u00b0\u0043', obj.temperature.unit)
+        self.assertEqual('degreesC', obj.temperature.unit)
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))

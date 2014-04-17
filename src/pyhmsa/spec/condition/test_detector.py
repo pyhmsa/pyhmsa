@@ -111,13 +111,13 @@ class TestWindow(unittest.TestCase):
         self.assertEqual(1, len(self.window.layers))
         self.assertEqual('Al', self.window.layers[0].material)
         self.assertAlmostEqual(0.5, self.window.layers[0].thickness, 4)
-        self.assertEqual(u'\u00b5m', self.window.layers[0].thickness.unit, 4)
+        self.assertEqual('um', self.window.layers[0].thickness.unit, 4)
 
         self.window.layers.append(WindowLayer('Be', 0.3))
         self.assertEqual(2, len(self.window.layers))
         self.assertEqual('Be', self.window.layers[1].material)
         self.assertAlmostEqual(0.3, self.window.layers[1].thickness, 4)
-        self.assertEqual(u'\u00b5m', self.window.layers[1].thickness.unit, 4)
+        self.assertEqual('um', self.window.layers[1].thickness.unit, 4)
 
     def testpickle(self):
         s = pickle.dumps(self.window)
@@ -126,7 +126,7 @@ class TestWindow(unittest.TestCase):
         self.assertEqual(1, len(window.layers))
         self.assertEqual('Al', window.layers[0].material)
         self.assertAlmostEqual(0.5, window.layers[0].thickness, 4)
-        self.assertEqual(u'\u00b5m', window.layers[0].thickness.unit, 4)
+        self.assertEqual('um', window.layers[0].thickness.unit, 4)
 
 class Test_Detector(unittest.TestCase):
 
@@ -166,12 +166,12 @@ class Test_Detector(unittest.TestCase):
     def testelevation(self):
         self.det.elevation = 45.0
         self.assertAlmostEqual(45.0, self.det.elevation, 4)
-        self.assertEqual(u'\u00b0', self.det.elevation.unit)
+        self.assertEqual('degrees', self.det.elevation.unit)
 
     def testazimuth(self):
         self.det.azimuth = 0.0
         self.assertAlmostEqual(0.0, self.det.azimuth, 4)
-        self.assertEqual(u'\u00b0', self.det.azimuth.unit)
+        self.assertEqual('degrees', self.det.azimuth.unit)
 
     def testdistance(self):
         self.det.distance = 50.0
@@ -196,7 +196,7 @@ class Test_Detector(unittest.TestCase):
     def testtemperature(self):
         self.det.temperature = -20.0
         self.assertAlmostEqual(-20.0, self.det.temperature, 4)
-        self.assertEqual(u'\u00b0\u0043', self.det.temperature.unit)
+        self.assertEqual('degreesC', self.det.temperature.unit)
 
     def testpickle(self):
         self.det.model = 'Example Model 123'
@@ -218,9 +218,9 @@ class Test_Detector(unittest.TestCase):
         self.assertEqual('A', det.measurement_unit)
         self.assertEqual('A', det.measurement_unit)
         self.assertAlmostEqual(45.0, det.elevation, 4)
-        self.assertEqual(u'\u00b0', det.elevation.unit)
+        self.assertEqual('degrees', det.elevation.unit)
         self.assertAlmostEqual(0.0, det.azimuth, 4)
-        self.assertEqual(u'\u00b0', det.azimuth.unit)
+        self.assertEqual('degrees', det.azimuth.unit)
         self.assertAlmostEqual(50.0, det.distance, 4)
         self.assertEqual('mm', det.distance.unit)
         self.assertAlmostEqual(20.0, det.area, 4)
@@ -230,7 +230,7 @@ class Test_Detector(unittest.TestCase):
         self.assertAlmostEqual(3.4, det.semi_angle, 4)
         self.assertEqual('mrad', det.semi_angle.unit)
         self.assertAlmostEqual(-20.0, det.temperature, 4)
-        self.assertEqual(u'\u00b0\u0043', det.temperature.unit)
+        self.assertEqual('degreesC', det.temperature.unit)
 
 class TestDetectorCamera(unittest.TestCase):
 
@@ -440,7 +440,7 @@ class TestDetectorSpectrometerXEDS(unittest.TestCase):
     def testtime_constant(self):
         self.det.time_constant = 11.1
         self.assertAlmostEqual(11.1, self.det.time_constant, 4)
-        self.assertEqual(u'\u00b5s', self.det.time_constant.unit)
+        self.assertEqual('us', self.det.time_constant.unit)
 
     def teststrobe_rate(self):
         self.det.strobe_rate = 2000
@@ -470,7 +470,7 @@ class TestDetectorSpectrometerXEDS(unittest.TestCase):
         self.assertAlmostEqual(180000, det.nominal_throughput, 4)
         self.assertEqual('counts', det.nominal_throughput.unit)
         self.assertAlmostEqual(11.1, det.time_constant, 4)
-        self.assertEqual(u'\u00b5s', det.time_constant.unit)
+        self.assertEqual('us', det.time_constant.unit)
         self.assertAlmostEqual(2000, det.strobe_rate, 4)
         self.assertEqual('Hz', det.strobe_rate.unit)
         self.assertEqual('Al', det.window.layers[0].material)

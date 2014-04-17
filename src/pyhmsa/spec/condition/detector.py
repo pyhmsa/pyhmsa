@@ -53,7 +53,7 @@ _PHA_MODES = frozenset([PHA_MODE_INTEGRAL, PHA_MODE_DIFFERENTIAL])
 XEDS_TECHNOLOGY_GE = 'Ge'
 XEDS_TECHNOLOGY_SILI = 'SiLi'
 XEDS_TECHNOLOGY_SDD = 'SDD'
-XEDS_TECHNOLOGY_UCAL = u'\u00b5-cal'
+XEDS_TECHNOLOGY_UCAL = 'microcalorimeter'
 
 _XEDS_TECHNOLOGIES = frozenset([XEDS_TECHNOLOGY_GE, XEDS_TECHNOLOGY_SILI,
                                 XEDS_TECHNOLOGY_SDD, XEDS_TECHNOLOGY_UCAL])
@@ -88,7 +88,7 @@ class PulseHeightAnalyser(Parameter):
 class WindowLayer(Parameter):
 
     material = TextAttribute(True, doc='material')
-    thickness = NumericalAttribute(u'\u00b5m', True, doc='thickness')
+    thickness = NumericalAttribute('um', True, doc='thickness')
 
     def __init__(self, material, thickness):
         """
@@ -138,13 +138,13 @@ class _Detector(_Condition):
     model = TextAttribute(False, 'Model', 'model')
     serial_number = TextAttribute(False, 'SerialNumber', 'serial number')
     measurement_unit = UnitAttribute('counts', False, 'MeasurementUnit', 'measurement unit')
-    elevation = NumericalAttribute(u'\u00b0', False, 'Elevation', 'elevation')
-    azimuth = NumericalAttribute(u'\u00b0', False, 'Azimuth', 'azimuth')
+    elevation = NumericalAttribute('degrees', False, 'Elevation', 'elevation')
+    azimuth = NumericalAttribute('degrees', False, 'Azimuth', 'azimuth')
     distance = NumericalAttribute('mm', False, 'Distance', 'distance')
     area = NumericalAttribute('mm2', False, 'Area', 'area')
     solid_angle = NumericalAttribute('sr', False, 'SolidAngle', 'solid angle')
     semi_angle = NumericalAttribute('mrad', False, 'SemiAngle', 'semi-angle')
-    temperature = NumericalAttribute(u'\u00b0\u0043', False, 'Temperature', 'temperature')
+    temperature = NumericalAttribute('degreesC', False, 'Temperature', 'temperature')
 
     def __init__(self, signal_type=None, manufacturer=None, model=None,
                   serial_number=None, measurement_unit='counts', elevation=None,
@@ -404,7 +404,7 @@ class DetectorSpectrometerXEDS(DetectorSpectrometer):
 
     technology = EnumAttribute(_XEDS_TECHNOLOGIES, False, 'Technology', 'technology')
     nominal_throughput = NumericalAttribute('counts', False, 'NominalThroughput', 'nominal throughput')
-    time_constant = NumericalAttribute(u'\u00b5s', False, 'TimeConstant', 'time constant')
+    time_constant = NumericalAttribute('us', False, 'TimeConstant', 'time constant')
     strobe_rate = NumericalAttribute('Hz', False, 'StrobeRate', 'strobe rate')
     window = ObjectAttribute(Window, False, doc='window')
 

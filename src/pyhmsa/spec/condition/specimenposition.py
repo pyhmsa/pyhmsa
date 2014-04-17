@@ -28,8 +28,8 @@ class SpecimenPosition(_Condition):
     x = NumericalAttribute('mm', False, 'X', 'x coordinate')
     y = NumericalAttribute('mm', False, 'Y', 'y coordinate')
     z = NumericalAttribute('mm', False, 'Z', 'z coordinate')
-    r = NumericalAttribute(u'\u00b0', False, 'R', 'rotation')
-    t = NumericalAttribute(u'\u00b0', False, 'T', 'tilt')
+    r = NumericalAttribute('degrees', False, 'R', 'rotation')
+    t = NumericalAttribute('degrees', False, 'T', 'tilt')
 
     def __init__(self, x=None, y=None, z=None, r=None, t=None):
         """

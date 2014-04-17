@@ -61,7 +61,7 @@ class TestExporterEMSA(unittest.TestCase):
         calibration = CalibrationLinear('Energy', 'eV', 2.49985, -237.098251)
         detector = DetectorSpectrometerXEDS(4096, calibration,
                                             technology=XEDS_TECHNOLOGY_SDD,
-                                            nominal_throughput=(180.0, 'kcps'),
+                                            nominal_throughput=(180.0, 'kcounts/s'),
                                             strobe_rate=2000.0,
                                             signal_type=SIGNAL_TYPE_EDS,
                                             manufacturer='Bruker AXS',

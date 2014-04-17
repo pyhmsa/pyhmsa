@@ -105,9 +105,9 @@ class TestDataFileReader(unittest.TestCase):
         self.assertAlmostEqual(2000.0, detector.strobe_rate, 4)
         self.assertEqual('Hz', detector.strobe_rate.unit)
         self.assertAlmostEqual(180.0, detector.nominal_throughput, 4)
-        self.assertEqual('kcps', detector.nominal_throughput.unit)
+        self.assertEqual('kcounts/s', detector.nominal_throughput.unit)
         self.assertAlmostEqual(40.0, detector.elevation, 4)
-        self.assertEqual(u'\u00b0', detector.elevation.unit)
+        self.assertEqual('degrees', detector.elevation.unit)
 
         ## Data
         data = datafile.data
@@ -152,7 +152,7 @@ class TestDataFileWriter(unittest.TestCase):
         calibration = CalibrationLinear('Energy', 'eV', 2.49985, -237.098251)
         detector = DetectorSpectrometerXEDS(4096, calibration,
                                             technology=XEDS_TECHNOLOGY_SDD,
-                                            nominal_throughput=(180.0, 'kcps'),
+                                            nominal_throughput=(180.0, 'kcounts/s'),
                                             strobe_rate=2000.0,
                                             signal_type=SIGNAL_TYPE_EDS,
                                             manufacturer='Bruker AXS',
@@ -234,9 +234,9 @@ class TestDataFileWriter(unittest.TestCase):
         self.assertEqual('2000.0', element.find('StrobeRate').text)
         self.assertEqual('Hz', element.find('StrobeRate').get('Unit'))
         self.assertEqual('180.0', element.find('NominalThroughput').text)
-        self.assertEqual('kcps', element.find('NominalThroughput').get('Unit'))
+        self.assertEqual('kcounts/s', element.find('NominalThroughput').get('Unit'))
         self.assertEqual('40.0', element.find('Elevation').text)
-        self.assertEqual(u'\u00b0', element.find('Elevation').get('Unit'))
+        self.assertEqual('degrees', element.find('Elevation').get('Unit'))
 
         ## Data
         element = root.find('Data/Analysis')

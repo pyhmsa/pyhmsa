@@ -106,7 +106,7 @@ class _ExporterEMSAThread(_ExporterThread):
                 lines += self._create_keyword_line('BEAMKV', beamkv)
 
             if probe.emission_current is not None:
-                emission = float(convert_unit(u'\u00b5A', probe.emission_current))
+                emission = float(convert_unit('uA', probe.emission_current))
                 lines += self._create_keyword_line('EMISSION', emission)
 
             if probe.beam_current is not None:
@@ -166,11 +166,11 @@ class _ExporterEMSAThread(_ExporterThread):
             lines += self._create_keyword_line('ELSDET', elsdet)
 
         if detector.elevation is not None:
-            elevangle = float(convert_unit(u'\u00b0', detector.elevation))
+            elevangle = float(convert_unit('degrees', detector.elevation))
             lines += self._create_keyword_line('ELEVANGLE', elevangle)
 
         if detector.azimuth is not None:
-            azimangle = float(convert_unit(u'\u00b0', detector.azimuth))
+            azimangle = float(convert_unit('degrees', detector.azimuth))
             lines += self._create_keyword_line('AZIMANGLE', azimangle)
 
         if detector.solid_angle is not None:

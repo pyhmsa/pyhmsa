@@ -30,7 +30,7 @@ class TestSpecimenPositionXMLHandler(unittest.TestCase):
 
         self.obj = SpecimenPosition(0.0, 0.0, 10.0, 90.0, 70.0)
 
-        source = u'<SpecimenPosition><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z><R Unit="\u00b0" DataType="float">90.0</R><T Unit="\u00b0" DataType="float">70.0</T></SpecimenPosition>'
+        source = '<SpecimenPosition><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z><R Unit="degrees" DataType="float">90.0</R><T Unit="degrees" DataType="float">70.0</T></SpecimenPosition>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -48,9 +48,9 @@ class TestSpecimenPositionXMLHandler(unittest.TestCase):
         self.assertAlmostEqual(10.0, obj.z, 4)
         self.assertEqual('mm', obj.z.unit)
         self.assertAlmostEqual(90.0, obj.r, 4)
-        self.assertEqual(u'\u00b0', obj.r.unit)
+        self.assertEqual('degrees', obj.r.unit)
         self.assertAlmostEqual(70.0, obj.t, 4)
-        self.assertEqual(u'\u00b0', obj.t.unit)
+        self.assertEqual('degrees', obj.t.unit)
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
