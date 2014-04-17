@@ -116,5 +116,8 @@ setup(name='pyHMSA',
             'ImageRaster2DHyperimage = pyhmsa.fileformat.xmlhandler.datum.imageraster:ImageRaster2DHyperimageXMLHandler',
              ],
          'pyhmsa.fileformat.importer':
-            ['ESMA = pyhmsa.fileformat.importer.emsa:ImporterEMSA']},
+            ['EMSA = pyhmsa.fileformat.importer.emsa:ImporterEMSA'],
+         'pyhmsa.fileformat.exporter':
+            ['EMSA = pyhmsa.fileformat.exporter.emsa:ExporterEMSA'],
+        },
      )
