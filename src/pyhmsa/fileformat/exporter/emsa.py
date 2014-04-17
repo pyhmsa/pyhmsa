@@ -78,7 +78,7 @@ class _ExporterEMSAThread(_ExporterThread):
         lines += self._create_keyword_line('TITLE', header.title)
         lines += self._create_keyword_line('DATE', header.date.strftime('%d-%b-%Y'))
         lines += self._create_keyword_line('TIME', header.time.strftime('%H:%M'))
-        lines += self._create_keyword_line('OWNER', header.owner)
+        lines += self._create_keyword_line('OWNER', header.author)
         lines += self._create_keyword_line('NPOINTS', len(datum))
         lines += self._create_keyword_line('NCOLUMNS', self._NCOLUMNS)
         lines += self._create_keyword_line('XUNITS', detector.calibration.unit)
