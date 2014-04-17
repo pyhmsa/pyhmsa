@@ -30,7 +30,7 @@ import threading
 class _MonitorableThread(threading.Thread):
 
     def __init__(self, group=None, target=None, name=None,
-                 args=(), kwargs=None, *, daemon=None):
+                 args=(), kwargs=None):
         threading.Thread.__init__(self, group, target, name, args, kwargs)
 
         self._progress = 0.0
@@ -38,6 +38,12 @@ class _MonitorableThread(threading.Thread):
         self._exception = None
         self._cancel_event = threading.Event()
         self._result = None
+
+        # Note: Requires in Python 2 only
+        self._args = args
+        if kwargs is None:
+            kwargs = {}
+        self._kwargs = kwargs
 
     def _update_status(self, progress, status):
         self._progress = progress
