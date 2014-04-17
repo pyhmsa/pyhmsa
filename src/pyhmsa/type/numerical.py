@@ -17,9 +17,10 @@
 import numpy as np
 
 # Local modules.
-from pyhmsa.type.unit import validate_unit
+from pyhmsa.type.unit import validate_unit, parse_unit
 
 # Globals and constants variables.
+from pyhmsa.type.unit import  _PREFIXES_VALUES
 
 _SUPPORTED_DTYPES = frozenset(map(np.dtype, [np.uint8, np.int16, np.uint16,
                                              np.int32, np.uint32, np.int64,
@@ -96,3 +97,28 @@ def convert_value(value, unit=None):
         unit = value.unit or unit
 
     return arrayunit(value.shape, value.dtype, value, unit=unit)
+
+def convert_unit(newunit, value, oldunit=None):
+    if oldunit is None:
+        oldunit = value.unit
+
+    newprefix, newbaseunit, newexponent = parse_unit(newunit)
+    oldprefix, oldbaseunit, oldexponent = parse_unit(oldunit)
+
+    if newbaseunit != oldbaseunit:
+        raise ValueError('Base units must match: %s != %s' % \
+                         (newbaseunit, oldbaseunit))
+    if newexponent != oldexponent:
+        raise ValueError('Exponents must match: %s != %s' % \
+                         (newexponent, oldexponent))
+
+    newprefix_value = _PREFIXES_VALUES.get(newprefix, 1.0)
+    oldprefix_value = _PREFIXES_VALUES.get(oldprefix, 1.0)
+
+    factor = oldprefix_value ** oldexponent / newprefix_value ** oldexponent
+    newvalue = value * factor
+
+    if hasattr(value, 'unit'):
+        newvalue = convert_value(newvalue, newunit)
+
+    return newvalue

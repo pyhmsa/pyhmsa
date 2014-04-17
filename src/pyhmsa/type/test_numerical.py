@@ -10,7 +10,7 @@ import pickle
 import numpy as np
 
 # Local modules.
-from pyhmsa.type.numerical import convert_value, validate_dtype
+from pyhmsa.type.numerical import convert_value, validate_dtype, convert_unit
 
 # Globals and constants variables.
 
@@ -72,6 +72,20 @@ class TestModule(unittest.TestCase):
         self.assertEqual(np.uint32, x.dtype.type)
 
         self.assertRaises(ValueError, convert_value, np.int8(5.0))
+
+    def testconvert_unit(self):
+        u = convert_value(5.0, 'km')
+        v = convert_unit('m', u)
+        self.assertAlmostEqual(5000.0, v, 4)
+        self.assertEqual('m', v.unit)
+
+        u = convert_value(5.0, 'km')
+        v = convert_unit('km', u)
+        self.assertAlmostEqual(5.0, v, 4)
+        self.assertEqual('km', v.unit)
+
+        v = convert_unit('m', 5.0, 'km')
+        self.assertAlmostEqual(5000.0, v, 4)
 
 class Testarrayunit(unittest.TestCase):
 

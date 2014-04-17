@@ -65,6 +65,11 @@ _UNITS = _SI_UNITS | _SI_DERIVED_UNITS | _NON_SI_UNITS
 _PREFIXES = frozenset(['Y', 'Z', 'E', 'P', 'T', 'G', 'M', 'k',
                       'm', u'\u00b5', 'n', 'p', 'f', 'a', 'z', 'y'])
 
+_PREFIXES_VALUES = {'Y': 1e24, 'Z': 1e21, 'E': 1e18, 'P': 1e15, 'T': 1e12,
+                    'G': 1e9, 'M': 1e6, 'k': 1e3, 'm': 1e-3, u'\u00b5': 1e-6,
+                    'n': 1e-9, 'p': 1e-12, 'f': 1e-15, 'a': 1e-18, 'z': 1e-21,
+                    'y': 1e-24}
+
 _PATTERN = r'\A'
 _PATTERN += '(?P<prefix>' + '|'.join(_PREFIXES) + ')?'
 _PATTERN += '(?P<unit>' + '|'.join(_UNITS) + ')'
@@ -73,14 +78,19 @@ _PATTERN += r'\Z'
 
 _RE_PATTERN = re.compile(_PATTERN, re.UNICODE)
 
-def validate_unit(unit):
+def parse_unit(unit):
     match = _RE_PATTERN.match(unit)
     if match is None:
         raise ValueError('Invalid unit: %s' % unit)
 
     prefix = match.group('prefix')
     baseunit = match.group('unit')
-#    exponent = match.group('exponent')
+    exponent = float(match.group('exponent') or 1.0)
+
+    return prefix, baseunit, exponent
+
+def validate_unit(unit):
+    prefix, baseunit, _ = parse_unit(unit)
 
     # Special cases
     if baseunit == 'g' and prefix in ['Y', 'Z', 'E', 'P', 'T', 'G', 'M']:
