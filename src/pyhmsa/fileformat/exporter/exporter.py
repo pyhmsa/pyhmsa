@@ -48,7 +48,7 @@ class _Exporter(_Monitorable):
     def validate(self, datafile, filepath):
         ext = os.path.splitext(filepath)[1]
         if ext not in self.SUPPORTED_EXTENSIONS:
-            raise ValueError('%s is not a valid extension' % ext)
+            raise ValueError('%s is not a supported extension' % ext)
 
     def can_export(self, datafile, filepath):
         try:

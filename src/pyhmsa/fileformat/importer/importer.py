@@ -71,8 +71,18 @@ class _Importer(_Monitorable):
         args = (filepath,) + args
         _Monitorable._create_thread(self, *args, **kwargs)
 
+    def validate(self, filepath):
+        ext = os.path.splitext(filepath)[1]
+        if ext not in self.SUPPORTED_EXTENSIONS:
+            raise ValueError('%s is not a supported extension' % ext)
+
     def can_import(self, filepath):
-        return os.path.splitext(filepath)[1] in self.SUPPORTED_EXTENSIONS
+        try:
+            self.validate(filepath)
+        except:
+            return False
+        else:
+            return True
 
     def import_(self, filepath):
         """
