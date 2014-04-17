@@ -12,7 +12,7 @@
 """
 
 # Standard library modules.
-from collections import MutableMapping
+from collections import MutableMapping, KeysView, ValuesView, ItemsView
 import fnmatch
 import inspect
 import copy
@@ -84,32 +84,21 @@ class _IdentifierDict(MutableMapping):
         c.update(self)
         return c
 
-    def findkeys(self, match):
+    def _find(self, match):
         if isinstance(match, str):
-            return frozenset(key for key, value in self.items() \
-                             if fnmatch.fnmatch(key, match))
+            return dict((key, value) for key, value in self.items() \
+                        if fnmatch.fnmatch(key, match))
         elif inspect.isclass(match):
-            return frozenset(key for key, value in self.items() \
-                             if isinstance(value, match))
+            return dict((key, value) for key, value in self.items() \
+                        if isinstance(value, match))
         else:
             raise ValueError("Specify an identifier or class")
+
+    def findkeys(self, match):
+        return KeysView(self._find(match))
 
     def findvalues(self, match):
-        if isinstance(match, str):
-            return frozenset(value for key, value in self.items() \
-                             if fnmatch.fnmatch(key, match))
-        elif inspect.isclass(match):
-            return frozenset(value for value in self.values() \
-                             if isinstance(value, match))
-        else:
-            raise ValueError("Specify an identifier or class")
+        return ValuesView(self._find(match))
 
     def finditems(self, match):
-        if isinstance(match, str):
-            return frozenset((key, value) for key, value in self.items() \
-                             if fnmatch.fnmatch(key, match))
-        elif inspect.isclass(match):
-            return frozenset((key, value) for key, value in self.items() \
-                             if isinstance(value, match))
-        else:
-            raise ValueError("Specify an identifier or class")
+        return ItemsView(self._find(match))
