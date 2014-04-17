@@ -133,7 +133,7 @@ class DataFile(object):
         from pyhmsa.fileformat.datafile import DataFileWriter
         writer = DataFileWriter()
         writer.write(self, filepath)
-        writer.wait()
+        writer.join()
 
     @property
     def header(self):
