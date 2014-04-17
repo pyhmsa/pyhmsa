@@ -102,7 +102,8 @@ class _ImporterEMSAThread(_ImporterThread):
             self._update_status(0.7, 'Extracting detector')
             datafile.conditions.update(self._extract_detector(keywords))
 
-            datum = Analysis1D(len(buffer), buffer=np.ravel(buffer),
+            datum = Analysis1D(len(buffer), dtype=buffer.dtype,
+                               buffer=np.ravel(buffer),
                                conditions=datafile.conditions)
             datafile.data['Spectrum'] = datum
         finally:
