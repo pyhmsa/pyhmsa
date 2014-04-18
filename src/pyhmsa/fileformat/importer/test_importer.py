@@ -39,8 +39,7 @@ class TestImporter(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        extra_datafile = DataFile()
-        self.imp = ImporterMock(extra_datafile)
+        self.imp = ImporterMock(search_home=False)
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -53,7 +52,7 @@ class TestImporter(unittest.TestCase):
     def test_update_extra(self):
         extra_datafile = DataFile()
         extra_datafile.header.author = 'Me'
-        imp = ImporterMock(extra_datafile)
+        imp = ImporterMock(extra_datafile, search_home=False)
 
         imp.import_('file.abc')
         datafile = imp.get()

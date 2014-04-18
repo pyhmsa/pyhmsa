@@ -42,15 +42,17 @@ class _Importer(_Monitorable):
 
     SUPPORTED_EXTENSIONS = ()
 
-    def __init__(self, extra_datafile=None):
+    def __init__(self, extra_datafile=None, search_home=True):
         _Monitorable.__init__(self)
 
         if extra_datafile is None:
+            extra_datafile = DataFile()
+
+        if search_home:
             filepath = os.path.expanduser('~/.pyhmsa/importer_extra.xml')
             if os.path.exists(filepath):
-                extra_datafile = DataFile.read(filepath)
-            else:
-                extra_datafile = DataFile()
+                extra_datafile.update(DataFile.read(filepath))
+
         self._extra_datafile = extra_datafile
 
     def _update_extra(self, datafile):
