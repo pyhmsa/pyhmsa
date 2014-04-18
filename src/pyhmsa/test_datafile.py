@@ -139,6 +139,18 @@ class TestDataFile(unittest.TestCase):
 
         shutil.rmtree(tmpdir, ignore_errors=True)
 
+    def testupdate(self):
+        datafile = DataFile()
+        datafile.header.title = 'Update'
+        datafile.conditions['cond'] = ElementalID(13)
+        datafile.data['datum'] = Analysis0D(1.0)
+
+        self.datafile.update(datafile)
+
+        self.assertEqual('Update', datafile.header.title)
+        self.assertEqual(13, datafile.conditions['cond'].atomic_number)
+        self.assertAlmostEqual(1.0, float(datafile.data['datum']), 4)
+
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

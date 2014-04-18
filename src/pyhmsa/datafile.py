@@ -135,6 +135,11 @@ class DataFile(object):
         writer.write(self, filepath)
         writer.join()
 
+    def update(self, datafile):
+        self._header.update(datafile.header)
+        self._conditions.update(datafile.conditions)
+        self._data.update(datafile.data)
+
     @property
     def header(self):
         """
