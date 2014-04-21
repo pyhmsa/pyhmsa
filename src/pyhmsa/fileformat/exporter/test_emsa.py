@@ -85,7 +85,7 @@ class TestExporterEMSA(unittest.TestCase):
         with open(filepath, 'r') as fp:
             lines = fp.readlines()
 
-        self.assertEqual(277, len(lines))
+        self.assertEqual(278, len(lines))
 
     def testcan_export(self):
         datafile = self._create_datafile()
