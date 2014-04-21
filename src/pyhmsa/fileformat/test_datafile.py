@@ -44,16 +44,14 @@ class TestDataFileReader(unittest.TestCase):
 
         testdatadir = os.path.join(os.path.dirname(__file__), '..', 'testdata')
         self.filepath = os.path.join(testdatadir, 'breccia_eds.xml')
-        self.reader = DataFileReader()
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
 
     def testreader1(self):
-        self.reader.read(self.filepath)
-        datafile = self.reader.get()
-        self.assertEqual(1.0, self.reader.progress)
-        self.assertEqual('Completed', self.reader.status)
+        reader = DataFileReader()
+        reader.read(self.filepath)
+        datafile = reader.get()
 
         ## Root
         self.assertEqual('1.0', datafile.version)
@@ -121,18 +119,17 @@ class TestDataFileReader(unittest.TestCase):
         self.assertEqual(395, analysis[-1])
 
     def testreader2(self):
-        self.reader.read(self.filepath)
-        self.reader.cancel()
-        self.assertEqual(1.0, self.reader.progress)
-        self.assertEqual('Cancelled', self.reader.status)
-        self.assertRaises(RuntimeError, self.reader.get)
+        reader = DataFileReader()
+        reader.read(self.filepath)
+        reader.cancel()
+        self.assertEqual(1.0, reader.progress)
+        self.assertEqual('Cancelled', reader.status)
 
 class TestDataFileWriter(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        # Create datafile
         self.datafile = DataFile()
         self.datafile.header.title = 'Breccia - EDS sum spectrum'
         self.datafile.header.date = datetime.date(2013, 7, 29)
@@ -165,9 +162,6 @@ class TestDataFileWriter(unittest.TestCase):
                               buffer=np.arange(4096, dtype=np.int32))
         self.datafile.data['EDS sum spectrum'] = analysis
 
-        # Writer
-        self.writer = DataFileWriter()
-
     def tearDown(self):
         unittest.TestCase.tearDown(self)
 
@@ -176,11 +170,12 @@ class TestDataFileWriter(unittest.TestCase):
         tmpdir = tempfile.mkdtemp()
         xmlfilepath = os.path.join(tmpdir, 'breccia_eds.xml')
         hmsafilepath = os.path.join(tmpdir, 'breccia_eds.hmsa')
-        self.writer.write(self.datafile, xmlfilepath)
-        self.writer.join()
+        writer = DataFileWriter()
+        writer.write(self.datafile, xmlfilepath)
+        writer.join()
 
-        self.assertEqual(1.0, self.writer.progress)
-        self.assertEqual('Completed', self.writer.status)
+        self.assertEqual(1.0, writer.progress)
+        self.assertEqual('Completed', writer.status)
 
         # Test
         with open(xmlfilepath, 'rb') as fp:

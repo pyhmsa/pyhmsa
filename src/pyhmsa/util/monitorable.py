@@ -55,6 +55,7 @@ class _MonitorableThread(threading.Thread):
     def start(self):
         self._exception = None
         self._cancel_event.clear()
+        self._result = None
 
         threading.Thread.start(self)
 
