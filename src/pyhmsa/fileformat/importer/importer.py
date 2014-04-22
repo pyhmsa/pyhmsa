@@ -22,6 +22,7 @@ __license__ = "GPL v3"
 import os
 
 # Third party modules.
+from pkg_resources import iter_entry_points
 
 # Local modules.
 from pyhmsa.datafile import DataFile
@@ -101,3 +102,30 @@ class _Importer(_Monitorable):
         datafile = _Monitorable.get(self)
         self._update_extra(datafile)
         return datafile
+
+def find_importers(filepath, extra_datafile=None, search_home=True, *args, **kwargs):
+    # Load importers
+    importers = {}
+    for entry_point in iter_entry_points('pyhmsa.fileformat.importer'):
+        importer = entry_point.load()(extra_datafile=extra_datafile,
+                                      search_home=search_home,
+                                      *args, **kwargs)
+        for ext in importer.SUPPORTED_EXTENSIONS:
+            importers.setdefault(ext, []).append(importer)
+
+    # Find importers
+    ext = os.path.splitext(filepath)[1]
+    return list(filter(lambda v: v.can_import(filepath), importers.get(ext, [])))
+
+def import_(filepath, extra_datafile=None, search_home=True, *args, **kwargs):
+    importers = find_importers(filepath, extra_datafile, search_home, *args, **kwargs)
+
+    if not importers:
+        raise ValueError('No possible importer for %s' % filepath)
+    if len(importers) > 1:
+        raise ValueError('Too many importers for %s' % filepath)
+
+    importer = importers[0]
+    importer.import_(filepath)
+    return importer.get()
+
