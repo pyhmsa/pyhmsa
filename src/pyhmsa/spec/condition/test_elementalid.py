@@ -23,6 +23,13 @@ class TestElementalID(unittest.TestCase):
     def tearDown(self):
         unittest.TestCase.tearDown(self)
 
+    def testskeleton(self):
+        element = ElementalID(symbol='Na')
+        self.assertEqual(11, element.atomic_number)
+        self.assertEqual('Na', element.symbol)
+
+        self.assertRaises(ValueError, ElementalID)
+
     def testz(self):
         self.assertEqual(11, self.element.atomic_number)
 

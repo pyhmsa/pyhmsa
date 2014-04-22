@@ -30,7 +30,7 @@ class ElementalID(_Condition):
 
     atomic_number = AtomicNumberAttribute(True, 'Element', "atomic number")
 
-    def __init__(self, atomic_number):
+    def __init__(self, atomic_number=None, symbol=None):
         """
         Defines and elemental identification, as may be useful for region of
         interest images, XAFS spectral maps, and the like.
@@ -39,7 +39,12 @@ class ElementalID(_Condition):
         """
         _Condition.__init__(self)
 
-        self.atomic_number = atomic_number
+        if atomic_number is not None:
+            self.atomic_number = atomic_number
+        elif symbol is not None:
+            self.symbol = symbol
+        else:
+            raise ValueError('Atomic number or symbol is required')
 
     def get_symbol(self):
         """
@@ -59,7 +64,7 @@ class ElementalIDXray(ElementalID):
     line = XRayLineAttribute(NOTATION_SIEGBAHN, True, 'Line', 'x-ray line')
     energy = NumericalAttribute('eV', False, 'Energy', 'energy of x-ray line')
 
-    def __init__(self, atomic_number, line, energy=None):
+    def __init__(self, atomic_number=None, line=None, energy=None, symbol=None):
         """
         Defines and elemental identification based on an x-ray peak, as may be
         useful for region of interest images and the like.
@@ -68,7 +73,9 @@ class ElementalIDXray(ElementalID):
         :arg line: x-ray line (required)
         :arg energy: energy of x-ray line (optional)
         """
-        ElementalID.__init__(self, atomic_number)
+        ElementalID.__init__(self, atomic_number, symbol)
 
+        if line is None:
+            raise ValueError('x-ray line is required')
         self.line = line
         self.energy = energy
