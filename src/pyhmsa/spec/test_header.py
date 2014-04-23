@@ -5,6 +5,7 @@
 import unittest
 import logging
 import pickle
+import datetime
 
 # Third party modules.
 
@@ -122,6 +123,12 @@ class TestHeader(unittest.TestCase):
         self.header.checksum = checksum
         self.assertEqual('53AAD59C05D59A40AD746D6928EA6D2D526865FD', self.header.checksum.value)
         self.assertRaises(ValueError, self.header.set_checksum, '53AAD59C05D59A40AD746D6928EA6D2D526865FD')
+
+    def testdatetime(self):
+        dt = datetime.datetime(2014, 4, 22, 7, 59, 23)
+        self.header.datetime = dt
+
+        self.assertEqual(dt, self.header.datetime)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

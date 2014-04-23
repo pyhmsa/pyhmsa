@@ -14,6 +14,7 @@
 # Standard library modules.
 from collections import MutableMapping, Mapping
 from abc import ABCMeta
+import datetime
 
 # Third party modules.
 
@@ -115,3 +116,15 @@ class Header(_BaseHeader):
         for key, value in kwds.items():
             if value is not None:
                 self[key] = value
+
+    def set_datetime(self, dt):
+        self.date = dt.date()
+        self.time = dt.time()
+
+    def get_datetime(self):
+        date = self.date
+        time = self.time
+        return datetime.datetime(date.year, date.month, date.day,
+                                 time.hour, time.minute, time.second, time.microsecond)
+
+    datetime = property(get_datetime, set_datetime)
