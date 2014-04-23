@@ -1,0 +1,7 @@
+Types
+=====
+
+.. toctree::
+   :glob:
+   
+   type/*
