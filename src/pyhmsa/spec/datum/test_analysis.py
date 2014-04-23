@@ -62,6 +62,10 @@ class TestAnalysis1D(unittest.TestCase):
         datum = datum[:3]
         self.assertEqual(3, datum.channels)
 
+    def testget_xy(self):
+        xy = self.datum.get_xy()
+        print(xy)
+
 class TestAnalysis2D(unittest.TestCase):
 
     def setUp(self):

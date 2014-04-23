@@ -18,6 +18,7 @@ import numpy as np
 
 # Local modules.
 from pyhmsa.spec.datum.datum import _Datum
+from pyhmsa.spec.condition.detector import DetectorSpectrometer
 
 # Globals and constants variables.
 
@@ -61,6 +62,27 @@ class Analysis1D(_Analysis):
         shape = (channels,)
         return _Analysis.__new__(cls, shape, dtype,
                                  buffer, offset, strides, order, conditions)
+
+    def get_xy(self, with_labels=False):
+        xs = range(self.channels)
+        xlabel = 'Channels'
+        ylabel = 'Values'
+
+        conditions = self.conditions.findvalues(DetectorSpectrometer)
+        if conditions:
+            condition = next(iter(conditions))
+            calibration = condition.calibration
+            xs = list(map(calibration, xs))
+            xlabel = '%s (%s)' % (calibration.quantity, calibration.unit)
+            if condition.measurement_unit is not None:
+                ylabel += ' (%s)' % condition.measurement_unit
+
+        outarr = np.transpose(np.array([xs, self], self.dtype))
+
+        if with_labels:
+            return xlabel, ylabel, outarr
+        else:
+            return outarr
 
     @property
     def channels(self):
