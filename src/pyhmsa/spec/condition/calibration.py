@@ -90,7 +90,9 @@ class CalibrationLinear(_Calibration):
         self.offset = offset
 
     def __call__(self, index):
-        return np.poly1d([self.gain, self.offset])(index)
+        if not hasattr(self, '_func'):
+            self._func = np.poly1d([self.gain, self.offset])
+        return self._func(index)
 
 class CalibrationPolynomial(_Calibration):
 
@@ -112,7 +114,9 @@ class CalibrationPolynomial(_Calibration):
         self.coefficients = coefficients
 
     def __call__(self, index):
-        return np.poly1d(self.coefficients)(index)
+        if not hasattr(self, '_func'):
+            self._func = np.poly1d(self.coefficients)
+        return self._func(index)
 
 class CalibrationExplicit(_Calibration):
 

@@ -43,6 +43,8 @@ class TestCalibrationConstantXMLHandler(unittest.TestCase):
         self.assertEqual('Energy', obj.quantity)
         self.assertEqual('eV', obj.unit)
         self.assertAlmostEqual(-237.098251, obj.value, 6)
+        self.assertAlmostEqual(-237.098251, obj(0), 4)
+        self.assertAlmostEqual(-237.098251, obj(1), 4)
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
@@ -82,6 +84,8 @@ class TestCalibrationLinearXMLHandler(unittest.TestCase):
         self.assertEqual('eV', obj.unit)
         self.assertAlmostEqual(2.49985, obj.gain, 6)
         self.assertAlmostEqual(-237.098251, obj.offset, 6)
+        self.assertAlmostEqual(-237.098251, obj(0), 4)
+        self.assertAlmostEqual(-237.098251 + 2.49985, obj(1), 4)
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
@@ -125,6 +129,8 @@ class TestCalibrationPolynomialXMLHandler(unittest.TestCase):
         self.assertAlmostEqual(0.677, obj.coefficients[1], 4)
         self.assertAlmostEqual(0.134, obj.coefficients[2], 4)
         self.assertAlmostEqual(-0.018, obj.coefficients[3], 4)
+        self.assertAlmostEqual(-0.018, obj(0), 4)
+        self.assertAlmostEqual(-1.432, obj(1), 4)
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
@@ -168,6 +174,10 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
         self.assertAlmostEqual(0.677, obj.values[1], 4)
         self.assertAlmostEqual(0.134, obj.values[2], 4)
         self.assertAlmostEqual(-0.018, obj.values[3], 4)
+        self.assertAlmostEqual(-2.225, obj(0), 4)
+        self.assertAlmostEqual(0.677, obj(1), 4)
+        self.assertAlmostEqual(0.134, obj(2), 4)
+        self.assertAlmostEqual(-0.018, obj(3), 4)
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
