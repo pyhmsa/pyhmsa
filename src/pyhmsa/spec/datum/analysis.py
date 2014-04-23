@@ -77,7 +77,7 @@ class Analysis1D(_Analysis):
             if condition.measurement_unit is not None:
                 ylabel += ' (%s)' % condition.measurement_unit
 
-        outarr = np.transpose(np.array([xs, self], self.dtype))
+        outarr = np.transpose(np.array([xs, self]))
 
         if with_labels:
             return xlabel, ylabel, outarr
