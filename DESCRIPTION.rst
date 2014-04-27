@@ -1,6 +1,3 @@
-pyHMSA
-======
-
 pyHMSA is a pure Python implementation of the MSA / MAS / AMAS HyperDimensional 
 Data File (HMSA, for short) specifications. 
 This file format is intended to be a common exchange format for microscopy and 
@@ -15,4 +12,4 @@ to represent the multi-dimensional data.
 
 pyHMSA is written to support both Python 2 and 3.
 
-The library is provided under the MIT :ref:`license`.
+The library is provided under the MIT license.
