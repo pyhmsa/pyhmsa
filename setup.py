@@ -2,6 +2,8 @@
 
 # Standard library modules.
 import os
+import re
+import codecs
 import zipfile
 from distutils.cmd import Command
 
@@ -11,6 +13,24 @@ from setuptools import setup, find_packages
 # Local modules.
 
 # Globals and constants variables.
+basedir = os.path.abspath(os.path.dirname(__file__))
+
+# Read the version number from a source file.
+# Why read it, and not import?
+# see https://groups.google.com/d/topic/pypa-dev/0PkjVpcxTzQ/discussion
+def find_version(*file_paths):
+    # Open in Latin-1 so that we avoid encoding errors.
+    # Use codecs.open for Python 2 compatibility
+    with codecs.open(os.path.join(basedir, *file_paths), 'r', 'latin1') as f:
+        version_file = f.read()
+
+    # The version line must have the form
+    # __version__ = 'ver'
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
 
 class TestDataCommand(Command):
 
@@ -42,14 +62,34 @@ class TestDataCommand(Command):
                     arcname = os.path.relpath(filename, basepath)
                     z.write(filename, arcname)
 
+# Get the long description from the relevant file
+with codecs.open('DESCRIPTION.rst', encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(name='pyHMSA',
-      version='0.1',
+      version=find_version('src', 'pyhmsa', '__init__.py'),
       description='Python implementation of the MSA / MAS / AMAS Hyper-Dimensional Data File specification',
+      long_description=long_description,
+
       author='Philippe Pinard',
       author_email='philippe.pinard@gmail.com',
-      url='https://bitbucket.org/microanalysis/pyhmsa',
+
+      url='http://pyhmsa.readthedocs.org',
       license='MIT',
       keywords='microscopy microanalysis hmsa file format',
+
+      classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'Operating System :: OS Independent',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Topic :: Scientific/Engineering :: Physics',
+    ],
 
       packages=find_packages('src'),
       package_dir={'':'src'},
