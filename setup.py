@@ -15,10 +15,15 @@ from setuptools import setup, find_packages
 # Globals and constants variables.
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
-# Read the version number from a source file.
-# Why read it, and not import?
-# see https://groups.google.com/d/topic/pypa-dev/0PkjVpcxTzQ/discussion
 def find_version(*file_paths):
+    """
+    Read the version number from a source file.
+
+    .. note::
+
+       Why read it, and not import?
+       see https://groups.google.com/d/topic/pypa-dev/0PkjVpcxTzQ/discussion
+    """
     # Open in Latin-1 so that we avoid encoding errors.
     # Use codecs.open for Python 2 compatibility
     with codecs.open(os.path.join(BASEDIR, *file_paths), 'r', 'latin1') as f:
@@ -88,7 +93,7 @@ setup(name='pyHMSA',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Topic :: Scientific/Engineering :: Physics',
-    ],
+        ],
 
       packages=find_packages(),
       namespace_packages=['pyhmsa'],
