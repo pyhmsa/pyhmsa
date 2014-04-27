@@ -13,7 +13,7 @@ from setuptools import setup, find_packages
 # Local modules.
 
 # Globals and constants variables.
-basedir = os.path.abspath(os.path.dirname(__file__))
+BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
 # Read the version number from a source file.
 # Why read it, and not import?
@@ -21,7 +21,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 def find_version(*file_paths):
     # Open in Latin-1 so that we avoid encoding errors.
     # Use codecs.open for Python 2 compatibility
-    with codecs.open(os.path.join(basedir, *file_paths), 'r', 'latin1') as f:
+    with codecs.open(os.path.join(BASEDIR, *file_paths), 'r', 'latin1') as f:
         version_file = f.read()
 
     # The version line must have the form
@@ -50,8 +50,7 @@ class TestDataCommand(Command):
         if not os.path.exists(self.dist_dir):
             os.makedirs(self.dist_dir)
 
-        basepath = os.path.dirname(__file__)
-        testdatapath = os.path.join(basepath, 'src', 'pyhmsa', 'testdata')
+        testdatapath = os.path.join(BASEDIR, 'pyhmsa', 'testdata')
 
         zipfilename = self.distribution.get_fullname() + '-testdata.zip'
         zipfilepath = os.path.join(self.dist_dir, zipfilename)
@@ -59,7 +58,7 @@ class TestDataCommand(Command):
             for root, _, files in os.walk(testdatapath):
                 for file in files:
                     filename = os.path.join(root, file)
-                    arcname = os.path.relpath(filename, basepath)
+                    arcname = os.path.relpath(filename, BASEDIR)
                     z.write(filename, arcname)
 
 # Get the long description from the relevant file
@@ -67,7 +66,7 @@ with codecs.open('DESCRIPTION.rst', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='pyHMSA',
-      version=find_version('src', 'pyhmsa', '__init__.py'),
+      version=find_version('pyhmsa', '__init__.py'),
       description='Python implementation of the MSA / MAS / AMAS Hyper-Dimensional Data File specification',
       long_description=long_description,
 
@@ -91,8 +90,7 @@ setup(name='pyHMSA',
         'Topic :: Scientific/Engineering :: Physics',
     ],
 
-      packages=find_packages('src'),
-      package_dir={'':'src'},
+      packages=find_packages(),
       namespace_packages=['pyhmsa'],
 
       install_requires=['numpy'],
