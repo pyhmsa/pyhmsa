@@ -2,5 +2,5 @@ syntax: glob
 
 build
 dist
-src/*.egg-info
-src/pyhmsa/testdata
+*.egg-info
+pyhmsa/testdata
