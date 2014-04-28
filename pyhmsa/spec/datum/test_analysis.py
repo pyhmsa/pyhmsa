@@ -64,7 +64,8 @@ class TestAnalysis1D(unittest.TestCase):
 
     def testget_xy(self):
         xy = self.datum.get_xy()
-        print(xy)
+        self.assertEqual(5, len(xy))
+        self.assertEqual(2, xy.shape[1])
 
 class TestAnalysis2D(unittest.TestCase):
 
