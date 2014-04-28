@@ -20,6 +20,7 @@ __license__ = "GPL v3"
 
 # Standard library modules.
 import os
+import logging
 
 # Third party modules.
 from pkg_resources import iter_entry_points
@@ -50,8 +51,10 @@ class _Importer(_Monitorable):
             extra_datafile = DataFile()
 
         if search_home:
+            logging.debug('Searching home for ~/.pyhmsa/importer_extra.xml')
             filepath = os.path.expanduser('~/.pyhmsa/importer_extra.xml')
             if os.path.exists(filepath):
+                logging.debug('Found ~/.pyhmsa/importer_extra.xml')
                 extra_datafile.update(DataFile.read(filepath))
 
         self._extra_datafile = extra_datafile

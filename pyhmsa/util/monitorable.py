@@ -19,7 +19,9 @@ __copyright__ = "Copyright (c) 2014 Philippe T. Pinard"
 __license__ = "GPL v3"
 
 # Standard library modules.
+import sys
 import threading
+import logging
 
 # Third party modules.
 
@@ -46,6 +48,7 @@ class _MonitorableThread(threading.Thread):
         self._kwargs = kwargs
 
     def _update_status(self, progress, status):
+        logging.debug('In %s: %s (%s%%)', self.name, status, progress * 100.0)
         self._progress = progress
         self._status = status
 
@@ -57,6 +60,7 @@ class _MonitorableThread(threading.Thread):
         self._cancel_event.clear()
         self._result = None
 
+        logging.debug('Starting %s' % self.name)
         threading.Thread.start(self)
 
         self._progress = 0.0
@@ -71,6 +75,8 @@ class _MonitorableThread(threading.Thread):
         except Exception as ex:
             self._update_status(1.0, 'Error')
             self._cancel_event.set()
+            if not hasattr(ex, '__traceback__'):
+                ex.__traceback__ = sys.exc_info()[2]
             self._exception = ex
             return
 
