@@ -98,7 +98,7 @@ setup(name='pyHMSA',
       packages=find_packages(),
       namespace_packages=['pyhmsa'],
 
-      install_requires=['numpy'],
+      install_requires=['numpy', 'six'],
       setup_requires=['nose', 'coverage'],
       tests_require=['Pillow'],
 

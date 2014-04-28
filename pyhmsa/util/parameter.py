@@ -18,6 +18,7 @@ from collections import OrderedDict
 
 # Third party modules.
 import numpy as np
+import six
 
 # Local modules.
 from pyhmsa.type.numerical import convert_value
@@ -124,7 +125,7 @@ class NumericalAttribute(_Attribute):
     def _prepare_value(self, value):
         if isinstance(value, tuple) and \
                 len(value) == 2 and \
-                (isinstance(value[1], str) or value[1] is None):
+                (isinstance(value[1], six.string_types) or value[1] is None):
             unit = value[1] or self.default_unit
             value = value[0]
         else:
@@ -207,7 +208,7 @@ class XRayLineAttribute(_Attribute):
 
         if isinstance(value, tuple) and \
                 len(value) == 2 and \
-                (isinstance(value[1], str) or value[1] is None):
+                (isinstance(value[1], six.string_types) or value[1] is None):
             notation = value[1] or self.default_notation
             value = value[0]
         else:

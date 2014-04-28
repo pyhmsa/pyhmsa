@@ -18,6 +18,7 @@ import inspect
 import copy
 
 # Third party modules.
+import six
 
 # Local modules.
 from pyhmsa.util.signal import Signal
@@ -85,7 +86,7 @@ class _IdentifierDict(MutableMapping):
         return c
 
     def _find(self, match):
-        if isinstance(match, str):
+        if isinstance(match, six.string_types):
             return dict((key, value) for key, value in self.items() \
                         if fnmatch.fnmatch(key, match))
         elif inspect.isclass(match):
