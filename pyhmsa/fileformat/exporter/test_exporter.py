@@ -26,16 +26,16 @@ from pyhmsa.datafile import DataFile
 
 class ExporterThreadMock(_ExporterThread):
 
-    def _run(self, datafile, filepath, *args, **kwargs):
+    def _run(self, datafile, dirpath, *args, **kwargs):
+        filepath = os.path.join(dirpath, datafile.header.title + '.abc')
         with open(filepath, 'w') as fp:
             fp.write(datafile.header.title)
+        return [filepath]
 
 class ExporterMock(_Exporter):
 
-    SUPPORTED_EXTENSIONS = ('.abc',)
-
-    def _create_thread(self, datafile, filepath, *args, **kwargs):
-        return ExporterThreadMock(datafile, filepath)
+    def _create_thread(self, datafile, dirpath, *args, **kwargs):
+        return ExporterThreadMock(datafile, dirpath)
 
 class Test_Exporter(unittest.TestCase):
 
@@ -50,16 +50,23 @@ class Test_Exporter(unittest.TestCase):
         shutil.rmtree(self.tmpdir, ignore_errors=True)
 
     def testexport(self):
-        filepath = os.path.join(self.tmpdir, 'test.abc')
         datafile = DataFile()
         datafile.header.title = 'test'
 
-        self.exp.export(datafile, filepath)
-        self.exp.join()
+        self.exp.export(datafile, self.tmpdir)
+        filepaths = self.exp.get()
 
         # Test
-        with open(filepath, 'r') as fp:
+        self.assertEqual(1, len(filepaths))
+        with open(filepaths[0], 'r') as fp:
             self.assertEqual('test', fp.read())
+
+    def testcan_export(self):
+        datafile = DataFile()
+        self.assertTrue(self.exp.can_export(datafile, self.tmpdir))
+
+        dirpath = os.path.join(self.tmpdir, 'doesnotexist')
+        self.assertFalse(self.exp.can_export(datafile, dirpath))
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

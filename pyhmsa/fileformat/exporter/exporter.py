@@ -30,33 +30,33 @@ from pyhmsa.util.monitorable import _Monitorable, _MonitorableThread
 
 class _ExporterThread(_MonitorableThread):
 
-    def __init__(self, datafile, filepath, *args, **kwargs):
-        args = (datafile, filepath,) + args
+    def __init__(self, datafile, dirpath, *args, **kwargs):
+        args = (datafile, dirpath,) + args
         _MonitorableThread.__init__(self, args=args, kwargs=kwargs)
 
-    def _run(self, datafile, filepath, *args, **kwargs):
+    def _run(self, datafile, dirpath, *args, **kwargs):
         raise NotImplementedError
 
 class _Exporter(_Monitorable):
 
-    SUPPORTED_EXTENSIONS = ()
-
-    def _create_thread(self, datafile, filepath, *args, **kwargs):
-        args = (datafile, filepath,) + args
+    def _create_thread(self, datafile, dirpath, *args, **kwargs):
+        args = (datafile, dirpath,) + args
         _Monitorable._create_thread(self, *args, **kwargs)
 
-    def validate(self, datafile, filepath):
-        ext = os.path.splitext(filepath)[1]
-        if ext not in self.SUPPORTED_EXTENSIONS:
-            raise ValueError('%s is not a supported extension' % ext)
+    def validate(self, datafile, dirpath):
+        if not os.path.exists(dirpath):
+            raise ValueError('Path does not exist: %s' % dirpath)
+        if not os.path.isdir(dirpath):
+            raise ValueError('Path is not a directory: %s' % dirpath)
 
-    def can_export(self, datafile, filepath):
+    def can_export(self, datafile, dirpath):
         try:
-            self.validate(datafile, filepath)
+            self.validate(datafile, dirpath)
         except:
             return False
         else:
             return True
 
-    def export(self, datafile, filepath):
-        self._start(datafile, filepath)
+    def export(self, datafile, dirpath):
+        self.validate(datafile, dirpath)
+        self._start(datafile, dirpath)

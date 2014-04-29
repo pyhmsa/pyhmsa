@@ -11,7 +11,6 @@ __license__ = "GPL v3"
 # Standard library modules.
 import unittest
 import logging
-import os
 import tempfile
 import shutil
 import datetime
@@ -71,34 +70,34 @@ class TestExporterEMSA(unittest.TestCase):
         datafile.conditions['EDS'] = detector
 
         analysis = Analysis1D(1024, np.int32,
-                              buffer=np.arange(1024, dtype=np.int32))
+                              buffer=np.arange(1024, dtype=np.int32),
+                              conditions={'EDS': detector})
         datafile.data['EDS sum spectrum'] = analysis
 
         return datafile
 
     def testexport1(self):
         datafile = self._create_datafile()
-        filepath = os.path.join(self.tmpdir, 'test.emsa')
-        self.exp.export(datafile, filepath)
-        self.exp.join()
+        self.exp.export(datafile, self.tmpdir)
+        filepaths = self.exp.get()
 
-        with open(filepath, 'r') as fp:
+        self.assertEqual(1, len(filepaths))
+
+        with open(filepaths[0], 'r') as fp:
             lines = fp.readlines()
 
         self.assertEqual(278, len(lines))
 
     def testcan_export(self):
         datafile = self._create_datafile()
-        filepath = os.path.join(self.tmpdir, 'test.emsa')
-        self.assertTrue(self.exp.can_export(datafile, filepath))
+        self.assertTrue(self.exp.can_export(datafile, self.tmpdir))
 
         datafile = DataFile()
-        filepath = os.path.join(self.tmpdir, 'test.emsa')
-        self.assertFalse(self.exp.can_export(datafile, filepath))
+        self.assertFalse(self.exp.can_export(datafile, self.tmpdir))
 
         datafile = self._create_datafile()
-        filepath = os.path.join(self.tmpdir, 'test.txt')
-        self.assertFalse(self.exp.can_export(datafile, filepath))
+        del datafile.data['EDS sum spectrum'].conditions['EDS']
+        self.assertFalse(self.exp.can_export(datafile, self.tmpdir))
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
