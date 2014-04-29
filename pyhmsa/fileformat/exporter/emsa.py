@@ -224,8 +224,8 @@ class ExporterEMSA(_Exporter):
     def _create_thread(self, datafile, dirpath, *args, **kwargs):
         return _ExporterEMSAThread(datafile, dirpath)
 
-    def validate(self, datafile, dirpath):
-        _Exporter.validate(self, datafile, dirpath)
+    def validate(self, datafile):
+        _Exporter.validate(self, datafile)
 
         items = datafile.data.finditems(Analysis1D)
         if not items:

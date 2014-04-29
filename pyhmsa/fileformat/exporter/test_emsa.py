@@ -90,14 +90,14 @@ class TestExporterEMSA(unittest.TestCase):
 
     def testcan_export(self):
         datafile = self._create_datafile()
-        self.assertTrue(self.exp.can_export(datafile, self.tmpdir))
+        self.assertTrue(self.exp.can_export(datafile))
 
         datafile = DataFile()
-        self.assertFalse(self.exp.can_export(datafile, self.tmpdir))
+        self.assertFalse(self.exp.can_export(datafile))
 
         datafile = self._create_datafile()
         del datafile.data['EDS sum spectrum'].conditions['EDS']
-        self.assertFalse(self.exp.can_export(datafile, self.tmpdir))
+        self.assertFalse(self.exp.can_export(datafile))
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

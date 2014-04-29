@@ -63,10 +63,7 @@ class Test_Exporter(unittest.TestCase):
 
     def testcan_export(self):
         datafile = DataFile()
-        self.assertTrue(self.exp.can_export(datafile, self.tmpdir))
-
-        dirpath = os.path.join(self.tmpdir, 'doesnotexist')
-        self.assertFalse(self.exp.can_export(datafile, dirpath))
+        self.assertTrue(self.exp.can_export(datafile))
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

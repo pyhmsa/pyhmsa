@@ -43,20 +43,23 @@ class _Exporter(_Monitorable):
         args = (datafile, dirpath,) + args
         _Monitorable._create_thread(self, *args, **kwargs)
 
-    def validate(self, datafile, dirpath):
-        if not os.path.exists(dirpath):
-            raise ValueError('Path does not exist: %s' % dirpath)
-        if not os.path.isdir(dirpath):
-            raise ValueError('Path is not a directory: %s' % dirpath)
+    def validate(self, datafile):
+        pass
 
-    def can_export(self, datafile, dirpath):
+    def can_export(self, datafile):
         try:
-            self.validate(datafile, dirpath)
+            self.validate(datafile)
         except:
             return False
         else:
             return True
 
     def export(self, datafile, dirpath):
-        self.validate(datafile, dirpath)
+        self.validate(datafile)
+
+        if not os.path.exists(dirpath):
+            raise ValueError('Path does not exist: %s' % dirpath)
+        if not os.path.isdir(dirpath):
+            raise ValueError('Path is not a directory: %s' % dirpath)
+
         self._start(datafile, dirpath)
