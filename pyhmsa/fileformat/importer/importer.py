@@ -99,6 +99,7 @@ class _Importer(_Monitorable):
         """
         Should create appropriate importer thread and starts it.
         """
+        self.validate(filepath)
         self._start(filepath)
 
     def get(self):
