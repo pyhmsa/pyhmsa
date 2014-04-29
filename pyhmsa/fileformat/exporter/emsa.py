@@ -61,7 +61,8 @@ class _ExporterEMSAThread(_ExporterThread):
             self._update_status(i / length, 'Exporting %s' % identifier)
             lines = self._create_lines(datafile, datum, detector)
 
-            filepath = os.path.join(dirpath, basefilename + '_' + identifier)
+            filename = basefilename + '_' + identifier + '.emsa'
+            filepath = os.path.join(dirpath, filename)
             with open(filepath, 'w') as fp:
                 fp.write('\n'.join(lines))
 
