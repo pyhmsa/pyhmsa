@@ -84,7 +84,7 @@ class _Importer(_Monitorable):
 
     def validate(self, filepath):
         ext = os.path.splitext(filepath)[1]
-        if ext not in self.SUPPORTED_EXTENSIONS:
+        if ext.lower() not in self.SUPPORTED_EXTENSIONS:
             raise ValueError('%s is not a supported extension' % ext)
 
     def can_import(self, filepath):
