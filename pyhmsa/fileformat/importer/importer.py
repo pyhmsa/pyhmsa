@@ -123,12 +123,12 @@ class _Importer(_Monitorable):
         self._update_extra(datafile)
         return datafile
 
-def find_importers(filepath, extra_datafile=None, search_home=True, *args, **kwargs):
+def find_importers(filepath, extra_datafile=None, search_extra=True, *args, **kwargs):
     # Load importers
     importers = {}
     for entry_point in iter_entry_points('pyhmsa.fileformat.importer'):
         importer = entry_point.load()(extra_datafile=extra_datafile,
-                                      search_home=search_home,
+                                      search_extra=search_extra,
                                       *args, **kwargs)
         for ext in importer.SUPPORTED_EXTENSIONS:
             importers.setdefault(ext, []).append(importer)
@@ -137,8 +137,8 @@ def find_importers(filepath, extra_datafile=None, search_home=True, *args, **kwa
     ext = os.path.splitext(filepath)[1]
     return list(filter(lambda v: v.can_import(filepath), importers.get(ext, [])))
 
-def import_(filepath, extra_datafile=None, search_home=True, *args, **kwargs):
-    importers = find_importers(filepath, extra_datafile, search_home, *args, **kwargs)
+def import_(filepath, extra_datafile=None, search_extra=True, *args, **kwargs):
+    importers = find_importers(filepath, extra_datafile, search_extra, *args, **kwargs)
 
     if not importers:
         raise ValueError('No possible importer for %s' % filepath)
