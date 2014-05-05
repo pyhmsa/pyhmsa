@@ -27,7 +27,7 @@ class TestImporterESMA(unittest.TestCase):
 
         self.testdata = os.path.join(os.path.dirname(__file__),
                                      '..', '..', 'testdata', 'importer', 'emsa')
-        self.imp = ImporterEMSA()
+        self.imp = ImporterEMSA(search_extra=False)
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)

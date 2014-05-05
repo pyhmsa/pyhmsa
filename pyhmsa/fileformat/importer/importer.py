@@ -20,6 +20,7 @@ __license__ = "GPL v3"
 
 # Standard library modules.
 import os
+import sys
 import logging
 
 # Third party modules.
@@ -44,20 +45,35 @@ class _Importer(_Monitorable):
 
     SUPPORTED_EXTENSIONS = ()
 
-    def __init__(self, extra_datafile=None, search_home=True):
+    def __init__(self, extra_datafile=None, search_extra=True):
         _Monitorable.__init__(self)
 
         if extra_datafile is None:
             extra_datafile = DataFile()
 
-        if search_home:
-            logging.debug('Searching home for ~/.pyhmsa/importer_extra.xml')
-            filepath = os.path.expanduser('~/.pyhmsa/importer_extra.xml')
-            if os.path.exists(filepath):
-                logging.debug('Found ~/.pyhmsa/importer_extra.xml')
+        if search_extra:
+            logging.debug('Searching for extras')
+
+            for filepath in self._glob_extra_filepaths():
+                logging.debug('Found %s' % filepath)
                 extra_datafile.update(DataFile.read(filepath))
 
         self._extra_datafile = extra_datafile
+
+    def _glob_extra_filepaths(self, suffix=''):
+        dirpaths = []
+        dirpaths.append(os.path.expanduser('~/.pyhmsa'))
+        if getattr(sys, "frozen", False):
+            dirpaths.append(os.path.dirname(os.path.abspath(sys.executable)))
+
+        filepaths = []
+        for dirpath in dirpaths:
+            filename = 'importer_extra%s.xml' % suffix
+            filepath = os.path.join(dirpath, filename)
+            if os.path.exists(filepath):
+                filepaths.append(filepath)
+
+        return filepaths
 
     def _update_extra(self, datafile):
         # Header
