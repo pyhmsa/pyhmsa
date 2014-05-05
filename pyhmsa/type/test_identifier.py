@@ -211,6 +211,40 @@ class Test_IdentifierDict(unittest.TestCase):
         items = self.d.finditems('*')
         self.assertEqual(3, len(items))
 
+    def testadd(self):
+        self.d.add('a', 1)
+        self.d.add('a', 2)
+        self.assertEqual(2, len(self.d))
+        self.assertIn('a', self.d)
+        self.assertIn('a1', self.d)
+        self.assertEqual(1, self.d['a'])
+        self.assertEqual(2, self.d['a1'])
+
+        identifier = self.d.add('a', 3)
+        self.assertEqual('a2', identifier)
+
+        identifier = self.d.add('a2', 4)
+        self.assertEqual('a3', identifier)
+
+    def testaddall(self):
+        self.d.add('a', 1)
+        self.d.addall({'a': 2})
+        self.assertEqual(2, len(self.d))
+        self.assertIn('a', self.d)
+        self.assertIn('a1', self.d)
+        self.assertEqual(1, self.d['a'])
+        self.assertEqual(2, self.d['a1'])
+
+        self.d.addall(a=3)
+        self.assertIn('a2', self.d)
+        self.assertEqual(3, self.d['a2'])
+
+        self.d.addall([('a', 4), ('a', 5)])
+        self.assertIn('a3', self.d)
+        self.assertEqual(4, self.d['a3'])
+        self.assertIn('a4', self.d)
+        self.assertEqual(5, self.d['a4'])
+
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

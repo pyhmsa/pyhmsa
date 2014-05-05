@@ -12,10 +12,11 @@
 """
 
 # Standard library modules.
-from collections import MutableMapping, KeysView, ValuesView, ItemsView
+from collections import MutableMapping, Mapping, KeysView, ValuesView, ItemsView
 import fnmatch
 import inspect
 import copy
+import re
 
 # Third party modules.
 import six
@@ -39,13 +40,17 @@ class _IdentifierDict(MutableMapping):
     def __init__(self, adict=None, **kwargs):
         self._data = {}
 
+        self.item_added = Signal()
+        self.item_deleted = Signal()
+        self.item_modified = Signal()
+
         if adict is not None:
             self.update(adict)
         self.update(**kwargs)
 
-        self.item_added = Signal()
-        self.item_deleted = Signal()
-        self.item_modified = Signal()
+    def __repr__(self):
+        return '<%s(%s)>' % (self.__class__.__name__,
+                             ','.join(sorted(self.keys())))
 
     def __iter__(self):
         return iter(self._data)
@@ -84,6 +89,40 @@ class _IdentifierDict(MutableMapping):
             self._data = data
         c.update(self)
         return c
+
+    def add(self, identifier, item):
+        base_identifier = re.sub(r'\d*$', '', identifier)
+
+        identifiers = self.findkeys(base_identifier + '*')
+        if identifiers: # Identifier already exists
+            index = 1
+            while identifier in self:
+                identifier = '{0}{1:d}'.format(base_identifier, index)
+                index += 1
+
+        self[identifier] = item
+        return identifier
+
+    def addall(*args, **kwds): #@NoSelf
+        if len(args) > 2:
+            raise TypeError("update() takes at most 2 positional "
+                            "arguments ({} given)".format(len(args)))
+        elif not args:
+            raise TypeError("update() takes at least 1 argument (0 given)")
+        self = args[0]
+        other = args[1] if len(args) >= 2 else ()
+
+        if isinstance(other, Mapping):
+            for identifier in other:
+                self.add(identifier, other[identifier])
+        elif hasattr(other, "keys"):
+            for identifier in other.keys():
+                self.add(identifier, other[identifier])
+        else:
+            for identifier, datum in other:
+                self.add(identifier, datum)
+        for identifier, datum in kwds.items():
+            self.add(identifier, datum)
 
     def _find(self, match):
         if isinstance(match, six.string_types):
