@@ -12,6 +12,7 @@
 """
 
 # Standard library modules.
+import bisect
 
 # Third party modules.
 import numpy as np
@@ -42,6 +43,12 @@ class _Calibration(Parameter):
         self.unit = unit
 
     def __call__(self, index):
+        return self.get_quantity(index)
+
+    def get_quantity(self, index):
+        raise NotImplementedError
+
+    def get_index(self, value):
         raise NotImplementedError
 
 class CalibrationConstant(_Calibration):
@@ -62,8 +69,11 @@ class CalibrationConstant(_Calibration):
 
         self.value = value
 
-    def __call__(self, index):
+    def get_quantity(self, index):
         return self.value
+
+    def get_index(self, value):
+        return 0 if value == self.value else -1
 
 class CalibrationLinear(_Calibration):
 
@@ -89,10 +99,17 @@ class CalibrationLinear(_Calibration):
         self.gain = gain
         self.offset = offset
 
-    def __call__(self, index):
+    def get_quantity(self, index):
+        return self.func(index)
+
+    def get_index(self, value):
+        return int((self.func - value).r[0])
+
+    @property
+    def func(self):
         if not hasattr(self, '_func'):
             self._func = np.poly1d([self.gain, self.offset])
-        return self._func(index)
+        return self._func
 
 class CalibrationPolynomial(_Calibration):
 
@@ -113,10 +130,20 @@ class CalibrationPolynomial(_Calibration):
 
         self.coefficients = coefficients
 
-    def __call__(self, index):
+    def get_quantity(self, index):
+        return self.func(index)
+
+    def get_index(self, value):
+        for root in (self.func - value).r:
+            if not np.iscomplex(root) and root >= 0:
+                return int(np.real(root))
+        return -1
+
+    @property
+    def func(self):
         if not hasattr(self, '_func'):
             self._func = np.poly1d(self.coefficients)
-        return self._func(index)
+        return self._func
 
 class CalibrationExplicit(_Calibration):
 
@@ -137,7 +164,17 @@ class CalibrationExplicit(_Calibration):
         """
         _Calibration.__init__(self, quantity, unit)
 
+        if len(values) == 0:
+            raise ValueError('At least one value must be specified')
+        if not all(values[i] <= values[i + 1] for i in range(len(values) - 1)):
+            raise ValueError('Values are not sorted')
         self.values = values
 
-    def __call__(self, index):
+    def get_quantity(self, index):
         return self.values[index]
+
+    def get_index(self, value):
+        index = bisect.bisect_left(self.values, value)
+        if index != len(self.values):
+            return index
+        return -1
