@@ -174,6 +174,7 @@ class _DataFileReaderThread(_BufferedDataFileReaderThread):
         _MonitorableThread.__init__(self, args=(filepath,))
 
     def _run(self, filepath, *args, **kwargs):
+        print(filepath)
         self._update_status(0.0, 'Running')
         if self.is_cancelled(): return
 
@@ -192,83 +193,9 @@ class _DataFileReaderThread(_BufferedDataFileReaderThread):
         self._update_status(1.0, 'Completed')
         return datafile
 
-    def _read_root(self, datafile, root):
-        datafile.language = \
-            root.get('{http://www.w3.org/XML/1998/namespace}lang', 'en-US')
-
-    def _read_header(self, datafile, root):
-        handler = HeaderXMLHandler(datafile.version)
-        datafile.header.update(handler.parse(root.find('Header')))
-
-    def _read_conditions(self, datafile, root):
-        # Load handlers
-        handlers = set()
-        for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.condition'):
-            handler = entry_point.load()(datafile.version)
-            handlers.add(handler)
-
-        # Parse conditions
-        elements = root.findall('Conditions/*')
-        count = len(elements)
-        for i, element in enumerate(elements):
-            key = element.get('ID', 'Inst%i' % len(datafile.conditions))
-
-            self._update_status(0.2 + i / count * 0.4,
-                                'Reading condition %s' % key)
-            if self.is_cancelled(): return
-
-            for handler in handlers:
-                if handler.can_parse(element):
-                    datafile.conditions[key] = handler.parse(element)
-                    break
-
-    def _read_data(self, datafile, root, hmsa_file):
-        # Check UID
-        xml_uid = root.attrib['UID'].encode('ascii')
-        hmsa_uid = binascii.hexlify(hmsa_file.read(8))
-        if xml_uid.upper() != hmsa_uid.upper():
-            raise ValueError('UID in XML (%s) does not match UID in HMSA (%s)' % \
-                             (xml_uid, hmsa_uid))
-        logging.debug('Check UID: %s == %s', xml_uid, hmsa_uid)
-
-        # Check checksum
-        xml_checksum = getattr(datafile.header, 'checksum', None)
-        if xml_checksum is not None:
-            xml_checksum = datafile.header.checksum
-
-            hmsa_file.seek(0)
-            buffer = hmsa_file.read()
-            hmsa_checksum = calculate_checksum(xml_checksum.algorithm, buffer)
-
-            if xml_checksum.value.upper() != hmsa_checksum.value.upper():
-                raise ValueError('Checksum in XML (%s) does not match checksum in HMSA (%s)' % \
-                                 (xml_checksum.value, hmsa_checksum.value))
-            logging.debug('Check sum: %s == %s', xml_checksum.value, hmsa_checksum.value)
-
-        # Load handlers
-        handlers = set()
-        for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.datum'):
-            handler = entry_point.load()(datafile.version, hmsa_file,
-                                         datafile.conditions)
-            handlers.add(handler)
-
-        # Parse data
-        elements = root.findall('Data/*')
-        count = len(elements)
-        for i, element in enumerate(elements):
-            key = element.get('Name', 'Inst%i' % len(datafile.data))
-
-            self._update_status(0.6 + i / count * 0.4, 'Reading datum %s' % key)
-            if self.is_cancelled(): return
-
-            for handler in handlers:
-                if handler.can_parse(element):
-                    datafile.data[key] = handler.parse(element)
-                    break
-
 class DataFileReader(_Monitorable):
 
-    def _create_thread(self, filepath, xml_file, hmsa_file, *args, **kwargs):
+    def _create_thread(self, filepath=None, xml_file=None, hmsa_file=None, *args, **kwargs):
         if xml_file is not None and hmsa_file is not None:
             return _BufferedDataFileReaderThread(xml_file, hmsa_file)
         else:
@@ -444,7 +371,7 @@ class _DataFileWriterThread(_BufferedDataFileWriterThread):
 
 class DataFileWriter(_Monitorable):
 
-    def _create_thread(self, datafile, filepath, xml_file, hmsa_file,
+    def _create_thread(self, datafile, filepath=None, xml_file=None, hmsa_file=None,
                        *args, **kwargs):
         if xml_file is not None and hmsa_file is not None:
             return _BufferedDataFileWriterThread(datafile, xml_file, hmsa_file)
