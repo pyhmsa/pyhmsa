@@ -18,12 +18,14 @@ import shutil
 import xml.etree.ElementTree as etree
 import binascii
 import struct
+import io
 
 # Third party modules.
 import numpy as np
 
 # Local modules.
-from pyhmsa.fileformat.datafile import DataFileReader, DataFileWriter
+from pyhmsa.fileformat.datafile import \
+    DataFileReader, DataFileWriter, _extract_filepath
 
 from pyhmsa.datafile import DataFile
 from pyhmsa.spec.datum.analysis import Analysis1D
@@ -124,6 +126,79 @@ class TestDataFileReader(unittest.TestCase):
         reader.cancel()
         self.assertEqual(1.0, reader.progress)
         self.assertEqual('Cancelled', reader.status)
+
+    def testreader3(self):
+        xml_filepath, hmsa_filepath = _extract_filepath(self.filepath)
+        with open(xml_filepath, 'rb') as xml_file, \
+                open(hmsa_filepath, 'rb') as hmsa_file:
+            reader = DataFileReader()
+            reader.read(xml_file=xml_file, hmsa_file=hmsa_file)
+            datafile = reader.get()
+
+        ## Root
+        self.assertEqual('1.0', datafile.version)
+        self.assertEqual('en-US', datafile.language)
+
+        ## Header
+        header = datafile.header
+        self.assertEqual('Breccia - EDS sum spectrum', header.title)
+        self.assertEqual(2013, header.date.year)
+        self.assertEqual(7, header.date.month)
+        self.assertEqual(29, header.date.day)
+        self.assertEqual(14, header.time.hour)
+        self.assertEqual(42, header.time.minute)
+        self.assertEqual(10, header.time.second)
+        self.assertEqual('Clayton Microbeam Laboratory; CSIRO Process Science and Engineering.', header.author)
+        self.assertEqual('EpmxToHmsa', header['AuthorSoftware'])
+        self.assertEqual('AUS Eastern Standard Time', header.timezone)
+
+        ## Conditions
+        conditions = datafile.conditions
+        self.assertEqual(3, len(conditions))
+
+        instrument = conditions['Inst0']
+        self.assertEqual('JEOL Ltd.', instrument.manufacturer)
+        self.assertEqual(b'\xe6\x97\xa5\xe6\x9c\xac\xe9\x9b\xbb\xe5\xad\x90\xe6\xa0\xaa\xe5\xbc\x8f\xe4\xbc\x9a\xe7\xa4\xbe',
+                         instrument.manufacturer.alternatives['ja'].encode('utf-8'))
+        self.assertEqual('JXA 8500F-CL', instrument.model)
+
+        probe = conditions['Probe0']
+        self.assertAlmostEqual(15.0, probe.beam_voltage, 4)
+        self.assertEqual('kV', probe.beam_voltage.unit)
+        self.assertAlmostEqual(47.59, probe.beam_current, 4)
+        self.assertEqual('nA', probe.beam_current.unit)
+        self.assertAlmostEqual(2500.0, probe.scan_magnification, 4)
+        self.assertEqual('Schottky FEG', probe.gun_type)
+
+        detector = conditions['EDS']
+        self.assertEqual(4096, detector.channel_count)
+        self.assertEqual("Energy", detector.calibration.quantity)
+        self.assertEqual("eV", detector.calibration.unit)
+        self.assertAlmostEqual(2.49985, detector.calibration.gain, 4)
+        self.assertAlmostEqual(-237.098251, detector.calibration.offset, 4)
+        self.assertEqual('EDS', detector.signal_type)
+        self.assertEqual('Bruker AXS', detector.manufacturer)
+        self.assertEqual('XFLASH 4010', detector.model)
+        self.assertAlmostEqual(20.0, detector.area, 4)
+        self.assertEqual('mm2', detector.area.unit)
+        self.assertEqual('SDD', detector.technology)
+        self.assertAlmostEqual(2000.0, detector.strobe_rate, 4)
+        self.assertEqual('Hz', detector.strobe_rate.unit)
+        self.assertAlmostEqual(180.0, detector.nominal_throughput, 4)
+        self.assertEqual('kcounts/s', detector.nominal_throughput.unit)
+        self.assertAlmostEqual(40.0, detector.elevation, 4)
+        self.assertEqual('degrees', detector.elevation.unit)
+
+        ## Data
+        data = datafile.data
+        self.assertEqual(1, len(data))
+
+        analysis = data['EDS sum spectrum']
+        self.assertEqual(4096, analysis.channels)
+        self.assertEqual(0, len(analysis.conditions))
+        self.assertEqual(np.int64, analysis.dtype.type)
+        self.assertEqual(0, analysis[0])
+        self.assertEqual(395, analysis[-1])
 
 class TestDataFileWriter(unittest.TestCase):
 
@@ -254,6 +329,94 @@ class TestDataFileWriter(unittest.TestCase):
         # Close
         hmsa.close()
         shutil.rmtree(tmpdir, ignore_errors=True)
+
+    def testwriter2(self):
+        # Write
+        xml_file = io.BytesIO()
+        hmsa_file = io.BytesIO()
+        writer = DataFileWriter()
+        writer.write(self.datafile, xml_file=xml_file, hmsa_file=hmsa_file)
+        writer.join()
+
+        self.assertEqual(1.0, writer.progress)
+        self.assertEqual('Completed', writer.status)
+
+        # Test
+        root = etree.fromstring(xml_file.getvalue())
+        hmsa_file.seek(0)
+
+        ## Root
+        self.assertEqual('1.0', root.get('Version'))
+        self.assertEqual('en-US', root.get('{http://www.w3.org/XML/1998/namespace}lang'))
+#        self.assertEqual(uid, root.get('UID').encode('ascii'))
+
+        ## Header
+        element = root.find('Header')
+        self.assertEqual('Breccia - EDS sum spectrum', element.find('Title').text)
+        self.assertEqual('2013-07-29', element.find('Date').text)
+        self.assertEqual('14:42:10', element.find('Time').text)
+        self.assertEqual('Clayton Microbeam Laboratory; CSIRO Process Science and Engineering.', element.find('Author').text)
+        self.assertEqual('EpmxToHmsa', element.find('AuthorSoftware').text)
+        self.assertEqual('AUS Eastern Standard Time', element.find('Timezone').text)
+
+        ## Conditions
+        element = root.find('Conditions/Instrument')
+        self.assertEqual('Inst0', element.get('ID'))
+        self.assertEqual('JEOL Ltd.', element.find('Manufacturer').text)
+        self.assertEqual(b'\xe6\x97\xa5\xe6\x9c\xac\xe9\x9b\xbb\xe5\xad\x90\xe6\xa0\xaa\xe5\xbc\x8f\xe4\xbc\x9a\xe7\xa4\xbe',
+                         element.find('Manufacturer').get('alt-lang-ja').encode('utf-8'))
+        self.assertEqual('JXA 8500F-CL', element.find('Model').text)
+
+        element = root.find('Conditions/Probe')
+        self.assertEqual('Probe0', element.get('ID'))
+        self.assertEqual('15.0', element.find('BeamVoltage').text)
+        self.assertEqual('kV', element.find('BeamVoltage').get('Unit'))
+        self.assertEqual('47.59', element.find('BeamCurrent').text)
+        self.assertEqual('nA', element.find('BeamCurrent').get('Unit'))
+        self.assertEqual('2500.0', element.find('ScanMagnification').text)
+        self.assertEqual('Schottky FEG', element.find('GunType').text)
+
+        element = root.find('Conditions/Detector')
+        self.assertEqual('EDS', element.get('ID'))
+        self.assertEqual('4096', element.find('ChannelCount').text)
+        self.assertEqual("Energy", element.find('Calibration/Quantity').text)
+        self.assertEqual("eV", element.find('Calibration/Unit').text)
+        self.assertEqual('2.49985', element.find('Calibration/Gain').text)
+        self.assertEqual('-237.098251', element.find('Calibration/Offset').text)
+        self.assertEqual('EDS', element.find('SignalType').text)
+        self.assertEqual('Bruker AXS', element.find('Manufacturer').text)
+        self.assertEqual('XFLASH 4010', element.find('Model').text)
+        self.assertEqual('20.0', element.find('Area').text)
+        self.assertEqual('mm2', element.find('Area').get('Unit'))
+        self.assertEqual('SDD', element.find('Technology').text)
+        self.assertEqual('2000.0', element.find('StrobeRate').text)
+        self.assertEqual('Hz', element.find('StrobeRate').get('Unit'))
+        self.assertEqual('180.0', element.find('NominalThroughput').text)
+        self.assertEqual('kcounts/s', element.find('NominalThroughput').get('Unit'))
+        self.assertEqual('40.0', element.find('Elevation').text)
+        self.assertEqual('degrees', element.find('Elevation').get('Unit'))
+
+        ## Data
+        element = root.find('Data/Analysis')
+        self.assertEqual('EDS sum spectrum', element.get('Name'))
+        self.assertEqual('8', element.find('DataOffset').text)
+        self.assertEqual('16384', element.find('DataLength').text)
+        self.assertEqual('int32', element.find('DatumType').text)
+        self.assertEqual('4096', element.find('DatumDimensions/Dimension').text)
+        self.assertEqual('Channel', element.find('DatumDimensions/Dimension').get('Name'))
+
+        uid = binascii.hexlify(hmsa_file.read(8)).upper()
+        self.assertEqual(uid, root.get('UID').encode('ascii'))
+
+        buffer = hmsa_file.read()
+        self.assertEqual(16384, len(buffer))
+
+        self.assertEqual(0, struct.unpack('<i', buffer[:4])[0])
+        self.assertEqual(4095, struct.unpack('<i', buffer[-4:])[0])
+
+        # Close
+        xml_file.close()
+        hmsa_file.close()
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
