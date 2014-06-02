@@ -174,7 +174,6 @@ class _DataFileReaderThread(_BufferedDataFileReaderThread):
         _MonitorableThread.__init__(self, args=(filepath,))
 
     def _run(self, filepath, *args, **kwargs):
-        print(filepath)
         self._update_status(0.0, 'Running')
         if self.is_cancelled(): return
 
