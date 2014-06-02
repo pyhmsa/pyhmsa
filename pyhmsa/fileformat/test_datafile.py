@@ -129,11 +129,17 @@ class TestDataFileReader(unittest.TestCase):
 
     def testreader3(self):
         xml_filepath, hmsa_filepath = _extract_filepath(self.filepath)
-        with open(xml_filepath, 'rb') as xml_file, \
-                open(hmsa_filepath, 'rb') as hmsa_file:
-            reader = DataFileReader()
-            reader.read(xml_file=xml_file, hmsa_file=hmsa_file)
-            datafile = reader.get()
+        with open(xml_filepath, 'rb') as fp:
+            xml_file = io.BytesIO(fp.read())
+        with open(hmsa_filepath, 'rb') as fp:
+            hmsa_file = io.BytesIO(fp.read())
+
+        reader = DataFileReader()
+        reader.read(xml_file=xml_file, hmsa_file=hmsa_file)
+        datafile = reader.get()
+
+        xml_file.close()
+        hmsa_file.close()
 
         ## Root
         self.assertEqual('1.0', datafile.version)

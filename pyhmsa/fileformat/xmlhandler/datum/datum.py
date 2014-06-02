@@ -145,11 +145,13 @@ class _DatumXMLHandler(_XMLHandler):
         length = self._parse_data_length(element)
 
         self._hmsa_file.seek(offset)
-        return np.fromfile(self._hmsa_file, dtype, length // dtype.itemsize)
+        arr = array.array(dtype.char)
+        arr.fromfile(self._hmsa_file, length // dtype.itemsize)
+        return np.frombuffer(arr)
 
     def _convert_binary(self, obj):
         arr = array.array(obj.dtype.char, obj.ravel(order='F'))
-        arr.tofile(self._hmsa_file)
+        self._hmsa_file.write(arr.tobytes())
         del arr
 
     def _convert(self, obj):
