@@ -147,7 +147,7 @@ class _DatumXMLHandler(_XMLHandler):
         self._hmsa_file.seek(offset)
         arr = array.array(dtype.char)
         arr.fromfile(self._hmsa_file, length // dtype.itemsize)
-        return np.frombuffer(arr)
+        return np.frombuffer(arr, dtype, length // dtype.itemsize)
 
     def _convert_binary(self, obj):
         arr = array.array(obj.dtype.char, obj.ravel(order='F'))
