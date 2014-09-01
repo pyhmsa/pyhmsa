@@ -152,7 +152,7 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
 
         self.h = CalibrationExplicitXMLHandler(1.0)
 
-        self.obj = CalibrationExplicit('Energy', 'eV', (-2.225, 0.677, 0.134, -0.018))
+        self.obj = CalibrationExplicit('Energy', 'eV', (-2.225, -0.018, 0.134, 0.677))
 
         source = u'<Calibration Class="Explicit"><Quantity>Energy</Quantity><Unit>eV</Unit><Values DataType="array:float" Count="4">-2.225, 0.677, 0.134, -0.018</Values></Calibration>'
         self.element = etree.fromstring(source.encode('utf-8'))
@@ -189,7 +189,7 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
         self.assertEqual('Explicit', element.get('Class'))
         self.assertEqual('Energy', element.find('Quantity').text)
         self.assertEqual('eV', element.find('Unit').text)
-        self.assertEqual('-2.225,0.677,0.134,-0.018', element.find('Values').text)
+        self.assertEqual('-2.225,-0.018,0.134,0.677', element.find('Values').text)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
