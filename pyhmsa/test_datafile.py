@@ -46,6 +46,8 @@ class TestDataFile(unittest.TestCase):
 
         self.assertEqual(1, len(self.datafile.data['datum'].conditions))
         self.assertEqual(1, len(self.datafile.conditions))
+        self.assertIs(self.datafile.conditions['cond'],
+                      self.datafile.data['datum'].conditions['cond'])
 
     def testadd_datum_condition2(self):
         datum = Analysis0D(1.0)
@@ -54,15 +56,18 @@ class TestDataFile(unittest.TestCase):
 
         self.assertEqual(1, len(self.datafile.data['datum'].conditions))
         self.assertEqual(1, len(self.datafile.conditions))
+        self.assertIs(self.datafile.conditions['cond'],
+                      self.datafile.data['datum'].conditions['cond'])
 
     def testadd_datum_condition3(self):
         datum = Analysis0D(1.0)
         self.datafile.data['datum'] = datum
 
         self.datafile.conditions['cond'] = ElementalID(13)
+        self.datafile.data['datum'].conditions['cond'] = ElementalID(14)
 
-        self.assertRaises(ValueError, self.datafile.data['datum'].conditions.__setitem__,
-                          'cond', ElementalID(14))
+        self.assertEqual(14, self.datafile.conditions['cond'].atomic_number)
+        self.assertEqual(14, self.datafile.data['datum'].conditions['cond'].atomic_number)
 
     def testmodify_datum_condition(self):
         datum = Analysis0D(1.0, conditions={'cond': ElementalID(13)})
@@ -81,9 +86,8 @@ class TestDataFile(unittest.TestCase):
 
         self.datafile.conditions['cond'] = ElementalID(14)
 
-        self.assertEqual(1, len(self.datafile.data['datum'].conditions))
+        self.assertEqual(0, len(self.datafile.data['datum'].conditions))
         self.assertEqual(1, len(self.datafile.conditions))
-        self.assertEqual(14, self.datafile.data['datum'].conditions['cond'].atomic_number)
         self.assertEqual(14, self.datafile.conditions['cond'].atomic_number)
 
     def testdelete_datum_condition(self):
@@ -112,9 +116,12 @@ class TestDataFile(unittest.TestCase):
         self.datafile.data['datum'] = datum2
 
         self.assertEqual(1, len(self.datafile.data))
-        self.assertEqual(1, len(self.datafile.conditions))
-        self.assertEqual(14, self.datafile.data['datum'].conditions['cond'].atomic_number)
-        self.assertEqual(14, self.datafile.conditions['cond'].atomic_number)
+        self.assertEqual(2, len(self.datafile.conditions))
+        self.assertEqual(1, len(self.datafile.data['datum'].conditions))
+
+        self.assertEqual(13, self.datafile.conditions['cond'].atomic_number)
+        self.assertEqual(14, self.datafile.data['datum'].conditions['cond1'].atomic_number)
+        self.assertEqual(14, self.datafile.conditions['cond1'].atomic_number)
 
     def testdelete_datum(self):
         datum = Analysis0D(1.0, conditions={'cond': ElementalID(13)})
@@ -124,6 +131,10 @@ class TestDataFile(unittest.TestCase):
 
         self.assertEqual(0, len(self.datafile.data))
         self.assertEqual(1, len(self.datafile.conditions))
+
+        self.datafile.conditions.clear()
+
+        self.assertEqual(1, len(datum.conditions))
 
     def testread(self):
         # Read
@@ -150,6 +161,41 @@ class TestDataFile(unittest.TestCase):
         self.assertEqual('Update', datafile.header.title)
         self.assertEqual(13, datafile.conditions['cond'].atomic_number)
         self.assertAlmostEqual(1.0, float(datafile.data['datum']), 4)
+
+    def testmerge(self):
+        self.datafile.header.title = 'Update'
+        self.datafile.data['datum'] = \
+            Analysis0D(1.0, conditions={'cond': ElementalID(13)})
+
+        datafile = DataFile()
+        datafile.header.title = 'Update2'
+        datafile.header.author = 'John Doe'
+        datafile.conditions['cond'] = ElementalID(14)
+        datafile.data['datum'] = Analysis0D(2.0, conditions={'cond': ElementalID(15)})
+
+        self.datafile.merge(datafile)
+#
+        self.assertEqual('Update', self.datafile.header.title)
+        self.assertEqual('John Doe', self.datafile.header.author)
+        self.assertEqual(3, len(self.datafile.conditions))
+        self.assertEqual(2, len(self.datafile.data))
+        self.assertEqual(13, self.datafile.conditions['cond'].atomic_number)
+        self.assertEqual(15, self.datafile.conditions['cond1'].atomic_number)
+        self.assertEqual(14, self.datafile.conditions['cond2'].atomic_number)
+        self.assertAlmostEqual(1.0, float(self.datafile.data['datum']), 4)
+        self.assertAlmostEqual(2.0, float(self.datafile.data['datum1']), 4)
+        self.assertIn('cond', self.datafile.data['datum'].conditions)
+        self.assertIn('cond1', self.datafile.data['datum1'].conditions)
+        self.assertIn('cond2', self.datafile.orphan_conditions)
+
+    def testorphan_conditions(self):
+        self.datafile.header.title = 'Update'
+        self.datafile.data['datum'] = \
+            Analysis0D(1.0, conditions={'cond': ElementalID(13)})
+        self.assertEqual(0, len(self.datafile.orphan_conditions))
+
+        self.datafile.data['datum'].conditions.clear()
+        self.assertEqual(1, len(self.datafile.orphan_conditions))
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

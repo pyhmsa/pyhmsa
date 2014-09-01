@@ -52,12 +52,7 @@ class DataFile(object):
         self._header = Header()
 
         self._conditions = Conditions()
-        self._conditions.item_deleted.connect(self._on_condition_deleted)
-        self._conditions.item_modified.connect(self._on_condition_modified)
-
-        self._data = Data()
-        self._data.item_added.connect(self._on_datum_added)
-        self._data.item_modified.connect(self._on_datum_modified)
+        self._data = Data(self)
 
     @classmethod
     def read(cls, filepath):
@@ -72,57 +67,6 @@ class DataFile(object):
         reader = DataFileReader()
         reader.read(filepath)
         return reader.get()
-
-    def _on_condition_deleted(self, identifier, oldcondition):
-        for datum in self._data.values():
-            for identifier2 in list(datum.conditions.keys()):
-                if identifier == identifier2:
-                    del datum.conditions[identifier]
-
-    def _on_condition_modified(self, identifier, condition, oldcondition):
-        for datum in self._data.values():
-            for identifier2 in datum.conditions.keys():
-                if identifier == identifier2 and condition != oldcondition:
-                    datum.conditions[identifier] = condition
-
-    def _on_datum_added(self, identifier, datum):
-        datum.conditions.item_added.connect(self._on_datum_condition_added)
-        datum.conditions.item_modified.connect(self._on_datum_condition_modified)
-
-        # Re-add conditions (to allow signal to be propagated)
-        conditions = datum.conditions.copy()
-        datum.conditions.clear()
-        datum.conditions.update(conditions)
-
-    def _on_datum_modified(self, identifier, newdatum, olddatum):
-        # Remove old conditions
-        for condition_identifier in olddatum.conditions.keys():
-            state = None
-            for datum in self._data.values():
-                if condition_identifier in datum.conditions:
-                    if datum is newdatum: # Same object
-                        state = 'replace'
-                    else:
-                        state = 'remove'
-
-            if condition_identifier in self._conditions:
-                if state == 'remove':
-                    del self._conditions[condition_identifier]
-                elif state == 'replace':
-                    self._conditions[condition_identifier] = \
-                        newdatum.conditions[condition_identifier]
-
-        self._on_datum_added(identifier, newdatum)
-
-    def _on_datum_condition_added(self, identifier, condition):
-        if identifier not in self._conditions:
-            self._conditions[identifier] = condition
-
-        if condition != self._conditions[identifier]:
-            raise ValueError('Condition with ID "%s" already exists' % identifier)
-
-    def _on_datum_condition_modified(self, identifier, condition, oldcondition):
-        self._conditions[identifier] = condition
 
     def write(self, filepath=None):
         """
@@ -140,6 +84,14 @@ class DataFile(object):
         self._conditions.update(datafile.conditions)
         self._data.update(datafile.data)
 
+    def merge(self, datafile):
+        for key, value in datafile.header.items():
+            if self.header.get(key) is None:
+                self.header[key] = value
+
+        self._data.addall(datafile.data)
+        self._conditions.addall(datafile.orphan_conditions)
+
     @property
     def header(self):
         """
@@ -153,6 +105,24 @@ class DataFile(object):
         Conditions
         """
         return self._conditions
+
+    @property
+    def orphan_conditions(self):
+        """
+        Conditions that are not associated to any data sets (read-only).
+        """
+        conditions = {}
+
+        for identifier, condition in self.conditions.items():
+            orphan = True
+            for datum in self.data.values():
+                if condition in datum.conditions.values():
+                    orphan = False
+                    break
+            if orphan:
+                conditions[identifier] = condition
+
+        return conditions
 
     @property
     def data(self):

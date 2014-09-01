@@ -23,7 +23,7 @@ __license__ = "GPL v3"
 # Third party modules.
 
 # Local modules.
-from pyhmsa.type.identifier import _IdentifierDict
+from pyhmsa.type.identifier import _IdentifierDict, _WeakValueIdentifierDict
 from pyhmsa.spec.condition.condition import _Condition
 
 # Globals and constants variables.
@@ -34,3 +34,13 @@ class Conditions(_IdentifierDict):
         if not isinstance(condition, _Condition):
             raise ValueError("Value is not a condition")
         _IdentifierDict.__setitem__(self, identifier, condition)
+
+class WeakConditions(_WeakValueIdentifierDict):
+
+    def __init__(self, datafile):
+        _WeakValueIdentifierDict.__init__(self)
+        self._datafile = datafile
+
+    def __setitem__(self, identifier, condition):
+        self._datafile.conditions[identifier] = condition
+        _WeakValueIdentifierDict.__setitem__(self, identifier, condition)

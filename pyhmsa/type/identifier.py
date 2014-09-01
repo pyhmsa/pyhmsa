@@ -17,12 +17,12 @@ import fnmatch
 import inspect
 import copy
 import re
+import weakref
 
 # Third party modules.
 import six
 
 # Local modules.
-from pyhmsa.util.signal import Signal
 
 # Globals and constants variables.
 
@@ -35,60 +35,7 @@ def validate_identifier(identifier):
     except UnicodeEncodeError:
         raise ValueError('Identifier contains non-ascii characters')
 
-class _IdentifierDict(MutableMapping):
-
-    def __init__(self, adict=None, **kwargs):
-        self._data = {}
-
-        self.item_added = Signal()
-        self.item_deleted = Signal()
-        self.item_modified = Signal()
-
-        if adict is not None:
-            self.update(adict)
-        self.update(**kwargs)
-
-    def __repr__(self):
-        return '<%s(%s)>' % (self.__class__.__name__,
-                             ','.join(sorted(self.keys())))
-
-    def __iter__(self):
-        return iter(self._data)
-
-    def __len__(self):
-        return len(self._data)
-
-    def __getitem__(self, identifier):
-        return self._data[identifier]
-
-    def __setitem__(self, identifier, item):
-        validate_identifier(identifier)
-
-        new = identifier not in self
-        if not new:
-            olditem = self[identifier]
-
-        self._data[identifier] = item
-
-        if new:
-            self.item_added.fire(identifier, item)
-        else:
-            self.item_modified.fire(identifier, item, olditem)
-
-    def __delitem__(self, identifier):
-        olditem = self[identifier]
-        del self._data[identifier]
-        self.item_deleted.fire(identifier, olditem)
-
-    def copy(self):
-        data = self._data
-        try:
-            self._data = {}
-            c = copy.copy(self)
-        finally:
-            self._data = data
-        c.update(self)
-        return c
+class _BaseIdentifierDict(object):
 
     def add(self, identifier, item):
         base_identifier = re.sub(r'\d*$', '', identifier)
@@ -142,3 +89,54 @@ class _IdentifierDict(MutableMapping):
 
     def finditems(self, match):
         return ItemsView(self._find(match))
+
+
+class _IdentifierDict(MutableMapping, _BaseIdentifierDict):
+
+    def __init__(self):
+        _BaseIdentifierDict.__init__(self)
+        self._data = {}
+
+    def __repr__(self):
+        return '<%s(%s)>' % (self.__class__.__name__,
+                             ','.join(sorted(self.keys())))
+
+    def __iter__(self):
+        return iter(self._data)
+
+    def __len__(self):
+        return len(self._data)
+
+    def __getitem__(self, identifier):
+        return self._data[identifier]
+
+    def __setitem__(self, identifier, item):
+        validate_identifier(identifier)
+        self._data[identifier] = item
+
+    def __delitem__(self, identifier):
+        del self._data[identifier]
+
+    def copy(self):
+        data = self._data
+        try:
+            self._data = {}
+            c = copy.copy(self)
+        finally:
+            self._data = data
+        c.update(self)
+        return c
+
+class _WeakValueIdentifierDict(weakref.WeakValueDictionary, _BaseIdentifierDict):
+
+    def __init__(self):
+        weakref.WeakValueDictionary.__init__(self)
+        _BaseIdentifierDict.__init__(self)
+
+    def __repr__(self):
+        return '<%s(%s)>' % (self.__class__.__name__,
+                             ','.join(sorted(self.keys())))
+
+    def __setitem__(self, identifier, item):
+        validate_identifier(identifier)
+        weakref.WeakValueDictionary.__setitem__(self, identifier, item)
