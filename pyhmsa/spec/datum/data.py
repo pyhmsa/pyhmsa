@@ -39,10 +39,20 @@ class Data(_IdentifierDict):
         if not isinstance(datum, _Datum):
             raise ValueError("Value is not a datum")
 
+        # Remove old datum
+        if identifier in self:
+            del self[identifier]
+
+        # Reconstruct weak references to conditions
         conditions = WeakConditions(self._datafile)
         for cidentifier, condition in datum.conditions.items():
             if condition not in self._datafile.conditions.values():
                 cidentifier = self._datafile.conditions.add(cidentifier, condition)
+            else:
+                for cidentifier2, condition2 in self._datafile.conditions.items():
+                    if condition == condition2:
+                        cidentifier = cidentifier2
+                        break
             conditions[cidentifier] = condition
 
         datum._conditions = conditions
