@@ -15,7 +15,8 @@ import logging
 # Third party modules.
 
 # Local modules.
-from pyhmsa.util.element_properties import get_atomic_number, get_symbol
+from pyhmsa.util.element_properties import \
+    get_atomic_number, get_symbol, get_atomic_mass_kg_mol
 
 # Globals and constants variables.
 
@@ -34,6 +35,10 @@ class Test_ElementPropertiesDatabase(unittest.TestCase):
     def testatomic_number(self):
         self.assertEqual(1, get_atomic_number('H'))
         self.assertEqual(118, get_atomic_number('Uuo'))
+
+    def testget_atomic_mass_kg_mol(self):
+        self.assertAlmostEqual(0.0010079, get_atomic_mass_kg_mol(1), 4)
+        self.assertAlmostEqual(0.247, get_atomic_mass_kg_mol(96), 4)
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

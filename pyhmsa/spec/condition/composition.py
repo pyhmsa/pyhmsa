@@ -23,7 +23,7 @@ import six
 from pyhmsa.util.parameter import ParameterMetaclass, UnitAttribute
 from pyhmsa.spec.condition.condition import _Condition
 from pyhmsa.type.numerical import convert_value
-from pyhmsa.util.element_properties import get_symbol, get_atomic_number
+import pyhmsa.util.element_properties as ep
 
 # Globals and constants variables.
 _COMPOSITION_UNITS = frozenset(['atoms', 'mol%', 'vol%', 'wt%',
@@ -84,14 +84,14 @@ class CompositionElemental(_BaseCompositionElemental):
 
     def __getitem__(self, key):
         if isinstance(key, six.string_types):
-            key = get_atomic_number(key)
+            key = ep.get_atomic_number(key)
         return self._data[key]
 
     def __setitem__(self, key, item):
         if key is None:
             return
         if isinstance(key, six.string_types):
-            key = get_atomic_number(key)
+            key = ep.get_atomic_number(key)
         if key < 1:
             raise ValueError('Atomic number cannot be less than hydrogen')
         if key > 118:
@@ -100,7 +100,7 @@ class CompositionElemental(_BaseCompositionElemental):
 
     def __delitem__(self, key):
         if isinstance(key, six.string_types):
-            key = get_atomic_number(key)
+            key = ep.get_atomic_number(key)
         del self._data[key]
 
     def __repr__(self):
@@ -108,9 +108,47 @@ class CompositionElemental(_BaseCompositionElemental):
 
         if len(self) > 0:
             for z, fraction in self.items():
-                r += ', %s=%s' % (get_symbol(z), fraction)
+                r += ', %s=%s' % (ep.get_symbol(z), fraction)
 
         return r + ')>'
 
     __str__ = __repr__
+
+    def to_wt(self):
+        """
+        Returns a :class:`CompositionElemental` with unit of wt%.
+        """
+        if self.unit.startswith('vol'):
+            raise ValueError('Cannot be converted to wt%')
+
+        def _get_factor(unit):
+            if unit.endswith('%'):
+                return 1.0
+            elif unit.endswith('ppm'):
+                return 0.0001
+            elif unit.endswith('ppb'):
+                return 0.0000001
+            else:
+                raise ValueError('Unknown unit')
+
+        if self.unit.startswith('wt'):
+            comp = CompositionElemental('wt%')
+            factor = _get_factor(self.unit)
+            for z, fraction in self.items():
+                comp[z] = fraction * factor
+            return comp
+
+        elif self.unit == 'atoms' or self.unit.startswith('mol'):
+            comp = CompositionElemental('wt%')
+            for z, fraction in self.items():
+                comp[z] = fraction * ep.get_atomic_mass_kg_mol(z)
+
+            total = sum(comp.values())
+            for z, fraction in comp.items():
+                comp[z] = fraction / total * 100.0
+
+            return comp
+
+        else:
+            raise ValueError('Unknown unit')
 

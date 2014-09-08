@@ -57,6 +57,22 @@ class TestCompositionElemental(unittest.TestCase):
         self.assertAlmostEqual(1, comp[13], 4)
         self.assertAlmostEqual(6, comp[9], 4)
 
+    def testto_wt(self):
+        comp = self.comp.to_wt()
+        self.assertAlmostEqual(54.29633, comp[9], 4)
+        self.assertAlmostEqual(32.85172, comp[11], 4)
+        self.assertAlmostEqual(12.85195, comp[13], 4)
+
+        comp2 = comp.to_wt()
+        self.assertIsNot(comp2, comp)
+        self.assertAlmostEqual(54.29633, comp2[9], 4)
+        self.assertAlmostEqual(32.85172, comp2[11], 4)
+        self.assertAlmostEqual(12.85195, comp2[13], 4)
+
+        comp = CompositionElemental('mol%', {11: 300, 13: 100, 9: 600}).to_wt()
+        self.assertAlmostEqual(54.29633, comp[9], 4)
+        self.assertAlmostEqual(32.85172, comp[11], 4)
+        self.assertAlmostEqual(12.85195, comp[13], 4)
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
