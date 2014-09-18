@@ -67,7 +67,7 @@ class TestDataCommand(Command):
                     z.write(filename, arcname)
 
 # Get the long description from the relevant file
-with codecs.open('DESCRIPTION.rst', encoding='utf-8') as f:
+with codecs.open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
 
 setup(name='pyHMSA',
