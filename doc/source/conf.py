@@ -1,5 +1,4 @@
 
-import sys
 import os
 import runpy
 
@@ -44,9 +43,9 @@ copyright = u'2014, Philippe Pinard'
 #
 # The short X.Y version.
 filepath = os.path.join(os.path.dirname(__file__),
-                        '..', '..', 'src', 'pyhmsa', '__init__.py')
-vars = runpy.run_path(filepath)
-version = vars['__version__']
+                        '..', '..', 'pyhmsa', '__init__.py')
+_vars = runpy.run_path(filepath)
+version = _vars['__version__']
 
 # The full version, including alpha/beta/rc tags.
 release = version
