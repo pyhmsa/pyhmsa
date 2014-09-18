@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<MSAHyperDimensionalDataFile Version="1.0" UID="60606EE485B42736" xml:lang="en-US">
+	<Header>
+		<Title>Breccia - EDS sum spectrum</Title>
+		<Date>2013-07-29</Date>
+		<Time>14:42:10</Time>
+		<Timezone>AUS Eastern Standard Time</Timezone>
+		<Author>Clayton Microbeam Laboratory; CSIRO Process Science and Engineering.</Author>
+		<Owner>CSIRO Process Science and Engineering</Owner>
+		<AuthorSoftware Version="13.2.0.0" libhmsaVersion="12.2.0.0">EpmxToHmsa</AuthorSoftware>
+		<SplitFrom UID="1094A67D58332F07" Software="hmsaSplitter">Breccia.hmsa</SplitFrom>
+		<Checksum Algorithm="SHA-1">25A63F54EAB13254F1C34FAD5F180E74C2239A0B</Checksum>
+	</Header>
+	<Conditions>
+		<Instrument ID="Inst0">
+			<Manufacturer alt-lang-ja="日本電子株式会社">JEOL Ltd.</Manufacturer>
+			<Model>JXA 8500F-CL</Model>
+		</Instrument>
+		<Probe Class="EM" ID="Probe0">
+			<BeamVoltage DataType="float" Unit="kV">15.</BeamVoltage>
+			<BeamCurrent DataType="float" Unit="nA">47.59</BeamCurrent>
+			<ScanMagnification DataType="float">2500.</ScanMagnification>
+			<GunType>Schottky FEG</GunType>
+		</Probe>
+		<Detector Class="Spectrometer/XEDS" ID="EDS">
+			<ChannelCount DataType="uint32">4096</ChannelCount>
+			<Calibration Class="Linear">
+				<Quantity>Energy</Quantity>
+				<Unit>eV</Unit>
+				<Gain DataType="float">2.49985</Gain>
+				<Offset DataType="float">-237.098251</Offset>
+			</Calibration>
+			<SignalType>EDS</SignalType>
+			<Manufacturer>Bruker AXS</Manufacturer>
+			<Model>XFLASH 4010</Model>
+			<Area DataType="float" Unit="mm2">20.</Area>
+			<Technology>SDD</Technology>
+			<StrobeRate DataType="float" Unit="Hz">2000.</StrobeRate>
+			<NominalThroughput DataType="float" Unit="kcounts/s">180.</NominalThroughput>
+			<Elevation DataType="float" Unit="°">40.</Elevation>
+		</Detector>
+	</Conditions>
+	<Data>
+		<Analysis Class="1D" Name="EDS sum spectrum">
+			<DataOffset DataType="int64">8</DataOffset>
+			<DataLength DataType="int64">32768</DataLength>
+			<DatumType SizeInBytes="8">int64</DatumType>
+			<DatumDimensions>
+				<Dimension DataType="uint32" Name="Channel">4096</Dimension>
+			</DatumDimensions>
+			<CollectionDimensions></CollectionDimensions>
+			<IncludeConditions />
+		</Analysis>
+	</Data>
+</MSAHyperDimensionalDataFile>

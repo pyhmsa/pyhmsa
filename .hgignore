@@ -3,7 +3,6 @@ syntax: glob
 build
 dist
 *.egg-info
-pyhmsa/testdata
 .coverage
 coverage.xml
 nosetests.xml
