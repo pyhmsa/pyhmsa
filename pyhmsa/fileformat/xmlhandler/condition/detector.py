@@ -82,7 +82,8 @@ class _DetectorSpectrometerXMLHandler(_XMLHandler):
         # Load handlers
         handlers = set()
         for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.condition.calibration'):
-            handler = entry_point.load()(self.version)
+            handler_class = entry_point.load(require=False)
+            handler = handler_class(self.version)
             handlers.add(handler)
 
         # Find handler
@@ -102,7 +103,8 @@ class _DetectorSpectrometerXMLHandler(_XMLHandler):
         # Load handlers
         handlers = set()
         for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.condition.calibration'):
-            handler = entry_point.load()(self.version)
+            handler_class = entry_point.load(require=False)
+            handler = handler_class(self.version)
             handlers.add(handler)
 
         # Find handler

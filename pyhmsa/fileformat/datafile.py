@@ -100,7 +100,8 @@ class _BufferedDataFileReaderThread(_MonitorableThread):
         # Load handlers
         handlers = set()
         for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.condition'):
-            handler = entry_point.load()(datafile.version)
+            handler_class = entry_point.load(require=False)
+            handler = handler_class(datafile.version)
             handlers.add(handler)
 
         # Parse conditions
@@ -144,8 +145,9 @@ class _BufferedDataFileReaderThread(_MonitorableThread):
         # Load handlers
         handlers = set()
         for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.datum'):
-            handler = entry_point.load()(datafile.version, hmsa_file,
-                                         datafile.conditions)
+            handler_class = entry_point.load(require=False)
+            handler = handler_class(datafile.version, hmsa_file,
+                                    datafile.conditions)
             handlers.add(handler)
 
         # Parse data
@@ -285,7 +287,8 @@ class _BufferedDataFileWriterThread(_MonitorableThread):
         # Load handlers
         handlers = set()
         for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.condition'):
-            handler = entry_point.load()(datafile.version)
+            handler_class = entry_point.load(require=False)
+            handler = handler_class(datafile.version)
             handlers.add(handler)
 
         # Convert conditions
@@ -312,8 +315,9 @@ class _BufferedDataFileWriterThread(_MonitorableThread):
         # Load handlers
         handlers = set()
         for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.datum'):
-            handler = entry_point.load()(datafile.version, hmsa_file,
-                                         datafile.conditions)
+            handler_class = entry_point.load(require=False)
+            handler = handler_class(datafile.version, hmsa_file,
+                                    datafile.conditions)
             handlers.add(handler)
 
         # Parse data
