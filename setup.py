@@ -70,6 +70,8 @@ class TestDataCommand(Command):
 with codecs.open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
 
+packages = find_packages()
+
 setup(name='pyHMSA',
       version=find_version('pyhmsa', '__init__.py'),
       description='Python implementation of the MSA / MAS / AMAS Hyper-Dimensional Data File specification',
@@ -95,8 +97,8 @@ setup(name='pyHMSA',
         'Topic :: Scientific/Engineering :: Physics',
         ],
 
-      packages=find_packages(),
-      namespace_packages=['pyhmsa'],
+      packages=packages,
+      namespace_packages=packages,
 
       install_requires=['numpy', 'six'],
       setup_requires=['nose', 'coverage'],
