@@ -25,7 +25,7 @@ from pyhmsa.type.checksum import Checksum
 from pyhmsa.type.xrayline import xrayline
 from pyhmsa.util.parameter import \
     (NumericalAttribute, TextAttribute, ObjectAttribute, DateAttribute,
-     TimeAttribute, ChecksumAttribute, XRayLineAttribute)
+     TimeAttribute, ChecksumAttribute, XRayLineAttribute, BoolAttribute)
 
 # Globals and constants variables.
 from pyhmsa.type.xrayline import NOTATION_SIEGBAHN
@@ -60,6 +60,7 @@ class _XMLHandler(object):
                          TimeAttribute: self._parse_time_attribute,
                          ChecksumAttribute: self._parse_checksum_attribute,
                          XRayLineAttribute: self._parse_xrayline_attribute,
+                         BoolAttribute: self._parse_bool_attribute,
                          }
         self._converters = {NumericalAttribute: self._convert_numerical_attribute,
                             TextAttribute: self._convert_text_attribute,
@@ -68,6 +69,7 @@ class _XMLHandler(object):
                             TimeAttribute: self._convert_time_attribute,
                             ChecksumAttribute: self._convert_checksum_attribute,
                             XRayLineAttribute: self._convert_xrayline_attribute,
+                            BoolAttribute: self._convert_bool_attribute,
                             }
 
     def _find_method(self, lookup, attrib):
@@ -186,6 +188,9 @@ class _XMLHandler(object):
         algorithm = element.attrib['Algorithm']
         return Checksum(value, algorithm)
 
+    def _parse_bool_attribute(self, element, attrib=None):
+        return element.text.lower() == 'true'
+
     def parse(self, element):
         raise NotImplementedError # pragma: no cover
 
@@ -270,6 +275,11 @@ class _XMLHandler(object):
 
     def _convert_checksum_attribute(self, value, attrib):
         return [] # Checksum is added manually later by the writer
+
+    def _convert_bool_attribute(self, value, attrib):
+        element = etree.Element(attrib.xmlname)
+        element.text = 'true' if value else 'false'
+        return [element]
 
     def convert(self, obj):
         raise NotImplementedError # pragma: no cover

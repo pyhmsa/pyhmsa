@@ -264,6 +264,22 @@ class EnumAttribute(TextAttribute):
         if value is not None and value not in self._values:
             raise ValueError('Unknown %s: %s' % (self.name, value))
 
+class BoolAttribute(_Attribute):
+
+    def __init__(self, required=False, xmlname=None, doc=None):
+        _Attribute.__init__(self, required=required, xmlname=xmlname, doc=doc)
+
+    def _prepare_value(self, value):
+        if value is None:
+            return value
+        return bool(value)
+
+    def _validate_value(self, value):
+        _Attribute._validate_value(self, value)
+
+        if value is not None and not isinstance(value, bool):
+            raise ValueError('Value of %s is not a bool: %s' % (self.name, value))
+
 class NumericalRangeAttribute(NumericalAttribute):
 
     def __init__(self, default_unit=None, minvalue=-np.inf, maxvalue=np.inf,
