@@ -63,26 +63,42 @@ class Analysis1D(_Analysis):
         return _Analysis.__new__(cls, shape, dtype,
                                  buffer, offset, strides, order, conditions)
 
-    def get_xy(self, with_labels=False):
+    def get_xdata(self):
         xs = range(self.channels)
-        xlabel = 'Channels'
-        ylabel = 'Values'
 
         conditions = self.conditions.findvalues(DetectorSpectrometer)
         if conditions:
             condition = next(iter(conditions))
             calibration = condition.calibration
             xs = list(map(calibration, xs))
+
+        return np.array(xs)
+
+    def get_xlabel(self):
+        xlabel = 'Channels'
+
+        conditions = self.conditions.findvalues(DetectorSpectrometer)
+        if conditions:
+            condition = next(iter(conditions))
+            calibration = condition.calibration
             xlabel = '%s (%s)' % (calibration.quantity, calibration.unit)
+
+        return xlabel
+
+    def get_ylabel(self):
+        ylabel = 'Values'
+
+        conditions = self.conditions.findvalues(DetectorSpectrometer)
+        if conditions:
+            condition = next(iter(conditions))
             if condition.measurement_unit is not None:
                 ylabel += ' (%s)' % condition.measurement_unit
 
-        outarr = np.transpose(np.array([xs, self]))
+        return ylabel
 
-        if with_labels:
-            return xlabel, ylabel, outarr
-        else:
-            return outarr
+    def get_xy(self):
+        xs = self.get_xdata()
+        return np.transpose(np.array([xs, self]))
 
     @property
     def channels(self):
