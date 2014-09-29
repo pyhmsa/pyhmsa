@@ -26,6 +26,9 @@ pyHMSA
 
 .. image:: https://travis-ci.org/pyhmsa/pyhmsa.svg?branch=master
    :target: https://travis-ci.org/pyhmsa/pyhmsa
+   
+.. image:: https://codecov.io/github/pyhmsa/pyhmsa/coverage.svg?branch=master
+   :target: https://codecov.io/github/pyhmsa/pyhmsa?branch=master
 
 pyHMSA is a pure Python implementation of the MSA / MAS / AMAS HyperDimensional 
 Data File (HMSA, for short) specifications. 
