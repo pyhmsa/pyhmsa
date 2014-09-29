@@ -4,16 +4,18 @@ python:
   - "2.7"
   - "3.4"
 
+before_install:
+  - "sudo pip install codecov"
+
 install: 
   - "pip install -r requirements.txt"
-  - "pip install coveralls"
   - "python setup.py develop"
 
 script: 
   - "nosetests"
 
 after_success:
-    coveralls
+    codecov
 
 notifications:
     email: false
