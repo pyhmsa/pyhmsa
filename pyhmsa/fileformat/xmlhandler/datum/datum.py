@@ -146,12 +146,19 @@ class _DatumXMLHandler(_XMLHandler):
 
         self._hmsa_file.seek(offset)
         arr = array.array(dtype.char)
-        arr.fromfile(self._hmsa_file, length // dtype.itemsize)
+        try:
+            arr.fromfile(self._hmsa_file, length // dtype.itemsize)
+        except TypeError:
+            arr.fromstring(self._hmsa_file.read(length))
         return np.frombuffer(arr, dtype, length // dtype.itemsize)
 
     def _convert_binary(self, obj):
         arr = array.array(obj.dtype.char, obj.ravel(order='F'))
-        self._hmsa_file.write(arr.tobytes())
+        try:
+            b = arr.tobytes()
+        except AttributeError: # For Python 2.7 and < 3.4
+            b = arr.tostring()
+        self._hmsa_file.write(b)
         del arr
 
     def _convert(self, obj):
