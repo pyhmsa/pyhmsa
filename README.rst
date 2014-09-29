@@ -1,31 +1,31 @@
 pyHMSA
 ======
 
-.. image:: https://pypip.in/version/pyHMSA/badge.svg?style=flat
+.. image:: https://pypip.in/version/pyHMSA/badge.svg
    :target: https://pypi.python.org/pypi/pyHMSA/
    :alt: Latest Version
 
-.. image:: https://pypip.in/implementation/pyHMSA/badge.svg?style=flat
+.. image:: https://pypip.in/implementation/pyHMSA/badge.svg
    :target: https://pypi.python.org/pypi/pyHMSA/
    :alt: Supported Python implementations
    
-.. image:: https://pypip.in/py_versions/pyHMSA/badge.svg?style=flat
+.. image:: https://pypip.in/py_versions/pyHMSA/badge.svg
    :target: https://pypi.python.org/pypi/pyHMSA/
    :alt: Supported Python versions
 
-.. image:: https://pypip.in/wheel/pyHMSA/badge.svg?style=flat
+.. image:: https://pypip.in/wheel/pyHMSA/badge.svg
    :target: https://pypi.python.org/pypi/pyHMSA/
    :alt: Wheel Status
 
-.. image:: https://pypip.in/license/pyHMSA/badge.svg?style=flat
+.. image:: https://pypip.in/license/pyHMSA/badge.svg
    :target: https://pypi.python.org/pypi/pyHMSA/
    :alt: License
 
-.. image:: https://readthedocs.org/projects/pyhmsa/badge/?version=latest&style=flat
+.. image:: https://readthedocs.org/projects/pyhmsa/badge/?version=latest
    :target: https://readthedocs.org/projects/pyhmsa/
 
-.. image:: https://drone.io/bitbucket.org/microanalysis/pyhmsa/status.png
-   :target: https://drone.io/bitbucket.org/microanalysis/pyhmsa
+.. image:: https://travis-ci.org/pyhmsa/pyhmsa.svg?branch=master
+   :target: https://travis-ci.org/pyhmsa/pyhmsa
 
 pyHMSA is a pure Python implementation of the MSA / MAS / AMAS HyperDimensional 
 Data File (HMSA, for short) specifications. 
