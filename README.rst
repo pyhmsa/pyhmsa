@@ -51,6 +51,6 @@ More information can be found at the website:
 http://pyhmsa.readthedocs.org
 
 The most current development version is always available from our
-bitbucket repository:
+GitHub repository:
 
-https://bitbucket.org/microanalysis/pyhmsa
+https://github.com/pyhmsa/pyhmsa

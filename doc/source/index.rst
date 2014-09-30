@@ -65,7 +65,7 @@ Download
 ========
 
 The source code of the library can be viewed/forked/downloaded on 
-`bitbucket <https://bitbucket.org/microanalysis/pyhmsa>`_.
+`GitHub <https://github.com/pyhmsa/pyhmsa>`_.
 
 .. toctree::
    :hidden:
