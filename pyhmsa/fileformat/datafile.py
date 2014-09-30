@@ -186,6 +186,7 @@ class _DataFileReaderThread(_BufferedDataFileReaderThread):
         try:
             datafile = \
                 _BufferedDataFileReaderThread._run(self, xml_file, hmsa_file)
+            if self.is_cancelled(): return
             datafile._filepath = filepath
         finally:
             hmsa_file.close()

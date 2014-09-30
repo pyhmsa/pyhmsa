@@ -80,6 +80,7 @@ class _MonitorableThread(threading.Thread):
             self._exception = ex
             return
 
+        if self.is_cancelled(): return
         self._update_status(1.0, 'Completed')
         self._result = result
 
@@ -137,8 +138,10 @@ class _Monitorable(object):
         self._thread = self._create_thread(*args, **kwargs)
         self._thread.start()
 
-    def cancel(self):
+    def cancel(self, timeout=None):
         self._thread.cancel()
+        self._thread.join(timeout)
+        self._thread._update_status(1.0, 'Cancelled') # Require in case thread changed status
 
     def is_alive(self):
         return self._thread.is_alive()
