@@ -4,7 +4,7 @@ from pyhmsa.datafile import DataFile
 from pyhmsa.type.language import langstr
 datafile = DataFile()
 
-author = langstr('Fyodor Dostoyevsky', {'ru': u'Фёдор Миха́йлович Достое́вский'})
+author = langstr('Wilhelm Conrad Roentgen', {'de': u'Wilhelm Conrad Röntgen'})
 datafile.header.author = author
 
-print(datafile.header.author.alternatives['ru']) # Returns ...
+print(datafile.header.author.alternatives['de']) # Returns ...
