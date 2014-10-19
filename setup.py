@@ -4,8 +4,6 @@
 import os
 import re
 import codecs
-import zipfile
-from distutils.cmd import Command
 
 # Third party modules.
 from setuptools import setup, find_packages
@@ -37,35 +35,6 @@ def find_version(*file_paths):
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
-class TestDataCommand(Command):
-
-    description = "create a zip of all files in the testData folder"
-    user_options = [('dist-dir=', 'd',
-                     "directory to put final built distributions in "
-                     "[default: dist]"), ]
-
-    def initialize_options(self):
-        self.dist_dir = None
-
-    def finalize_options(self):
-        if self.dist_dir is None:
-            self.dist_dir = "dist"
-
-    def run(self):
-        if not os.path.exists(self.dist_dir):
-            os.makedirs(self.dist_dir)
-
-        testdatapath = os.path.join(BASEDIR, 'pyhmsa', 'testdata')
-
-        zipfilename = self.distribution.get_fullname() + '-testdata.zip'
-        zipfilepath = os.path.join(self.dist_dir, zipfilename)
-        with zipfile.ZipFile(zipfilepath, 'w') as z:
-            for root, _, files in os.walk(testdatapath):
-                for file in files:
-                    filename = os.path.join(root, file)
-                    arcname = os.path.relpath(filename, BASEDIR)
-                    z.write(filename, arcname)
-
 # Get the long description from the relevant file
 with codecs.open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
@@ -94,6 +63,7 @@ setup(name='pyHMSA',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
         'Topic :: Scientific/Engineering :: Physics',
         ],
 
@@ -107,8 +77,6 @@ setup(name='pyHMSA',
       zip_safe=True,
 
       test_suite='nose.collector',
-
-      cmdclass={'zip_testdata': TestDataCommand},
 
       entry_points=\
         {'pyhmsa.fileformat.xmlhandler.condition':
