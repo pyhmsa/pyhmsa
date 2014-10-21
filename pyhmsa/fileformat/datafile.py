@@ -187,7 +187,7 @@ class _DataFileReaderThread(_BufferedDataFileReaderThread):
             datafile = \
                 _BufferedDataFileReaderThread._run(self, xml_file, hmsa_file)
             if self.is_cancelled(): return
-            datafile._filepath = filepath
+            datafile._filepath = filepath_hmsa
         finally:
             hmsa_file.close()
             xml_file.close()
@@ -369,7 +369,7 @@ class _DataFileWriterThread(_BufferedDataFileWriterThread):
             xml_file.close()
 
         self._update_status(1.0, 'Completed')
-        datafile._filepath = filepath
+        datafile._filepath = filepath_hmsa
 
         return datafile
 

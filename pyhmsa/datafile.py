@@ -12,6 +12,7 @@
 """
 
 # Standard library modules.
+import os
 
 # Third party modules.
 
@@ -43,6 +44,8 @@ class DataFile(object):
         :arg language: language of the data file (default and recommended
             language is ``en-US``)
         """
+        if filepath is not None:
+            filepath = os.path.splitext(filepath)[0] + '.hmsa'
         self._filepath = filepath
 
         self._version = version
@@ -152,4 +155,7 @@ class DataFile(object):
 
     @property
     def filepath(self):
+        """
+        Path where the data file was last saved. Always .hmsa extension used.
+        """
         return self._filepath
