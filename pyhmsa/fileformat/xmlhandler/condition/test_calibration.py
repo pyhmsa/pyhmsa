@@ -152,9 +152,11 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
 
         self.h = CalibrationExplicitXMLHandler(1.0)
 
-        self.obj = CalibrationExplicit('Energy', 'eV', (-2.225, -0.018, 0.134, 0.677))
+        self.obj = CalibrationExplicit('Energy', 'eV',
+                                       (-2.225, -0.018, 0.134, 0.677),
+                                       ('a', 'b', 'c', 'd'))
 
-        source = u'<Calibration Class="Explicit"><Quantity>Energy</Quantity><Unit>eV</Unit><Values DataType="array:float" Count="4">-2.225, -0.018, 0.134, 0.677</Values></Calibration>'
+        source = u'<Calibration Class="Explicit"><Quantity>Energy</Quantity><Unit>eV</Unit><Values DataType="array:float" Count="4">-2.225, -0.018, 0.134, 0.677</Values><Labels>a,b,c,d</Labels></Calibration>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -174,10 +176,20 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
         self.assertAlmostEqual(-0.018, obj.values[1], 4)
         self.assertAlmostEqual(0.134, obj.values[2], 4)
         self.assertAlmostEqual(0.677, obj.values[3], 4)
+        self.assertEqual('a', obj.labels[0])
+        self.assertEqual('b', obj.labels[1])
+        self.assertEqual('c', obj.labels[2])
+        self.assertEqual('d', obj.labels[3])
         self.assertAlmostEqual(-2.225, obj(0), 4)
         self.assertAlmostEqual(-0.018, obj(1), 4)
         self.assertAlmostEqual(0.134, obj(2), 4)
         self.assertAlmostEqual(0.677, obj(3), 4)
+
+        source = u'<Calibration Class="Explicit"><Quantity>Energy</Quantity><Unit>eV</Unit><Values DataType="array:float" Count="4">-2.225, -0.018, 0.134, 0.677</Values></Calibration>'
+        element = etree.fromstring(source.encode('utf-8'))
+        obj = self.h.parse(element)
+        self.assertIsNone(obj.labels)
+        self.assertIsNone(obj.get_label(0))
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
@@ -190,6 +202,7 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
         self.assertEqual('Energy', element.find('Quantity').text)
         self.assertEqual('eV', element.find('Unit').text)
         self.assertEqual('-2.225,-0.018,0.134,0.677', element.find('Values').text)
+        self.assertEqual('a,b,c,d', element.find('Labels').text)
 
 if __name__ == '__main__': # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)

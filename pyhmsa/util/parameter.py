@@ -152,6 +152,20 @@ class TextAttribute(_Attribute):
         if value is not None and len(value.strip()) == 0 and self.is_required():
             raise ValueError('%s is required' % self.name)
 
+class TextListAttribute(TextAttribute):
+
+    def _prepare_value(self, values):
+        if values is None:
+            return None
+        return np.array(values, dtype=np.object)
+
+    def _validate_value(self, values):
+        if values is None:
+            return
+
+        for value in values:
+            TextAttribute._validate_value(self, value)
+
 class AtomicNumberAttribute(NumericalAttribute):
 
     def __init__(self, required=False, xmlname=None, doc=None):

@@ -20,7 +20,7 @@ import numpy as np
 # Local modules.
 from pyhmsa.util.parameter import \
     (Parameter, TextAttribute, NumericalAttribute, UnitAttribute,
-     OrderedNumericalAttribute)
+     OrderedNumericalAttribute, TextListAttribute)
 
 # Globals and constants variables.
 
@@ -149,8 +149,9 @@ class CalibrationPolynomial(_Calibration):
 class CalibrationExplicit(_Calibration):
 
     values = OrderedNumericalAttribute(None, True, "Values", "explicit values")
+    labels = TextListAttribute(False, 'Labels', 'text labels for each of the calibration points')
 
-    def __init__(self, quantity, unit, values):
+    def __init__(self, quantity, unit, values, labels=None):
         """
         Defines the energy/wavelength/etc calibration of a spectrometer or
         other measurement device, for which relationship between the measurement
@@ -166,6 +167,7 @@ class CalibrationExplicit(_Calibration):
         _Calibration.__init__(self, quantity, unit)
 
         self.values = values
+        self.labels = labels
 
     def get_quantity(self, index):
         return self.values[index]
@@ -175,3 +177,8 @@ class CalibrationExplicit(_Calibration):
         if index != len(self.values):
             return index
         return -1
+
+    def get_label(self, index):
+        if self.labels is None:
+            return None
+        return self.labels[index]

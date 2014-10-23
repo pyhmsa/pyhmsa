@@ -24,8 +24,9 @@ from pyhmsa.type.language import langstr
 from pyhmsa.type.checksum import Checksum
 from pyhmsa.type.xrayline import xrayline
 from pyhmsa.util.parameter import \
-    (NumericalAttribute, TextAttribute, ObjectAttribute, DateAttribute,
-     TimeAttribute, ChecksumAttribute, XRayLineAttribute, BoolAttribute)
+    (NumericalAttribute, TextAttribute, TextListAttribute, ObjectAttribute,
+     DateAttribute, TimeAttribute, ChecksumAttribute, XRayLineAttribute,
+     BoolAttribute)
 
 # Globals and constants variables.
 from pyhmsa.type.xrayline import NOTATION_SIEGBAHN
@@ -55,6 +56,7 @@ class _XMLHandler(object):
 
         self._parsers = {NumericalAttribute: self._parse_numerical_attribute,
                          TextAttribute: self._parse_text_attribute,
+                         TextListAttribute: self._parse_textlist_attribute,
                          ObjectAttribute: self._parse_object_attribute,
                          DateAttribute: self._parse_date_attribute,
                          TimeAttribute: self._parse_time_attribute,
@@ -64,6 +66,7 @@ class _XMLHandler(object):
                          }
         self._converters = {NumericalAttribute: self._convert_numerical_attribute,
                             TextAttribute: self._convert_text_attribute,
+                            TextListAttribute: self._convert_textlist_attribute,
                             ObjectAttribute: self._convert_object_attribute,
                             DateAttribute: self._convert_date_attribute,
                             TimeAttribute: self._convert_time_attribute,
@@ -159,6 +162,12 @@ class _XMLHandler(object):
         else:
             return element.text
 
+    def _parse_textlist_attribute(self, element, attrib=None):
+        text = element.text.strip()
+        if not text:
+            return None
+        return text.split(',')
+
     def _parse_object_attribute(self, element, attrib=None):
         return self._parse_parameter(element, attrib.type_)
 
@@ -249,6 +258,11 @@ class _XMLHandler(object):
             for language_tag, altvalue in value.alternatives.items():
                 element.set('alt-lang-' + language_tag, altvalue)
 
+        return [element]
+
+    def _convert_textlist_attribute(self, value, attrib):
+        element = etree.Element(attrib.xmlname)
+        element.text = ','.join(value)
         return [element]
 
     def _convert_object_attribute(self, value, attrib):

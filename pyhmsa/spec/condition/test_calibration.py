@@ -148,17 +148,24 @@ class TestCalibrationExplicit(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.cal = CalibrationExplicit('Energy', 'eV', (-2.255, -0.018, 0.134, 0.677))
+        self.cal = CalibrationExplicit('Energy', 'eV',
+                                       (-2.255, -0.018, 0.134, 0.677),
+                                       ('a', 'b', 'c', 'd'))
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
 
     def testskeleton(self):
         self.assertEqual(4, len(self.cal.values))
+        self.assertEqual(4, len(self.cal.labels))
         self.assertAlmostEqual(-2.255, self.cal.values[0], 4)
         self.assertAlmostEqual(-0.018, self.cal.values[1], 4)
         self.assertAlmostEqual(0.134, self.cal.values[2], 4)
         self.assertAlmostEqual(0.677, self.cal.values[3], 4)
+        self.assertEqual('a', self.cal.labels[0])
+        self.assertEqual('b', self.cal.labels[1])
+        self.assertEqual('c', self.cal.labels[2])
+        self.assertEqual('d', self.cal.labels[3])
         self.assertAlmostEqual(-2.255, self.cal(0), 4)
         self.assertAlmostEqual(-0.018, self.cal(1), 4)
         self.assertAlmostEqual(0.134, self.cal(2), 4)
@@ -171,6 +178,10 @@ class TestCalibrationExplicit(unittest.TestCase):
         self.assertEqual(1, self.cal.get_index(-0.018))
         self.assertEqual(2, self.cal.get_index(0.134))
         self.assertEqual(3, self.cal.get_index(0.677))
+        self.assertEqual('a', self.cal.get_label(0))
+        self.assertEqual('b', self.cal.get_label(1))
+        self.assertEqual('c', self.cal.get_label(2))
+        self.assertEqual('d', self.cal.get_label(3))
 
         self.assertRaises(ValueError, CalibrationExplicit, 'Energy', 'eV', ())
 
