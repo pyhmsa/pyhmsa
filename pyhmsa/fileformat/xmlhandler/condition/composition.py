@@ -37,7 +37,8 @@ class CompositionElementalXMLHandler(_XMLHandler):
     def parse(self, element):
         units = []
         tmpcomposition = {}
-        for subelement in element.findall('Element'):
+        subelements = element.findall('Element') + element.findall('Components/Element')
+        for subelement in subelements:
             z = int(subelement.attrib['Z'])
             value = self._parse_numerical_attribute(subelement)
             units.append(value.unit)
@@ -60,12 +61,13 @@ class CompositionElementalXMLHandler(_XMLHandler):
 
     def convert(self, obj):
         element = etree.Element('Composition', {'Class': 'Elemental'})
+        subelement = etree.SubElement(element, 'Components')
 
         attrib = type('MockAttribute', (object,), {'xmlname': 'Element'})
         for z, fraction in obj.items():
-            subelement = self._convert_numerical_attribute(fraction, attrib)[0]
-            subelement.set('Unit', obj.unit)
-            subelement.set('Z', str(z))
-            element.append(subelement)
+            subsubelement = self._convert_numerical_attribute(fraction, attrib)[0]
+            subsubelement.set('Unit', obj.unit)
+            subsubelement.set('Z', str(z))
+            subelement.append(subsubelement)
 
         return element

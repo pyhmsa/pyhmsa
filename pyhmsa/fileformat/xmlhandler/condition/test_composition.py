@@ -33,7 +33,7 @@ class TestCompositionXMLHandler(unittest.TestCase):
         self.obj[13] = 1
         self.obj[9] = 6
 
-        source = u'<Composition Class="Elemental"><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition>'
+        source = u'<Composition Class="Elemental"><Components><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Components></Composition>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -59,13 +59,23 @@ class TestCompositionXMLHandler(unittest.TestCase):
         element = etree.fromstring(source.encode('utf-8'))
         self.assertRaises(ValueError, self.h.parse, element)
 
+        # Old specifications
+        source = u'<Composition Class="Elemental"><Element Z="11" Unit="atoms" DataType="float">3.</Element><Element Z="13" Unit="atoms" DataType="float">1.</Element><Element Z="9" Unit="atoms" DataType="float">6.</Element></Composition>'
+        element = etree.fromstring(source.encode('utf-8'))
+        obj = self.h.parse(element)
+        self.assertEqual('atoms', obj.unit)
+        self.assertEqual(3, len(obj))
+        self.assertAlmostEqual(3.0, obj[11], 4)
+        self.assertAlmostEqual(1.0, obj[13], 4)
+        self.assertAlmostEqual(6.0, obj[9], 4)
+
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
 
     def testconvert(self):
         element = self.h.convert(self.obj)
         self.assertEqual('Composition', element.tag)
-        self.assertEqual(3, len(element.findall('Element')))
+        self.assertEqual(3, len(element.findall('Components/Element')))
 
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
