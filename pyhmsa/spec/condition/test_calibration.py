@@ -174,6 +174,9 @@ class TestCalibrationExplicit(unittest.TestCase):
 
         self.assertRaises(ValueError, CalibrationExplicit, 'Energy', 'eV', ())
 
+        self.assertRaises(ValueError, CalibrationExplicit, 'Energy', 'eV',
+                          (99.0, -2.255, -0.018, 0.134, 0.677))
+
     def testpickle(self):
         s = pickle.dumps(self.cal)
         cal = pickle.loads(s)

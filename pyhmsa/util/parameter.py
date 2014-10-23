@@ -316,6 +316,16 @@ class NumericalRangeAttribute(NumericalAttribute):
             lambda instance, vmin, vmax, unit = None: \
                 self.__set__(instance, ((vmin, vmax), unit or self._default_unit))
 
+class OrderedNumericalAttribute(NumericalAttribute):
+
+    def _validate_value(self, values):
+        NumericalAttribute._validate_value(self, values)
+
+        if len(values) == 0:
+            raise ValueError('At least one value must be specified')
+        if not all(values[i] <= values[i + 1] for i in range(len(values) - 1)):
+            raise ValueError('Values are not sorted')
+
 class DateAttribute(_Attribute):
 
     def _prepare_value(self, value):

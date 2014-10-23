@@ -19,7 +19,8 @@ import numpy as np
 
 # Local modules.
 from pyhmsa.util.parameter import \
-    Parameter, TextAttribute, NumericalAttribute, UnitAttribute
+    (Parameter, TextAttribute, NumericalAttribute, UnitAttribute,
+     OrderedNumericalAttribute)
 
 # Globals and constants variables.
 
@@ -147,7 +148,7 @@ class CalibrationPolynomial(_Calibration):
 
 class CalibrationExplicit(_Calibration):
 
-    values = NumericalAttribute(None, True, "Values", "explicit values")
+    values = OrderedNumericalAttribute(None, True, "Values", "explicit values")
 
     def __init__(self, quantity, unit, values):
         """
@@ -164,10 +165,6 @@ class CalibrationExplicit(_Calibration):
         """
         _Calibration.__init__(self, quantity, unit)
 
-        if len(values) == 0:
-            raise ValueError('At least one value must be specified')
-        if not all(values[i] <= values[i + 1] for i in range(len(values) - 1)):
-            raise ValueError('Values are not sorted')
         self.values = values
 
     def get_quantity(self, index):
