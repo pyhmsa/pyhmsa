@@ -154,7 +154,7 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
 
         self.obj = CalibrationExplicit('Energy', 'eV', (-2.225, -0.018, 0.134, 0.677))
 
-        source = u'<Calibration Class="Explicit"><Quantity>Energy</Quantity><Unit>eV</Unit><Values DataType="array:float" Count="4">-2.225, 0.677, 0.134, -0.018</Values></Calibration>'
+        source = u'<Calibration Class="Explicit"><Quantity>Energy</Quantity><Unit>eV</Unit><Values DataType="array:float" Count="4">-2.225, -0.018, 0.134, 0.677</Values></Calibration>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -171,13 +171,13 @@ class TestCalibrationExplicitXMLHandler(unittest.TestCase):
         self.assertEqual('eV', obj.unit)
         self.assertEqual(4, len(obj.values))
         self.assertAlmostEqual(-2.225, obj.values[0], 4)
-        self.assertAlmostEqual(0.677, obj.values[1], 4)
+        self.assertAlmostEqual(-0.018, obj.values[1], 4)
         self.assertAlmostEqual(0.134, obj.values[2], 4)
-        self.assertAlmostEqual(-0.018, obj.values[3], 4)
+        self.assertAlmostEqual(0.677, obj.values[3], 4)
         self.assertAlmostEqual(-2.225, obj(0), 4)
-        self.assertAlmostEqual(0.677, obj(1), 4)
+        self.assertAlmostEqual(-0.018, obj(1), 4)
         self.assertAlmostEqual(0.134, obj(2), 4)
-        self.assertAlmostEqual(-0.018, obj(3), 4)
+        self.assertAlmostEqual(0.677, obj(3), 4)
 
     def testcan_convert(self):
         self.assertTrue(self.h.can_convert(self.obj))
