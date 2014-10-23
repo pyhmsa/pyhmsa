@@ -136,8 +136,9 @@ class AcquisitionRasterLinescan(_AcquisitionRaster):
 
     step_count = NumericalAttribute(None, True, 'StepCount', 'number of steps')
     step_size = NumericalAttribute('um', False, 'StepSize', 'dimension of each step')
+    frame_count = NumericalAttribute(None, False, 'FrameCount', 'number of accumulated frames')
 
-    def __init__(self, step_count, step_size=None,
+    def __init__(self, step_count, step_size=None, frame_count=None,
                   position_start=None, position_end=None,
                   raster_mode=None,
                   dwell_time=None, total_time=None, dwell_time_live=None):
@@ -163,6 +164,7 @@ class AcquisitionRasterLinescan(_AcquisitionRaster):
 
         self.step_count = step_count
         self.step_size = step_size
+        self.frame_count = frame_count
         self.position_start = position_start
         self.position_end = position_end
 

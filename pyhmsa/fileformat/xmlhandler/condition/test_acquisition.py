@@ -157,10 +157,10 @@ class TestAcquisitionRasterLinescanXMLHandler(unittest.TestCase):
 
         position_start = SpecimenPosition(0.0, 0.0, 10.0)
         position_end = SpecimenPosition(10.24, 0.0, 10.0)
-        self.obj = AcquisitionRasterLinescan(1024, 10.0, position_start,
+        self.obj = AcquisitionRasterLinescan(1024, 10.0, 2, position_start,
                                              position_end, RASTER_MODE_STAGE)
 
-        source = '<Acquisition Class="Raster/Linescan"><RasterMode>Stage</RasterMode><StepCount DataType="uint32">1024</StepCount><StepSize Unit="um" DataType="float">10.</StepSize><SpecimenPosition Name="Start"><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z></SpecimenPosition><SpecimenPosition Name="End"><X Unit="mm" DataType="float">10.24</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z></SpecimenPosition></Acquisition>'
+        source = '<Acquisition Class="Raster/Linescan"><RasterMode>Stage</RasterMode><StepCount DataType="uint32">1024</StepCount><StepSize Unit="um" DataType="float">10.</StepSize><FrameCount DataType="uint32">2</FrameCount><SpecimenPosition Name="Start"><X Unit="mm" DataType="float">0.0</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z></SpecimenPosition><SpecimenPosition Name="End"><X Unit="mm" DataType="float">10.24</X><Y Unit="mm" DataType="float">0.0</Y><Z Unit="mm" DataType="float">10.0</Z></SpecimenPosition></Acquisition>'
         self.element = etree.fromstring(source.encode('utf-8'))
 
     def tearDown(self):
@@ -176,6 +176,7 @@ class TestAcquisitionRasterLinescanXMLHandler(unittest.TestCase):
         self.assertEqual(RASTER_MODE_STAGE, obj.raster_mode)
         self.assertEqual(1024, obj.step_count)
         self.assertAlmostEqual(10.0, obj.step_size, 4)
+        self.assertEqual(2, obj.frame_count)
         self.assertEqual('um', obj.step_size.unit)
         self.assertAlmostEqual(0.0, obj.position_start.x, 4)
         self.assertEqual('mm', obj.position_start.x.unit)
