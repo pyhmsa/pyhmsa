@@ -20,7 +20,7 @@ import numpy as np
 # Local modules.
 from pyhmsa.util.parameter import \
     (Parameter, TextAttribute, NumericalAttribute, UnitAttribute,
-     OrderedNumericalAttribute, TextListAttribute)
+     TextListAttribute)
 
 # Globals and constants variables.
 
@@ -148,7 +148,7 @@ class CalibrationPolynomial(_Calibration):
 
 class CalibrationExplicit(_Calibration):
 
-    values = OrderedNumericalAttribute(None, True, "Values", "explicit values")
+    values = NumericalAttribute(None, True, "Values", "explicit values")
     labels = TextListAttribute(False, 'Labels', 'text labels for each of the calibration points')
 
     def __init__(self, quantity, unit, values, labels=None):
