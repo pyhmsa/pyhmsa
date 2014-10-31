@@ -87,6 +87,18 @@ class TestModule(unittest.TestCase):
         v = convert_unit('m', 5.0, 'km')
         self.assertAlmostEqual(5000.0, v, 4)
 
+        v = convert_unit('m', 5.0, u'\u00c5')
+        self.assertAlmostEqual(5e-10, v, 14)
+
+        v = convert_unit(u'\u00c5', 5.0, 'nm')
+        self.assertAlmostEqual(50.0, v, 4)
+
+        v = convert_unit('rad', 180.0, 'degrees')
+        self.assertAlmostEqual(3.1416, v, 4)
+
+        v = convert_unit('degrees', 3.1416, 'rad')
+        self.assertAlmostEqual(180.0, v, 2)
+
 class Testarrayunit(unittest.TestCase):
 
     def setUp(self):

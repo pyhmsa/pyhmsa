@@ -103,8 +103,27 @@ def convert_unit(newunit, value, oldunit=None):
         oldunit = value.unit
 
     newprefix, newbaseunit, newexponent = parse_unit(newunit)
-    oldprefix, oldbaseunit, oldexponent = parse_unit(oldunit)
+    newprefix_value = _PREFIXES_VALUES.get(newprefix, 1.0)
 
+    oldprefix, oldbaseunit, oldexponent = parse_unit(oldunit)
+    oldprefix_value = _PREFIXES_VALUES.get(oldprefix, 1.0)
+
+    # Fix for non SI units
+    if newbaseunit == 'm' and oldbaseunit == u'\u00c5':
+        oldbaseunit = 'm'
+        oldprefix_value *= 1e-10
+    elif newbaseunit == u'\u00c5' and oldbaseunit == 'm':
+        oldbaseunit = u'\u00c5'
+        oldprefix_value *= 1e10
+
+    elif newbaseunit == 'rad' and oldbaseunit == 'degrees':
+        oldbaseunit = 'rad'
+        oldprefix_value *= np.pi / 180.0
+    elif newbaseunit == 'degrees' and oldbaseunit == 'rad':
+        oldbaseunit = 'degrees'
+        oldprefix_value *= 180.0 / np.pi
+
+    # Check
     if newbaseunit != oldbaseunit:
         raise ValueError('Base units must match: %s != %s' % \
                          (newbaseunit, oldbaseunit))
@@ -112,9 +131,7 @@ def convert_unit(newunit, value, oldunit=None):
         raise ValueError('Exponents must match: %s != %s' % \
                          (newexponent, oldexponent))
 
-    newprefix_value = _PREFIXES_VALUES.get(newprefix, 1.0)
-    oldprefix_value = _PREFIXES_VALUES.get(oldprefix, 1.0)
-
+    # Conversion
     factor = oldprefix_value ** oldexponent / newprefix_value ** oldexponent
     newvalue = value * factor
 
