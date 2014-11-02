@@ -114,7 +114,7 @@ class DataFile(object):
         """
         Conditions that are not associated to any data sets (read-only).
         """
-        conditions = {}
+        conditions = Conditions()
 
         for identifier, condition in self.conditions.items():
             orphan = True
