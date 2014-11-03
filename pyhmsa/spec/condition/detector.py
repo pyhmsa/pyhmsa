@@ -17,10 +17,13 @@
 
 # Local modules.
 from pyhmsa.spec.condition.condition import _Condition
-from pyhmsa.spec.condition.calibration import _Calibration
+from pyhmsa.spec.condition.calibration import _Calibration, CalibrationExplicit
 from pyhmsa.util.parameter import \
     (Parameter, NumericalAttribute, EnumAttribute, TextAttribute,
      FrozenAttribute, UnitAttribute, ObjectAttribute)
+from pyhmsa.type.unit import parse_unit
+from pyhmsa.type.numerical import convert_unit
+from pyhmsa.util.physics import wavelength_to_energy_eV, energy_to_wavelength_m
 
 # Globals and constants variables.
 SIGNAL_TYPE_EDS = 'EDS'
@@ -397,6 +400,100 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
         if window is None:
             window = Window()
         self.window = window
+
+    def get_calibration_energy(self):
+        quantity = self.calibration.quantity.lower()
+        _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+
+        # From energy
+        if quantity == 'energy' and baseunit == 'eV':
+            return self.calibration
+
+        # From wavelength
+        if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
+            values = [wavelength_to_energy_eV(self.calibration(i)) \
+                      for i in range(int(self.channel_count))]
+            return CalibrationExplicit('Energy', 'eV', list(values))
+
+        # From position
+        if quantity == 'position' and baseunit == 'm':
+            if self.crystal_2d is None:
+                raise ValueError('Element "crystal_2d" is not defined')
+            d_spacing = convert_unit('m', self.crystal_2d)
+
+            if self.rowland_circle_diameter is None:
+                raise ValueError('Element "rowland_circle_diameter" is not defined')
+            rownload_m = convert_unit('m', self.rowland_circle_diameter)
+
+            values = [wavelength_to_energy_eV(self.calibration(i) / rownload_m * d_spacing) \
+                      for i in range(int(self.channel_count))]
+            return CalibrationExplicit('Energy', 'eV', list(values))
+
+        raise ValueError('Cannot convert calibration to energy')
+
+    calibration_energy = property(get_calibration_energy)
+
+    def get_calibration_wavelength(self):
+        quantity = self.calibration.quantity.lower()
+        _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+
+        # From wavelength
+        if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
+            return self.calibration
+
+        # From energy
+        if quantity == 'energy' and baseunit == 'eV':
+            values = [energy_to_wavelength_m(self.calibration(i)) \
+                      for i in range(int(self.channel_count))]
+            return CalibrationExplicit('Wavelength', 'm', list(values))
+
+        # From position
+        if quantity == 'position' and baseunit == 'm':
+            if self.crystal_2d is None:
+                raise ValueError('Element "crystal_2d" is not defined')
+            d_spacing = convert_unit('m', self.crystal_2d)
+
+            if self.rowland_circle_diameter is None:
+                raise ValueError('Element "rowland_circle_diameter" is not defined')
+            rownload_m = convert_unit('m', self.rowland_circle_diameter)
+
+            values = [self.calibration(i) / rownload_m * d_spacing \
+                      for i in range(int(self.channel_count))]
+            return CalibrationExplicit('Wavelength', 'm', list(values))
+
+        raise ValueError('Cannot convert calibration to wavelength')
+
+    calibration_wavelength = property(get_calibration_wavelength)
+
+    def get_calibration_position(self):
+        quantity = self.calibration.quantity.lower()
+        _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+
+        # From position
+        if quantity == 'position' and baseunit == 'm':
+            return self.calibration
+
+        # From energy and wavelength
+        if self.crystal_2d is None:
+            raise ValueError('Element "crystal_2d" is not defined')
+        d_spacing = convert_unit('m', self.crystal_2d)
+
+        if self.rowland_circle_diameter is None:
+            raise ValueError('Element "rowland_circle_diameter" is not defined')
+        rownload_m = convert_unit('m', self.rowland_circle_diameter)
+
+        if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
+            values = [self.calibration(i) * rownload_m / d_spacing \
+                      for i in range(int(self.channel_count))]
+            return CalibrationExplicit('Position', 'm', list(values))
+        elif quantity == 'energy' and baseunit == 'eV':
+            values = [energy_to_wavelength_m(self.calibration(i)) * rownload_m / d_spacing \
+                      for i in range(int(self.channel_count))]
+            return CalibrationExplicit('Position', 'm', list(values))
+
+        raise ValueError('Cannot convert calibration to position')
+
+    calibration_position = property(get_calibration_position)
 
 class DetectorSpectrometerXEDS(DetectorSpectrometer):
 

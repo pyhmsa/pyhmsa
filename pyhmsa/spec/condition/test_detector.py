@@ -354,7 +354,9 @@ class TestDetectorSpectrometerWDS(unittest.TestCase):
         unittest.TestCase.setUp(self)
 
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
-        self.det = DetectorSpectrometerWDS(4096, calibration)
+        self.det = DetectorSpectrometerWDS(4096, calibration,
+                                           crystal_2d=8.742,
+                                           rowland_circle_diameter=140)
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -364,12 +366,10 @@ class TestDetectorSpectrometerWDS(unittest.TestCase):
         self.assertEqual('TAP', self.det.dispersion_element)
 
     def testcrystal_2d(self):
-        self.det.crystal_2d = 8.742
         self.assertAlmostEqual(8.742, self.det.crystal_2d, 4)
         self.assertEqual(u'\u00c5', self.det.crystal_2d.unit)
 
     def testrowland_circle_diameter(self):
-        self.det.rowland_circle_diameter = 140.0
         self.assertAlmostEqual(140.0, self.det.rowland_circle_diameter, 4)
         self.assertEqual('mm', self.det.rowland_circle_diameter.unit)
 
@@ -388,6 +388,24 @@ class TestDetectorSpectrometerWDS(unittest.TestCase):
         self.det.window = window
         self.assertEqual('Al', self.det.window.layers[0].material)
         self.assertEqual(1.0, self.det.window.layers[0].thickness)
+
+    def testcalibration_energy(self):
+        cal = self.det.calibration_energy
+        self.assertEqual('Energy', cal.quantity)
+        self.assertEqual('eV', cal.unit)
+        self.assertAlmostEqual(-237.098251, cal(0), 4)
+
+    def testcalibration_wavelength(self):
+        cal = self.det.calibration_wavelength
+        self.assertEqual('Wavelength', cal.quantity)
+        self.assertEqual('m', cal.unit)
+        self.assertAlmostEqual(-5.22923e-9, cal(0), 13)
+
+    def testcalibration_position(self):
+        cal = self.det.calibration_position
+        self.assertEqual('Position', cal.quantity)
+        self.assertEqual('m', cal.unit)
+        self.assertAlmostEqual(-0.8374, cal(0), 4)
 
     def testpickle(self):
         self.det.dispersion_element = 'TAP'
