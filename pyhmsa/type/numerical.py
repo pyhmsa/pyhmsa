@@ -99,6 +99,9 @@ def convert_value(value, unit=None):
     return arrayunit(value.shape, value.dtype, value, unit=unit)
 
 def convert_unit(newunit, value, oldunit=None):
+    if value is None:
+        return None
+
     if oldunit is None:
         oldunit = value.unit
 
