@@ -311,6 +311,18 @@ class TestDetectorSpectrometer(unittest.TestCase):
 
         self.assertRaises(ValueError, self.det.set_collection_mode, 'ABC')
 
+    def testcalibration_energy(self):
+        cal = self.det.calibration_energy
+        self.assertEqual('Energy', cal.quantity)
+        self.assertEqual('eV', cal.unit)
+        self.assertAlmostEqual(-237.098251, cal(0), 4)
+
+    def testcalibration_wavelength(self):
+        cal = self.det.calibration_wavelength
+        self.assertEqual('Wavelength', cal.quantity)
+        self.assertEqual('m', cal.unit)
+        self.assertAlmostEqual(-5.22923e-9, cal(0), 13)
+
     def testpickle(self):
         self.det.collection_mode = COLLECTION_MODE_PARALLEL
 
@@ -388,18 +400,6 @@ class TestDetectorSpectrometerWDS(unittest.TestCase):
         self.det.window = window
         self.assertEqual('Al', self.det.window.layers[0].material)
         self.assertEqual(1.0, self.det.window.layers[0].thickness)
-
-    def testcalibration_energy(self):
-        cal = self.det.calibration_energy
-        self.assertEqual('Energy', cal.quantity)
-        self.assertEqual('eV', cal.unit)
-        self.assertAlmostEqual(-237.098251, cal(0), 4)
-
-    def testcalibration_wavelength(self):
-        cal = self.det.calibration_wavelength
-        self.assertEqual('Wavelength', cal.quantity)
-        self.assertEqual('m', cal.unit)
-        self.assertAlmostEqual(-5.22923e-9, cal(0), 13)
 
     def testcalibration_position(self):
         cal = self.det.calibration_position

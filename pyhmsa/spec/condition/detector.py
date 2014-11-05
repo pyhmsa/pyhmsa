@@ -280,6 +280,42 @@ class DetectorSpectrometer(_Detector):
         self.calibration = calibration
         self.collection_mode = collection_mode
 
+    def get_calibration_energy(self):
+        quantity = self.calibration.quantity.lower()
+        _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+
+        # From energy
+        if quantity == 'energy' and baseunit == 'eV':
+            return self.calibration
+
+        # From wavelength
+        if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
+            values = [wavelength_to_energy_eV(self.calibration(i)) \
+                      for i in range(int(self.channel_count))]
+            return CalibrationExplicit('Energy', 'eV', list(values))
+
+        raise ValueError('Cannot convert calibration to energy')
+
+    calibration_energy = property(get_calibration_energy)
+
+    def get_calibration_wavelength(self):
+        quantity = self.calibration.quantity.lower()
+        _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+
+        # From wavelength
+        if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
+            return self.calibration
+
+        # From energy
+        if quantity == 'energy' and baseunit == 'eV':
+            values = [energy_to_wavelength_m(self.calibration(i)) \
+                      for i in range(int(self.channel_count))]
+            return CalibrationExplicit('Wavelength', 'm', list(values))
+
+        raise ValueError('Cannot convert calibration to wavelength')
+
+    calibration_wavelength = property(get_calibration_wavelength)
+
 class DetectorSpectrometerCL(DetectorSpectrometer):
 
     CLASS = 'Spectrometer/CL'
@@ -402,64 +438,50 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
         self.window = window
 
     def get_calibration_energy(self):
-        quantity = self.calibration.quantity.lower()
-        _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+        try:
+            return DetectorSpectrometer.get_calibration_energy(self)
+        except ValueError:
+            quantity = self.calibration.quantity.lower()
+            _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
 
-        # From energy
-        if quantity == 'energy' and baseunit == 'eV':
-            return self.calibration
+            # From position
+            if quantity == 'position' and baseunit == 'm':
+                if self.crystal_2d is None:
+                    raise ValueError('Element "crystal_2d" is not defined')
+                d_spacing = convert_unit('m', self.crystal_2d)
 
-        # From wavelength
-        if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
-            values = [wavelength_to_energy_eV(self.calibration(i)) \
-                      for i in range(int(self.channel_count))]
-            return CalibrationExplicit('Energy', 'eV', list(values))
+                if self.rowland_circle_diameter is None:
+                    raise ValueError('Element "rowland_circle_diameter" is not defined')
+                rownload_m = convert_unit('m', self.rowland_circle_diameter)
 
-        # From position
-        if quantity == 'position' and baseunit == 'm':
-            if self.crystal_2d is None:
-                raise ValueError('Element "crystal_2d" is not defined')
-            d_spacing = convert_unit('m', self.crystal_2d)
-
-            if self.rowland_circle_diameter is None:
-                raise ValueError('Element "rowland_circle_diameter" is not defined')
-            rownload_m = convert_unit('m', self.rowland_circle_diameter)
-
-            values = [wavelength_to_energy_eV(self.calibration(i) / rownload_m * d_spacing) \
-                      for i in range(int(self.channel_count))]
-            return CalibrationExplicit('Energy', 'eV', list(values))
+                values = [wavelength_to_energy_eV(self.calibration(i) / rownload_m * d_spacing) \
+                          for i in range(int(self.channel_count))]
+                return CalibrationExplicit('Energy', 'eV', list(values))
 
         raise ValueError('Cannot convert calibration to energy')
 
     calibration_energy = property(get_calibration_energy)
 
     def get_calibration_wavelength(self):
-        quantity = self.calibration.quantity.lower()
-        _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+        try:
+            return DetectorSpectrometer.get_calibration_wavelength(self)
+        except ValueError:
+            quantity = self.calibration.quantity.lower()
+            _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
 
-        # From wavelength
-        if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
-            return self.calibration
+            # From position
+            if quantity == 'position' and baseunit == 'm':
+                if self.crystal_2d is None:
+                    raise ValueError('Element "crystal_2d" is not defined')
+                d_spacing = convert_unit('m', self.crystal_2d)
 
-        # From energy
-        if quantity == 'energy' and baseunit == 'eV':
-            values = [energy_to_wavelength_m(self.calibration(i)) \
-                      for i in range(int(self.channel_count))]
-            return CalibrationExplicit('Wavelength', 'm', list(values))
+                if self.rowland_circle_diameter is None:
+                    raise ValueError('Element "rowland_circle_diameter" is not defined')
+                rownload_m = convert_unit('m', self.rowland_circle_diameter)
 
-        # From position
-        if quantity == 'position' and baseunit == 'm':
-            if self.crystal_2d is None:
-                raise ValueError('Element "crystal_2d" is not defined')
-            d_spacing = convert_unit('m', self.crystal_2d)
-
-            if self.rowland_circle_diameter is None:
-                raise ValueError('Element "rowland_circle_diameter" is not defined')
-            rownload_m = convert_unit('m', self.rowland_circle_diameter)
-
-            values = [self.calibration(i) / rownload_m * d_spacing \
-                      for i in range(int(self.channel_count))]
-            return CalibrationExplicit('Wavelength', 'm', list(values))
+                values = [self.calibration(i) / rownload_m * d_spacing \
+                          for i in range(int(self.channel_count))]
+                return CalibrationExplicit('Wavelength', 'm', list(values))
 
         raise ValueError('Cannot convert calibration to wavelength')
 
