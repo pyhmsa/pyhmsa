@@ -74,6 +74,50 @@ class TestSpecimenPosition(unittest.TestCase):
         self.assertAlmostEqual(90.0, position.r, 4)
         self.assertEqual('degrees', position.r.unit)
 
+    def test__add__(self):
+        position = self.position + SpecimenPosition(x=1.0, y=1.0, t=1.0)
+        self.assertIsNone(position.x)
+        self.assertAlmostEqual(6.0, position.y, 4)
+        self.assertIsNone(position.z)
+        self.assertAlmostEqual(90.0, position.r, 4)
+        self.assertIsNone(position.t)
+
+        position = self.position + SpecimenPosition()
+        self.assertIsNone(position.x)
+        self.assertAlmostEqual(5.0, position.y, 4)
+        self.assertIsNone(position.z)
+        self.assertAlmostEqual(90.0, position.r, 4)
+        self.assertIsNone(position.t)
+
+        self.position += SpecimenPosition(x=1.0, y=1.0, t=1.0)
+        self.assertIsNone(self.position.x)
+        self.assertAlmostEqual(6.0, self.position.y, 4)
+        self.assertIsNone(self.position.z)
+        self.assertAlmostEqual(90.0, self.position.r, 4)
+        self.assertIsNone(self.position.t)
+
+    def test__sub__(self):
+        position = self.position - SpecimenPosition(x=1.0, y=1.0, t=1.0)
+        self.assertIsNone(position.x)
+        self.assertAlmostEqual(4.0, position.y, 4)
+        self.assertIsNone(position.z)
+        self.assertAlmostEqual(90.0, position.r, 4)
+        self.assertIsNone(position.t)
+
+        position = self.position - SpecimenPosition()
+        self.assertIsNone(position.x)
+        self.assertAlmostEqual(5.0, position.y, 4)
+        self.assertIsNone(position.z)
+        self.assertAlmostEqual(90.0, position.r, 4)
+        self.assertIsNone(position.t)
+
+        self.position -= SpecimenPosition(x=1.0, y=1.0, t=1.0)
+        self.assertIsNone(self.position.x)
+        self.assertAlmostEqual(4.0, self.position.y, 4)
+        self.assertIsNone(self.position.z)
+        self.assertAlmostEqual(90.0, self.position.r, 4)
+        self.assertIsNone(self.position.t)
+
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

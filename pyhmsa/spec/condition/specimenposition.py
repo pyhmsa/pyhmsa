@@ -51,3 +51,28 @@ class SpecimenPosition(_Condition):
         self.z = z
         self.r = r
         self.t = t
+
+    def __add__(self, other):
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        x = self.x + (other.x or 0.0) if self.x is not None else None
+        y = self.y + (other.y or 0.0) if self.y is not None else None
+        z = self.z + (other.z or 0.0) if self.z is not None else None
+        r = self.r + (other.r or 0.0) if self.r is not None else None
+        t = self.t + (other.t or 0.0) if self.t is not None else None
+
+        return SpecimenPosition(x, y, z, r, t)
+
+    def __sub__(self, other):
+        if not isinstance(other, self.__class__):
+            return NotImplemented
+
+        x = self.x - (other.x or 0.0) if self.x is not None else None
+        y = self.y - (other.y or 0.0) if self.y is not None else None
+        z = self.z - (other.z or 0.0) if self.z is not None else None
+        r = self.r - (other.r or 0.0) if self.r is not None else None
+        t = self.t - (other.t or 0.0) if self.t is not None else None
+
+        return SpecimenPosition(x, y, z, r, t)
+
