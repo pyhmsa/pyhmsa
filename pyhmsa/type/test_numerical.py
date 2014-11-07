@@ -121,6 +121,16 @@ class Testarrayunit(unittest.TestCase):
         self.assertEqual('5.000', '{0:.3f}'.format(self.v))
         self.assertEqual('5.000 s', '{0:.3f} {0.unit:s}'.format(self.v))
 
+    def test__eq__(self):
+        self.assertTrue(5.0 == self.v)
+        self.assertTrue(convert_value(5.0, 's') == self.v)
+        self.assertFalse(convert_value(5.0, 'ms') == self.v)
+
+    def test__ne__(self):
+        self.assertFalse(5.0 != self.v)
+        self.assertFalse(convert_value(5.0, 's') != self.v)
+        self.assertTrue(convert_value(5.0, 'ms') != self.v)
+
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

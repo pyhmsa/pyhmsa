@@ -83,6 +83,14 @@ class arrayunit(np.ndarray):
         else:
             return format(np.ndarray.__str__(self), spec)
 
+    def __eq__(self, other):
+        if not np.ndarray.__eq__(self, other):
+            return False
+        return self.unit == getattr(other, 'unit', self.unit)
+
+    def __ne__(self, other):
+        return not self == other
+
     @property
     def unit(self):
         return self._unit
