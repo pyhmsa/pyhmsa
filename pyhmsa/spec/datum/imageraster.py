@@ -19,8 +19,13 @@ import numpy as np
 # Local modules.
 from pyhmsa.spec.datum.datum import _Datum
 from pyhmsa.spec.datum.analysis import Analysis0D, Analysis1D, Analysis2D
+from pyhmsa.spec.condition.acquisition import AcquisitionRasterXY
+from pyhmsa.spec.condition.specimenposition import SpecimenPosition
+from pyhmsa.type.numerical import convert_unit
 
 # Globals and constants variables.
+from pyhmsa.spec.condition.acquisition import \
+    POSITION_LOCATION_CENTER, POSITION_LOCATION_START
 
 class _ImageRaster(_Datum):
     """
@@ -35,6 +40,45 @@ class _ImageRaster2D(_ImageRaster):
     """
     Abstract class for image raster 2D classes.
     """
+
+    def get_position(self, x, y):
+        if x < 0 or x >= self.x:
+            raise IndexError('Index %i is out of bounds' % x)
+        if y < 0 or y >= self.y:
+            raise IndexError('Index %i is out of bounds' % y)
+
+        acqs = self.conditions.findvalues(AcquisitionRasterXY)
+        if not acqs:
+            raise ValueError('No acquisition raster XY found in conditions')
+        acq = next(iter(acqs))
+
+        position_start = acq.positions.get(POSITION_LOCATION_START)
+        if position_start is None:
+            raise ValueError('Missing start position in acquisition condition')
+
+        position_center = acq.positions.get(POSITION_LOCATION_CENTER)
+        if position_center is None:
+            raise ValueError('Missing center position in acquisition condition')
+
+        if convert_unit('m', position_start.z) != convert_unit('m', position_center.z):
+            raise ValueError('Positions must have the same z: %s != %s' % \
+                             (position_start.z, position_center.z))
+        if convert_unit('degrees', position_start.r) != convert_unit('degrees', position_center.r):
+            raise ValueError('Positions must have the same rotation: %s != %s' % \
+                             (position_start.r, position_center.r))
+        if convert_unit('degrees', position_start.t) != convert_unit('degrees', position_center.t):
+            raise ValueError('Positions must have the same tilt: %s != %s' % \
+                             (position_start.t, position_center.t))
+
+        delta = position_center - position_start
+        delta_x = convert_unit('mm', delta.x) / (acq.step_count_x / 2)
+        delta_y = convert_unit('mm', delta.y) / (acq.step_count_y / 2)
+
+        return SpecimenPosition(x=convert_unit('mm', position_start.x) + delta_x * x,
+                                y=convert_unit('mm', position_start.y) + delta_y * y,
+                                z=position_start.z,
+                                r=position_start.r,
+                                t=position_start.t)
 
     @property
     def x(self):

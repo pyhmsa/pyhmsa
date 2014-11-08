@@ -19,15 +19,19 @@ import numpy as np
 from pyhmsa.spec.datum.imageraster import \
     ImageRaster2D, ImageRaster2DSpectral, ImageRaster2DHyperimage
 from pyhmsa.spec.condition.condition import _Condition
+from pyhmsa.spec.condition.acquisition import AcquisitionRasterXY
+from pyhmsa.spec.condition.specimenposition import SpecimenPosition
 
 # Globals and constants variables.
+from pyhmsa.spec.condition.acquisition import \
+    POSITION_LOCATION_CENTER, POSITION_LOCATION_START
 
 class TestImageRaster2D(unittest.TestCase):
 
     def setUp(self):
         unittest.TestCase.setUp(self)
 
-        self.datum = ImageRaster2D(5, 5)
+        self.datum = ImageRaster2D(6, 6)
         self.datum.conditions['Test'] = _Condition()
         self.datum[0, 0] = 5.0
 
@@ -35,18 +39,60 @@ class TestImageRaster2D(unittest.TestCase):
         unittest.TestCase.tearDown(self)
 
     def testskeleton(self):
-        self.assertEqual(5, self.datum.x)
-        self.assertEqual(5, self.datum.y)
+        self.assertEqual(6, self.datum.x)
+        self.assertEqual(6, self.datum.y)
         self.assertEqual(1, len(self.datum.conditions))
         self.assertAlmostEqual(5.0, self.datum[0, 0], 4)
 
-        self.assertEqual(5, self.datum.collection_dimensions['X'])
-        self.assertEqual(5, self.datum.collection_dimensions['Y'])
+        self.assertEqual(6, self.datum.collection_dimensions['X'])
+        self.assertEqual(6, self.datum.collection_dimensions['Y'])
 
     def testtoanalysis(self):
         analysis = self.datum.toanalysis(0, 0)
         self.assertAlmostEqual(5.0, analysis, 4)
         self.assertEqual(1, len(analysis.conditions))
+
+    def testget_position1(self):
+        acq = AcquisitionRasterXY(6, 6)
+        acq.positions[POSITION_LOCATION_CENTER] = SpecimenPosition(0.0, 0.0, 0.0)
+        acq.positions[POSITION_LOCATION_START] = SpecimenPosition(-1.0, 1.0, 0.0)
+        self.datum.conditions.add('Acq0', acq)
+
+        pos = self.datum.get_position(0, 0)
+        self.assertAlmostEqual(-1.0, pos.x, 4)
+        self.assertAlmostEqual(1.0, pos.y, 4)
+        self.assertAlmostEqual(0.0, pos.z, 4)
+
+        pos = self.datum.get_position(3, 0)
+        self.assertAlmostEqual(0.0, pos.x, 4)
+        self.assertAlmostEqual(1.0, pos.y, 4)
+        self.assertAlmostEqual(0.0, pos.z, 4)
+
+        pos = self.datum.get_position(3, 3)
+        self.assertAlmostEqual(0.0, pos.x, 4)
+        self.assertAlmostEqual(0.0, pos.y, 4)
+        self.assertAlmostEqual(0.0, pos.z, 4)
+
+    def testget_position2(self):
+        acq = AcquisitionRasterXY(6, 6)
+        acq.positions[POSITION_LOCATION_CENTER] = SpecimenPosition(0.0, 0.0, 0.0)
+        acq.positions[POSITION_LOCATION_START] = SpecimenPosition(1.0, -1.0, 0.0)
+        self.datum.conditions.add('Acq0', acq)
+
+        pos = self.datum.get_position(0, 0)
+        self.assertAlmostEqual(1.0, pos.x, 4)
+        self.assertAlmostEqual(-1.0, pos.y, 4)
+        self.assertAlmostEqual(0.0, pos.z, 4)
+
+        pos = self.datum.get_position(3, 0)
+        self.assertAlmostEqual(0.0, pos.x, 4)
+        self.assertAlmostEqual(-1.0, pos.y, 4)
+        self.assertAlmostEqual(0.0, pos.z, 4)
+
+        pos = self.datum.get_position(3, 3)
+        self.assertAlmostEqual(0.0, pos.x, 4)
+        self.assertAlmostEqual(0.0, pos.y, 4)
+        self.assertAlmostEqual(0.0, pos.z, 4)
 
 class TestImageRaster2DSpectral(unittest.TestCase):
 
