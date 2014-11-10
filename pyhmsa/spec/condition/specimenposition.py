@@ -12,15 +12,23 @@
 """
 
 # Standard library modules.
+import operator
 
 # Third party modules.
 
 # Local modules.
 from pyhmsa.spec.condition.condition import _Condition
 from pyhmsa.util.parameter import NumericalAttribute
-from pyhmsa.type.numerical import convert_unit
+from pyhmsa.type.numerical import convert_unit, convert_value
 
 # Globals and constants variables.
+
+def _apply_operator(op, a, b, unit):
+    if a is None:
+        return None
+    if b is None:
+        b = convert_value(0.0, unit)
+    return op(convert_unit(unit, a), convert_unit(unit, b))
 
 class SpecimenPosition(_Condition):
 
@@ -57,11 +65,11 @@ class SpecimenPosition(_Condition):
         if not isinstance(other, self.__class__):
             return NotImplemented
 
-        x = self.x + (other.x or 0.0) if self.x is not None else None
-        y = self.y + (other.y or 0.0) if self.y is not None else None
-        z = self.z + (other.z or 0.0) if self.z is not None else None
-        r = self.r + (other.r or 0.0) if self.r is not None else None
-        t = self.t + (other.t or 0.0) if self.t is not None else None
+        x = _apply_operator(operator.add, self.x, other.x, 'mm')
+        y = _apply_operator(operator.add, self.y, other.y, 'mm')
+        z = _apply_operator(operator.add, self.z, other.z, 'mm')
+        r = _apply_operator(operator.add, self.r, other.r, 'degrees')
+        t = _apply_operator(operator.add, self.t, other.t, 'degrees')
 
         return SpecimenPosition(x, y, z, r, t)
 
@@ -69,11 +77,11 @@ class SpecimenPosition(_Condition):
         if not isinstance(other, self.__class__):
             return NotImplemented
 
-        x = self.x - (other.x or 0.0) if self.x is not None else None
-        y = self.y - (other.y or 0.0) if self.y is not None else None
-        z = self.z - (other.z or 0.0) if self.z is not None else None
-        r = self.r - (other.r or 0.0) if self.r is not None else None
-        t = self.t - (other.t or 0.0) if self.t is not None else None
+        x = _apply_operator(operator.sub, self.x, other.x, 'mm')
+        y = _apply_operator(operator.sub, self.y, other.y, 'mm')
+        z = _apply_operator(operator.sub, self.z, other.z, 'mm')
+        r = _apply_operator(operator.sub, self.r, other.r, 'degrees')
+        t = _apply_operator(operator.sub, self.t, other.t, 'degrees')
 
         return SpecimenPosition(x, y, z, r, t)
 
