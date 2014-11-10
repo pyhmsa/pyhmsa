@@ -42,6 +42,11 @@ class _ImageRaster2D(_ImageRaster):
     """
 
     def get_position(self, x, y):
+        if x < 0:
+            x = self.x + x
+        if y < 0:
+            y = self.y + y
+
         if x < 0 or x >= self.x:
             raise IndexError('Index %i is out of bounds' % x)
         if y < 0 or y >= self.y:
