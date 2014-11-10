@@ -118,6 +118,14 @@ class TestSpecimenPosition(unittest.TestCase):
         self.assertAlmostEqual(90.0, self.position.r, 4)
         self.assertIsNone(self.position.t)
 
+    def testtolist(self):
+        l = self.position.tolist()
+        self.assertIsNone(l[0])
+        self.assertAlmostEqual(5.0, l[1], 4)
+        self.assertIsNone(l[2])
+        self.assertAlmostEqual(90.0, l[3], 4)
+        self.assertIsNone(l[4])
+
 if __name__ == '__main__': #pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

@@ -18,6 +18,7 @@
 # Local modules.
 from pyhmsa.spec.condition.condition import _Condition
 from pyhmsa.util.parameter import NumericalAttribute
+from pyhmsa.type.numerical import convert_unit
 
 # Globals and constants variables.
 
@@ -76,3 +77,11 @@ class SpecimenPosition(_Condition):
 
         return SpecimenPosition(x, y, z, r, t)
 
+    def tolist(self, coordinate_unit='mm', angle_unit='degrees'):
+        def _float(x):
+            return float(x) if x is not None else None
+        return [_float(convert_unit(coordinate_unit, self.x)),
+                _float(convert_unit(coordinate_unit, self.y)),
+                _float(convert_unit(coordinate_unit, self.z)),
+                _float(convert_unit(angle_unit, self.r)),
+                _float(convert_unit(angle_unit, self.t))]
