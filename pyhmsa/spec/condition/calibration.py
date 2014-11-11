@@ -12,7 +12,6 @@
 """
 
 # Standard library modules.
-import bisect
 
 # Third party modules.
 import numpy as np
@@ -173,10 +172,7 @@ class CalibrationExplicit(_Calibration):
         return self.values[index]
 
     def get_index(self, value):
-        index = bisect.bisect_left(self.values, value)
-        if index != len(self.values):
-            return index
-        return -1
+        return np.abs(self.values - value).argmin()
 
     def get_label(self, index):
         if self.labels is None:
