@@ -222,3 +222,86 @@ class ImageRaster2DHyperimage(_ImageRaster2D):
     def toanalysis(self, x, y):
         return Analysis2D(self.u, self.v, self.dtype, self[x, y],
                           conditions=self.conditions)
+
+def stitch(*data):
+    if len(data) < 2:
+        raise ValueError('Specify at least 2 datum')
+
+    # Check data and step sizes
+    datum_clasz = None
+    datum_dtype = None
+    datum_dims = None
+    step_size_x_mm = None
+    step_size_y_mm = None
+
+    for datum in data:
+        acqs = datum.conditions.findvalues(AcquisitionRasterXY)
+        if not acqs:
+            raise ValueError('No acquisition raster XY found in conditions')
+        acq = next(iter(acqs))
+
+        if step_size_x_mm is None:
+            step_size_x_mm = convert_unit('mm', acq.step_size_x)
+        else:
+            if step_size_x_mm != convert_unit('mm', acq.step_size_x):
+                raise ValueError('All data must have the same step size x')
+
+        if step_size_y_mm is None:
+            step_size_y_mm = convert_unit('mm', acq.step_size_y)
+        else:
+            if step_size_y_mm != convert_unit('mm', acq.step_size_y):
+                raise ValueError('All data must have the same step size y')
+
+        if datum_clasz is None:
+            datum_clasz = type(datum)
+        else:
+            if datum_clasz != type(datum):
+                raise ValueError('All data must have the same type')
+
+        if datum_dtype is None:
+            datum_dtype = datum.dtype
+        else:
+            if datum_dtype != datum.dtype:
+                raise ValueError('All data must have the same data type')
+
+        if datum_dims is None:
+            datum_dims = datum.datum_dimensions
+        else:
+            if datum_dims != datum.datum_dimensions:
+                raise ValueError('All data must have the same dimensions')
+
+    # Extract start and end positions
+    start_positions = []
+    end_positions = []
+    for datum in data:
+        start_positions.append(np.array(datum.get_position(0, 0).tolist('mm')[:3]))
+        end_positions.append(np.array(datum.get_position(-1, -1).tolist('mm')[:3]))
+
+    # Find new start and end positions
+    distances = np.zeros((len(start_positions), len(end_positions)))
+    for i, start_position in enumerate(start_positions):
+        for j, end_position in enumerate(end_positions):
+            distances[i, j] = np.sum((end_position - start_position) ** 2)
+
+    index = np.unravel_index(distances.argmax(), distances.shape)
+    start_position = start_positions[index[0]]
+    end_position = end_positions[index[1]]
+
+    # Create new datum
+    nx = abs(int((end_position - start_position)[0] / step_size_x_mm)) + 1
+    ny = abs(int((end_position - start_position)[1] / step_size_y_mm)) + 1
+
+    datum_stitch = datum_clasz(nx, ny, *datum_dims.values(), dtype=datum_dtype)
+
+    acq = AcquisitionRasterXY(nx, ny, acq.step_size_x, acq.step_size_y)
+    acq.positions[POSITION_LOCATION_START] = SpecimenPosition(*start_position)
+    acq.positions[POSITION_LOCATION_END] = SpecimenPosition(*end_position)
+    datum_stitch.conditions.add('Acq0', acq)
+
+    for datum in data:
+        position = datum.get_position(0, 0)
+        i, j = datum_stitch.get_index(position)
+        ni, nj = datum.shape[:2]
+        datum_stitch[i:i + ni, j:j + nj, ...] = datum
+
+    return datum_stitch
