@@ -83,11 +83,47 @@ class _ImageRaster2D(_ImageRaster):
         delta_x = convert_unit('mm', delta.x) / (acq.step_count_x - 1)
         delta_y = convert_unit('mm', delta.y) / (acq.step_count_y - 1)
 
-        return SpecimenPosition(x=convert_unit('mm', position_start.x) + delta_x * x,
-                                y=convert_unit('mm', position_start.y) + delta_y * y,
-                                z=np.mean([position_start.z, position_end.z]),
-                                r=position_start.r,
-                                t=position_start.t)
+        x = convert_unit('mm', position_start.x) + delta_x * x
+        y = convert_unit('mm', position_start.y) + delta_y * y
+        if position_start.z is None and position_end.z is None:
+            z = None
+        else:
+            z = np.mean([position_start.z, position_end.z])
+        r = position_start.r
+        t = position_start.t
+
+        return SpecimenPosition(x, y, z, r, t)
+
+    def get_index(self, position):
+        acqs = self.conditions.findvalues(AcquisitionRasterXY)
+        if not acqs:
+            raise ValueError('No acquisition raster XY found in conditions')
+        acq = next(iter(acqs))
+
+        position_start = self.get_position(0, 0)
+
+        step_size_x = convert_unit('mm', acq.step_size_x)
+        step_size_y = convert_unit('mm', acq.step_size_y)
+
+        if step_size_x is None or step_size_y is None:
+            position_end = self.get_position(-1, -1)
+            delta = position_end - position_start
+
+            if acq.step_size_x is None:
+                step_size_x = convert_unit('mm', delta.x) / (acq.step_count_x - 1)
+
+            if acq.step_size_y is None:
+                step_size_y = convert_unit('mm', delta.y) / (acq.step_count_y - 1)
+
+        delta = position - position_start
+        x = abs(int(convert_unit('mm', delta.x) / step_size_x))
+        y = abs(int(convert_unit('mm', delta.y) / step_size_y))
+
+        if x < 0 or x >= self.x or y < 0 or y >= self.y:
+            raise IndexError('Position (%i, %i) is out of bounds [0,%i[ : [0,%i[' % \
+                             (x, y, self.x, self.y))
+
+        return x, y
 
     @property
     def x(self):

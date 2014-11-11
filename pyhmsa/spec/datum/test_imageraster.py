@@ -160,6 +160,21 @@ class TestImageRaster2D(unittest.TestCase):
         self.assertAlmostEqual(expected.y, actual.y, 4)
         self.assertAlmostEqual(expected.z, actual.z, 4)
 
+    def testget_index(self):
+        acq = AcquisitionRasterXY(7, 7)
+        acq.positions[POSITION_LOCATION_CENTER] = SpecimenPosition(0.0, 0.0, 0.0)
+        acq.positions[POSITION_LOCATION_START] = SpecimenPosition(-1.0, 1.0, 0.0)
+        self.datum.conditions.add('Acq0', acq)
+
+        position = self.datum.get_position(0, 0)
+        self.assertEqual((0, 0), self.datum.get_index(position))
+
+        position = self.datum.get_position(3, 3)
+        self.assertEqual((3, 3), self.datum.get_index(position))
+
+        position = self.datum.get_position(-1, -1)
+        self.assertEqual((6, 6), self.datum.get_index(position))
+
 class TestImageRaster2DSpectral(unittest.TestCase):
 
     def setUp(self):
