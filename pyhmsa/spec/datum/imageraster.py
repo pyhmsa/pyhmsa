@@ -272,21 +272,14 @@ def stitch(*data):
                 raise ValueError('All data must have the same dimensions')
 
     # Extract start and end positions
-    start_positions = []
-    end_positions = []
+    positions = []
     for datum in data:
-        start_positions.append(np.array(datum.get_position(0, 0).tolist('mm')[:3]))
-        end_positions.append(np.array(datum.get_position(-1, -1).tolist('mm')[:3]))
+        positions.append(np.array(datum.get_position(0, 0).tolist('mm')[:3]))
+        positions.append(np.array(datum.get_position(-1, -1).tolist('mm')[:3]))
 
     # Find new start and end positions
-    distances = np.zeros((len(start_positions), len(end_positions)))
-    for i, start_position in enumerate(start_positions):
-        for j, end_position in enumerate(end_positions):
-            distances[i, j] = np.sum((end_position - start_position) ** 2)
-
-    index = np.unravel_index(distances.argmax(), distances.shape)
-    start_position = start_positions[index[0]]
-    end_position = end_positions[index[1]]
+    start_position = np.min(positions, axis=0)
+    end_position = np.max(positions, axis=0)
 
     # Create new datum
     nx = abs(int((end_position - start_position)[0] / step_size_x_mm)) + 1
@@ -300,9 +293,13 @@ def stitch(*data):
     datum_stitch.conditions.add('Acq0', acq)
 
     for datum in data:
-        position = datum.get_position(0, 0)
-        i, j = datum_stitch.get_index(position)
+        i0, j0 = datum_stitch.get_index(datum.get_position(0, 0))
+        i1, j1 = datum_stitch.get_index(datum.get_position(-1, -1))
+        xstep = 1 if i1 > i0 else -1
+        ystep = 1 if j1 > j0 else -1
+        i = min(i0, i1)
+        j = min(j0, j1)
         ni, nj = datum.shape[:2]
-        datum_stitch[i:i + ni, j:j + nj, ...] = datum
+        datum_stitch[i:i + ni, j:j + nj, ...] = datum[::xstep, ::ystep]
 
     return datum_stitch
