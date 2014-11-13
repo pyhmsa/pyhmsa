@@ -88,7 +88,8 @@ class _ImageRaster2D(_ImageRaster):
         if position_start.z is None and position_end.z is None:
             z = None
         else:
-            z = np.mean([position_start.z, position_end.z])
+            z = np.mean([convert_unit('mm', position_start.z),
+                         convert_unit('mm', position_end.z)])
         r = position_start.r
         t = position_start.t
 
