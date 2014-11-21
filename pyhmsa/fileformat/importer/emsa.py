@@ -271,7 +271,7 @@ class _ImporterEMSAThread(_ImporterThread):
         position = SpecimenPosition(x=keywords.getfloat('XPOSITION'),
                                     y=keywords.getfloat('YPOSITION'),
                                     z=keywords.getfloat('ZPOSITION')) #FIXME: Handle XTILTSTGE and YTILTSTGE
-        dwell_time = (keywords.get('DWELLTIME'), 'ms')
+        dwell_time = (keywords.getfloat('DWELLTIME'), 'ms')
         if 'INTEGTIME' in keywords:
             total_time = (keywords.getfloat('INTEGTIME'), 'ms')
         else:
@@ -293,7 +293,7 @@ class _ImporterEMSAThread(_ImporterThread):
         kwargs['signal_type'] = signal_type
         kwargs['channel_count'] = keywords.getint('NPOINTS')
 
-        quantity = keywords.get('XLABEL', 'x')
+        quantity = keywords.get('XLABEL', 'Energy')
         unit = keywords.get('XUNITS')
         gain = keywords.getfloat('XPERCHAN')
         offset = keywords.getfloat('OFFSET')
