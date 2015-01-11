@@ -134,6 +134,7 @@ setup(name='pyHMSA',
             ['EMSA = pyhmsa.fileformat.importer.emsa:ImporterEMSA',
              'RAW = pyhmsa.fileformat.importer.raw:ImporterRAW'],
          'pyhmsa.fileformat.exporter':
-            ['EMSA = pyhmsa.fileformat.exporter.emsa:ExporterEMSA'],
+            ['EMSA = pyhmsa.fileformat.exporter.emsa:ExporterEMSA',
+             'RAW = pyhmsa.fileformat.exporter.raw:ExporterRAW'],
         },
      )
