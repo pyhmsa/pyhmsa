@@ -17,6 +17,10 @@ pyHMSA is written to support both Python 2 and 3.
 
 The library is provided under the MIT :ref:`license`.
 
+pyHMSA was developed as part of the doctorate thesis project of 
+Philippe T. Pinard at RWTH Aachen University (Aachen, Germany) under the 
+supervision of Dr. Silvia Richter.
+
 Examples
 ========
 
