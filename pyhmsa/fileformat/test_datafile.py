@@ -124,7 +124,6 @@ class TestDataFileReader(unittest.TestCase):
         reader = DataFileReader()
         reader.read(self.filepath)
         reader.cancel()
-        self.assertEqual(1.0, reader.progress)
         self.assertEqual('Cancelled', reader.status)
 
     def testreader3(self):
@@ -255,7 +254,6 @@ class TestDataFileWriter(unittest.TestCase):
         writer.write(self.datafile, xmlfilepath)
         writer.join()
 
-        self.assertEqual(1.0, writer.progress)
         self.assertEqual('Completed', writer.status)
 
         # Test
@@ -344,7 +342,6 @@ class TestDataFileWriter(unittest.TestCase):
         writer.write(self.datafile, xml_file=xml_file, hmsa_file=hmsa_file)
         writer.join()
 
-        self.assertEqual(1.0, writer.progress)
         self.assertEqual('Completed', writer.status)
 
         # Test
