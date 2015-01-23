@@ -22,6 +22,7 @@ __license__ = "GPL v3"
 import os
 import sys
 import logging
+logger = logging.getLogger(__name__)
 
 # Third party modules.
 from pkg_resources import iter_entry_points
@@ -52,10 +53,10 @@ class _Importer(_Monitorable):
             extra_datafile = DataFile()
 
         if search_extra:
-            logging.debug('Searching for extras')
+            logger.debug('Searching for extras')
 
             for filepath in self._glob_extra_filepaths():
-                logging.debug('Found %s' % filepath)
+                logger.debug('Found %s' % filepath)
                 extra_datafile.update(DataFile.read(filepath))
 
         self._extra_datafile = extra_datafile

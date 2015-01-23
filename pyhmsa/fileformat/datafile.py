@@ -22,6 +22,7 @@ __license__ = "GPL v3"
 import os
 import io
 import logging
+logger = logging.getLogger(__name__)
 import binascii
 import xml.etree.ElementTree as etree
 import xml.dom.minidom as minidom
@@ -126,7 +127,7 @@ class _BufferedDataFileReaderThread(_MonitorableThread):
         if xml_uid.upper() != hmsa_uid.upper():
             raise ValueError('UID in XML (%s) does not match UID in HMSA (%s)' % \
                              (xml_uid, hmsa_uid))
-        logging.debug('Check UID: %s == %s', xml_uid, hmsa_uid)
+        logger.debug('Check UID: %s == %s', xml_uid, hmsa_uid)
 
         # Check checksum
         xml_checksum = getattr(datafile.header, 'checksum', None)
@@ -140,7 +141,7 @@ class _BufferedDataFileReaderThread(_MonitorableThread):
             if xml_checksum.value.upper() != hmsa_checksum.value.upper():
                 raise ValueError('Checksum in XML (%s) does not match checksum in HMSA (%s)' % \
                                  (xml_checksum.value, hmsa_checksum.value))
-            logging.debug('Check sum: %s == %s', xml_checksum.value, hmsa_checksum.value)
+            logger.debug('Check sum: %s == %s', xml_checksum.value, hmsa_checksum.value)
 
         # Load handlers
         handlers = set()

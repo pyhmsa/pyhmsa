@@ -24,6 +24,7 @@ __license__ = "GPL v3"
 # Standard library modules.
 import os
 import logging
+logger = logging.getLogger(__name__)
 
 # Third party modules.
 import numpy as np
@@ -66,12 +67,12 @@ class _ImporterRAWThread(_ImporterThread):
         if 'data-type' not in rpl:
             raise IOError('Missing "data-type" parameter in rpl file')
         data_type = rpl['data-type']
-        logging.debug('Data type: %s', data_type)
+        logger.debug('Data type: %s', data_type)
 
         if 'data-length' not in rpl:
             raise IOError('Missing "data-length" parameter in rpl file')
         data_length = int(rpl['data-length'])
-        logging.debug('Data length: %i', data_length)
+        logger.debug('Data length: %i', data_length)
 
         if data_type == 'float':
             if data_length == 4:
@@ -92,7 +93,7 @@ class _ImporterRAWThread(_ImporterThread):
             else:
                 raise IOError('Invalid data length: %i' % data_length)
 
-        logging.debug('Numpy dtype: %s', dtype)
+        logger.debug('Numpy dtype: %s', dtype)
 
         ## Adjust byte order
         self._update_status(0.3, 'Adjust byte order')
@@ -100,7 +101,7 @@ class _ImporterRAWThread(_ImporterThread):
         if 'byte-order' not in rpl:
             raise IOError('Missing "byte-order" parameter in rpl file')
         byte_order = rpl['byte-order']
-        logging.debug('Byte order: %s' % byte_order)
+        logger.debug('Byte order: %s' % byte_order)
 
         if byte_order != 'dont-care':
             dtype = dtype.newbyteorder('>' if byte_order == 'big-endian' else '<')
@@ -111,17 +112,17 @@ class _ImporterRAWThread(_ImporterThread):
         if 'width' not in rpl:
             raise IOError('Missing "width" parameter in rpl file')
         width = int(rpl['width'])
-        logging.debug('Width: %i', width)
+        logger.debug('Width: %i', width)
 
         if 'height' not in rpl:
             raise IOError('Missing "height" parameter in rpl file')
         height = int(rpl['height'])
-        logging.debug('Height: %i', height)
+        logger.debug('Height: %i', height)
 
         if 'depth' not in rpl:
             raise IOError('Missing "depth" parameter in rpl file')
         depth = int(rpl['depth'])
-        logging.debug('Depth: %i', depth)
+        logger.debug('Depth: %i', depth)
 
         count = width * height * depth * dtype.itemsize
 
@@ -129,7 +130,7 @@ class _ImporterRAWThread(_ImporterThread):
         self._update_status(0.5, 'Extract values')
 
         offset = int(rpl.get('offset', 0))
-        logging.debug('Offset: %i', offset)
+        logger.debug('Offset: %i', offset)
 
         fp = open(raw_filepath, 'rb')
         fp.seek(offset)
@@ -143,7 +144,7 @@ class _ImporterRAWThread(_ImporterThread):
             datum = ImageRaster2D(width, height, dtype, buffer=values)
         else:
             record_by = rpl['record-by']
-            logging.debug('Record by: %s', record_by)
+            logger.debug('Record by: %s', record_by)
 
             if record_by == 'vector':
                 datum = ImageRaster2DSpectral(width, height, depth, dtype,

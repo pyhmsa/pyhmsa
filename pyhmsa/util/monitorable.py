@@ -22,6 +22,7 @@ __license__ = "GPL v3"
 import sys
 import threading
 import logging
+logger = logging.getLogger(__name__)
 
 # Third party modules.
 
@@ -48,7 +49,7 @@ class _MonitorableThread(threading.Thread):
         self._kwargs = kwargs
 
     def _update_status(self, progress, status):
-        logging.debug('In %s: %s (%s%%)', self.name, status, progress * 100.0)
+        logger.debug('In %s: %s (%s%%)', self.name, status, progress * 100.0)
         self._progress = progress
         self._status = status
 
@@ -60,7 +61,7 @@ class _MonitorableThread(threading.Thread):
         self._cancel_event.clear()
         self._result = None
 
-        logging.debug('Starting %s' % self.name)
+        logger.debug('Starting %s' % self.name)
         threading.Thread.start(self)
 
         self._progress = 0.0
