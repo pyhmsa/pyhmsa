@@ -31,6 +31,12 @@ class TestAnalysis0D(unittest.TestCase):
         self.assertAlmostEqual(4.0, self.datum, 4)
         self.assertEqual(1, len(self.datum.conditions))
 
+    def testcopy(self):
+        datum = self.datum.copy()
+        self.assertIsInstance(datum, Analysis0D)
+        self.assertAlmostEqual(4.0, datum, 4)
+        self.assertEqual(1, len(datum.conditions))
+
 class TestAnalysis1D(unittest.TestCase):
 
     def setUp(self):
