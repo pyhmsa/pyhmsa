@@ -4,11 +4,13 @@
 # Standard library modules.
 import unittest
 import logging
+import random
 
 # Third party modules.
 
 # Local modules.
-from pyhmsa.type.identifier import validate_identifier, _IdentifierDict
+from pyhmsa.type.identifier import \
+    validate_identifier, sorted_identifier, _IdentifierDict
 
 # Globals and constants variables.
 
@@ -25,6 +27,12 @@ class TestModule(unittest.TestCase):
         self.assertTrue(validate_identifier('abc_asda-|(sadfa)'))
         self.assertRaises(ValueError, validate_identifier, '')
         self.assertRaises(ValueError, validate_identifier, u'\u00b0C')
+
+    def testsorted_identifier(self):
+        identifiers = ['abc10', 'abc2', 'abc20', 'abc1', 'abc100']
+        random.shuffle(identifiers)
+        self.assertEqual(['abc1', 'abc2', 'abc10', 'abc20', 'abc100'],
+                         sorted_identifier(identifiers))
 
 class Test_IdentifierDict(unittest.TestCase):
 

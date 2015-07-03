@@ -35,6 +35,19 @@ def validate_identifier(identifier):
     except UnicodeEncodeError:
         raise ValueError('Identifier contains non-ascii characters')
 
+def sorted_identifier(iterable, reverse=False):
+    """
+    Sorts identifiers while taking into consideration the numeric suffix.
+    """
+    def _key(item):
+        match = re.match(r'(\d*)(.*)$', item[::-1])
+        if not match:
+            return item
+        else:
+            number, prefix = match.groups()
+            return (prefix[::-1], int(number[::-1]))
+    return sorted(iterable, key=_key, reverse=reverse)
+
 class _BaseIdentifierDict(object):
 
     def add(self, identifier, item):
