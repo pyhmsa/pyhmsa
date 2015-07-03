@@ -34,6 +34,11 @@ class TestModule(unittest.TestCase):
         self.assertEqual(['abc1', 'abc2', 'abc10', 'abc20', 'abc100'],
                          sorted_identifier(identifiers))
 
+        identifiers = ['abc10', 'abc2', 'abc20', 'abc', 'def', 'abc1', 'abc100']
+        random.shuffle(identifiers)
+        self.assertEqual(['abc', 'abc1', 'abc2', 'abc10', 'abc20', 'abc100', 'def'],
+                         sorted_identifier(identifiers))
+
 class Test_IdentifierDict(unittest.TestCase):
 
     def setUp(self):

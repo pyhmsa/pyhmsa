@@ -40,9 +40,9 @@ def sorted_identifier(iterable, reverse=False):
     Sorts identifiers while taking into consideration the numeric suffix.
     """
     def _key(item):
-        match = re.match(r'(\d*)(.*)$', item[::-1])
+        match = re.match(r'(\d+)(.*)$', item[::-1])
         if not match:
-            return item
+            return (item,)
         else:
             number, prefix = match.groups()
             return (prefix[::-1], int(number[::-1]))
