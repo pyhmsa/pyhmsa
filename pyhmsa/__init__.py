@@ -2,8 +2,8 @@
 
 __author__ = "Philippe T. Pinard"
 __email__ = "philippe.pinard@gmail.com"
-__version__ = "0.1.6"
-__copyright__ = "Copyright (c) 2013-2014 Philippe T. Pinard"
+__version__ = "0.1.7"
+__copyright__ = "Copyright (c) 2013-2015 Philippe T. Pinard"
 __license__ = "MIT"
 
 # This is required to create a namespace package.
