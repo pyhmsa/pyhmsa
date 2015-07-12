@@ -2,17 +2,19 @@ sudo: false
 
 language: python
 
-cache: pip
+cache:
+  directories:
+    - $HOME/.pip-cache/
 
 python:
 - '2.7'
 - '3.4'
 
 before_install:
-- pip install codecov
+- pip install --download-cache $HOME/.pip-cache codecov
 
 install:
-- pip install -r requirements.txt
+- pip install --download-cache $HOME/.pip-cache -r requirements.txt
 - python setup.py develop
 
 script:
