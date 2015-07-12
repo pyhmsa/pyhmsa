@@ -11,6 +11,7 @@ python:
 - '3.4'
 
 before_install:
+- pip install --upgrade pip
 - pip install --download-cache $HOME/.pip-cache codecov
 
 install:
