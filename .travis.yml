@@ -12,10 +12,10 @@ python:
 
 before_install:
 - pip install --upgrade pip
-- pip install --download-cache $HOME/.pip-cache codecov
+- pip install --cache-dir $HOME/.pip-cache codecov
 
 install:
-- pip install --download-cache $HOME/.pip-cache -r requirements.txt
+- pip install --cache-dir $HOME/.pip-cache -r requirements.txt
 - python setup.py develop
 
 script:
