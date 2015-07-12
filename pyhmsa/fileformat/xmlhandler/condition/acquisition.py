@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`acquisition` -- XML handler for acquisition classes
-================================================================================
-
-.. module:: acquisition
-   :synopsis: XML handler for acquisition classes
-
-.. inheritance-diagram:: acquisition
-
+XML handler for acquisition classes
 """
 
 # Standard library modules.

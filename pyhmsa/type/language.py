@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`language` -- Language format
-================================================================================
-
-.. module:: language
-   :synopsis: Language format
-
-.. inheritance-diagram:: pyhmsa.format.language
-
+Language format
 """
 
 # Standard library modules.

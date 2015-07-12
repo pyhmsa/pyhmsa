@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`detector` -- XML handler for detectors
-================================================================================
-
-.. module:: detector
-   :synopsis: XML handler for detectors
-
-.. inheritance-diagram:: detector
-
+XML handler for detectors
 """
 
 # Standard library modules.

@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`datafile` -- MSA hyper dimensional data file
-================================================================================
-
-.. module:: datafile
-   :synopsis: MSA hyper dimensional data file
-
-.. inheritance-diagram:: pyhmsa.spec.datafile
-
+MSA hyper dimensional data file
 """
 
 # Standard library modules.

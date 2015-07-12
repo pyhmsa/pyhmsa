@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # This is required to create a namespace package.
 # A namespace package allows programs to be located in different directories or
 # eggs.

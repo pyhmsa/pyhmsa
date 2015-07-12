@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`elementid` -- Element ID condition
-================================================================================
-
-.. module:: elementid
-   :synopsis: Element ID condition
-
-.. inheritance-diagram:: elementid
-
+Element ID condition
 """
 
 # Standard library modules.

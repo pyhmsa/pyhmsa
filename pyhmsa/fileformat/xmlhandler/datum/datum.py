@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`datum` -- XML handler for datum
-================================================================================
-
-.. module:: datum
-   :synopsis: XML handler for datum
-
-.. inheritance-diagram:: datum
-
+XML handler for datum
 """
 
 # Standard library modules.

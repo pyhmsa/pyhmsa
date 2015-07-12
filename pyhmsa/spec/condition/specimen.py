@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`specimen` -- Specimen condition
-================================================================================
-
-.. module:: specimen
-   :synopsis: Specimen condition
-
-.. inheritance-diagram:: pyhmsa.condition.specimen
-
+Specimen condition
 """
 
 # Standard library modules.

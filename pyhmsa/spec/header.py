@@ -1,18 +1,9 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`header` -- Header element
-================================================================================
-
-.. module:: header
-   :synopsis: Header element
-
-.. inheritance-diagram:: pyemsa.header
-
+Header element
 """
 
 # Standard library modules.
-from collections import MutableMapping, Mapping
+from collections import MutableMapping
 from abc import ABCMeta
 import datetime
 

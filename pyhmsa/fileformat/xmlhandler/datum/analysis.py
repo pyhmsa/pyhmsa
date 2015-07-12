@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`analysis` -- XML analysis for analysis data
-================================================================================
-
-.. module:: analysis
-   :synopsis: XML analysis for analysis data
-
-.. inheritance-diagram:: analysis
-
+XML handler for analysis data
 """
 
 # Standard library modules.

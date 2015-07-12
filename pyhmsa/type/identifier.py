@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`identifier` -- Condition and datum identifier
-================================================================================
-
-.. module:: identifier
-   :synopsis: Condition and datum identifier
-
-.. inheritance-diagram:: pyhmsa.format.identifier
-
+Condition and datum identifier
 """
 
 # Standard library modules.

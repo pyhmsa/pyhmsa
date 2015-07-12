@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`header` -- XML handler for header
-================================================================================
-
-.. module:: header
-   :synopsis: XML handler for header
-
-.. inheritance-diagram:: header
-
+XML handler for header
 """
 
 # Standard library modules.

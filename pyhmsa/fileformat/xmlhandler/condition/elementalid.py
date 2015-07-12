@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`elementid` -- XML handler for element id condition
-================================================================================
-
-.. module:: elementid
-   :synopsis: XML handler for element id condition
-
-.. inheritance-diagram:: elementid
-
+XML handler for element id condition
 """
 
 # Standard library modules.

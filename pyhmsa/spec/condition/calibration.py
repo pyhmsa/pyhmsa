@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`calibration` -- Calibration of measurements
-================================================================================
-
-.. module:: calibration
-   :synopsis: Calibration of measurements
-
-.. inheritance-diagram:: pyhmsa.condition.calibration
-
+Calibration of measurements
 """
 
 # Standard library modules.

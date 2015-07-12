@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`specimen` -- Specimen XML handler
-================================================================================
-
-.. module:: specimen
-   :synopsis: Specimen XML handler
-
-.. inheritance-diagram:: specimen
-
+Specimen XML handler
 """
 
 # Standard library modules.

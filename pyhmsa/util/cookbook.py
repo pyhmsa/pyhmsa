@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`cookbook` -- Utility functions taken from Python Cookbook
-================================================================================
-
-.. module:: cookbook
-   :synopsis: Utility functions taken from Python Cookbook
-
-.. inheritance-diagram:: cookbook
-
+Utility functions taken from Python Cookbook
 """
 
 # Standard library modules.

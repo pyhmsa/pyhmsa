@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`probe` -- Probe conditions
-================================================================================
-
-.. module:: probe
-   :synopsis: Probe conditions
-
-.. inheritance-diagram:: pyhmsa.condition.probe
-
+Probe conditions
 """
 
 # Standard library modules.

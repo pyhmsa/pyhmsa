@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`element_properties` -- Element properties
-================================================================================
-
-.. module:: element_properties
-   :synopsis: Element properties
-
-.. inheritance-diagram:: pyhmsa.util.element_properties
-
+Element properties
 """
 
 # Standard library modules.

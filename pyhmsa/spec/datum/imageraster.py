@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`imageraster` -- Image raster (2D and 3D collection)
-================================================================================
-
-.. module:: imageraster
-   :synopsis: Image raster (2D and 3D collection)
-
-.. inheritance-diagram:: pyhmsa.datum.imageraster
-
+Image raster (2D and 3D collection)
 """
 
 # Standard library modules.

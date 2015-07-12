@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`region` -- Region of interest condition
-================================================================================
-
-.. module:: region
-   :synopsis: Region of interest condition
-
-.. inheritance-diagram:: region
-
+Region of interest condition
 """
 
 # Standard library modules.

@@ -1,25 +1,10 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`raw` -- Import from RAW/RPL file format
-================================================================================
-
-.. module:: raw
-   :synopsis: Import from RAW/RPL file format
-
-.. inheritance-diagram:: pyhmsa.fileformat.importer.raw
+Import from RAW/RPL file format
 
 Based on:
 http://www.nist.gov/lispix/doc/image-file-formats/raw-file-format.htm
 
 """
-
-# Script information for the file.
-__author__ = "Philippe T. Pinard"
-__email__ = "philippe.pinard@gmail.com"
-__version__ = "0.1"
-__copyright__ = "Copyright (c) 2015 Philippe T. Pinard"
-__license__ = "GPL v3"
 
 # Standard library modules.
 import os

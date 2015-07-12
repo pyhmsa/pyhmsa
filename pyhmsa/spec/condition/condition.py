@@ -1,22 +1,6 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`condition` -- Base class for all conditions
-================================================================================
-
-.. module:: condition
-   :synopsis: Base class for all conditions
-
-.. inheritance-diagram:: pyhmsa.spec.condition.condition
-
+Base class for all conditions
 """
-
-# Script information for the file.
-__author__ = "Philippe T. Pinard"
-__email__ = "philippe.pinard@gmail.com"
-__version__ = "0.1"
-__copyright__ = "Copyright (c) 2014 Philippe T. Pinard"
-__license__ = "GPL v3"
 
 # Standard library modules.
 

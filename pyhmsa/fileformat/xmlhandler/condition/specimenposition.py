@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`specimenposition` -- Specimen position XML handler
-================================================================================
-
-.. module:: specimenposition
-   :synopsis: Specimen position XML handler
-
-.. inheritance-diagram:: pyhmsa.fileformat.xmlhandler.condition.specimenposition
-
+Specimen position XML handler
 """
 
 # Standard library modules.

@@ -1,4 +1,7 @@
-#!/usr/bin/env python
+"""
+Python implementation of the MSA / MAS / AMAS Hyper-Dimensional 
+Data File specification
+"""
 
 __author__ = "Philippe T. Pinard"
 __email__ = "philippe.pinard@gmail.com"

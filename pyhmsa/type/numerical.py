@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`numerical` -- Numerical data type
-================================================================================
-
-.. module:: numerical
-   :synopsis: Numerical data type
-
-.. inheritance-diagram:: pyhmsa.type.numerical
-
+Numerical data type
 """
 
 # Standard library modules.

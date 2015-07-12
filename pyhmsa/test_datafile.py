@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """ """
 
 # Script information for the file.

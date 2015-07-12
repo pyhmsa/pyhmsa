@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`parameter` -- Generic definition of parameters
-================================================================================
-
-.. module:: parameter
-   :synopsis: Generic definition of parameters
-
-.. inheritance-diagram:: parameter
-
+Generic definition of parameters
 """
 
 # Standard library modules.

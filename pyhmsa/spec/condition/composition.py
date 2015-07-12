@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`composition` -- Composition condition
-================================================================================
-
-.. module:: composition
-   :synopsis: Composition condition
-
-.. inheritance-diagram:: pyhmsa.spec.condition.composition
-
+Composition condition
 """
 
 # Standard library modules.

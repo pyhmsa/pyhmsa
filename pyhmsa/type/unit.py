@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`unit` -- Allowable units
-================================================================================
-
-.. module:: unit
-   :synopsis: Allowable units
-
-.. inheritance-diagram:: pyhmsa.unit
-
+Allowable units
 """
 
 # Standard library modules.

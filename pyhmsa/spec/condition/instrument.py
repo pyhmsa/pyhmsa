@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`instrument` -- Instrument condition
-================================================================================
-
-.. module:: instrument
-   :synopsis: Instrument condition
-
-.. inheritance-diagram:: pyhmsa.condition.instrument
-
+Instrument condition
 """
 
 # Standard library modules.

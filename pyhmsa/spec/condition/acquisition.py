@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`acquisition` -- Acquisition conditions
-================================================================================
-
-.. module:: acquisition
-   :synopsis: Acquisition conditions
-
-.. inheritance-diagram:: pyhmsa.condition.acquisition
-
+Acquisition conditions
 """
 
 # Standard library modules.

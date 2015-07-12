@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`detector` -- Detector condition
-================================================================================
-
-.. module:: detector
-   :synopsis: Detector condition
-
-.. inheritance-diagram:: pyhmsa.condition.detector
-
+Detector condition
 """
 
 # Standard library modules.

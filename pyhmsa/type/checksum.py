@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`checksum` -- Check sum
-================================================================================
-
-.. module:: checksum
-   :synopsis: Check sum
-
-.. inheritance-diagram:: checksum
-
+Check sum
 """
 
 # Standard library modules.

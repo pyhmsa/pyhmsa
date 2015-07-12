@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`xmlhandler` -- Handler to convert core objects to XML
-================================================================================
-
-.. module:: xmlhandler
-   :synopsis: Handler to convert core objects to XML
-
-.. inheritance-diagram:: xmlhandler
-
+Handler to convert core objects to XML
 """
 
 # Standard library modules.

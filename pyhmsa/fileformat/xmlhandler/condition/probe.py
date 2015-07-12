@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`probe` -- XML handler for probe condition
-================================================================================
-
-.. module:: probe
-   :synopsis: XML handler for probe condition
-
-.. inheritance-diagram:: probe
-
+XML handler for probe condition
 """
 
 # Standard library modules.

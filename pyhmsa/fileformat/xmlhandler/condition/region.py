@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`region` -- XML handler for region condition
-================================================================================
-
-.. module:: region
-   :synopsis: XML handler for region condition
-
-.. inheritance-diagram:: region
-
+XML handler for region condition
 """
 
 # Standard library modules.

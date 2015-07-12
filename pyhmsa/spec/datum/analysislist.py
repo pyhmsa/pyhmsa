@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`analysislist` -- Analysis list (1D collection)
-================================================================================
-
-.. module:: analysislist
-   :synopsis: Analysis list (1D collection)
-
-.. inheritance-diagram:: analysislist
-
+Analysis list (1D collection)
 """
 
 # Standard library modules.

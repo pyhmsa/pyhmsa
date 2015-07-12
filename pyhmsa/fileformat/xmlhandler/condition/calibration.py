@@ -1,13 +1,5 @@
 """
-================================================================================
-:mod:`calibration` -- XML handler for calibrations
-================================================================================
-
-.. module:: calibration
-   :synopsis: XML handler for calibrations
-
-.. inheritance-diagram:: calibration
-
+XML handler for calibrations
 """
 
 # Standard library modules.

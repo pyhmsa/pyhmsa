@@ -1,22 +1,6 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`conditions` -- Dictionary of conditions
-================================================================================
-
-.. module:: conditions
-   :synopsis: Dictionary
-
-.. inheritance-diagram:: pyhmsa.spec.condition.conditions
-
+Dictionary of conditions
 """
-
-# Script information for the file.
-__author__ = "Philippe T. Pinard"
-__email__ = "philippe.pinard@gmail.com"
-__version__ = "0.1"
-__copyright__ = "Copyright (c) 2014 Philippe T. Pinard"
-__license__ = "GPL v3"
 
 # Standard library modules.
 

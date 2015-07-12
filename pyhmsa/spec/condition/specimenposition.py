@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`specimenposition` -- Specimen position condition
-================================================================================
-
-.. module:: specimenposition
-   :synopsis: Specimen position condition
-
-.. inheritance-diagram:: pyhmsa.spec.condition.specimenposition
-
+Specimen position condition
 """
 
 # Standard library modules.

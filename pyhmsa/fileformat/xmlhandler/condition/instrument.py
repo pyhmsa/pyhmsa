@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`instrument` -- XML handler for instrument condition
-================================================================================
-
-.. module:: instrument
-   :synopsis: XML handler for instrument condition
-
-.. inheritance-diagram:: instrument
-
+XML handler for instrument condition
 """
 
 # Standard library modules.

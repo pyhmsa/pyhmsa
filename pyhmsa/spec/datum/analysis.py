@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`analysis` -- Analysis (0D collection)
-================================================================================
-
-.. module:: analysis
-   :synopsis: Analysis
-
-.. inheritance-diagram:: analysis
-
+Analysis (0D collection)
 """
 
 # Standard library modules.

@@ -1,14 +1,5 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`uid` -- Generate unique identifier id
-================================================================================
-
-.. module:: uid
-   :synopsis: Generate unique identifier id
-
-.. inheritance-diagram:: pyhmsa.uid
-
+Generate unique identifier id
 """
 
 # Standard library modules.

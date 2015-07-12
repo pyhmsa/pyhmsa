@@ -1,22 +1,6 @@
-#!/usr/bin/env python
 """
-================================================================================
-:mod:`analysislist` -- XML analysis for analysis list data
-================================================================================
-
-.. module:: analysislist
-   :synopsis: XML analysis for analysis list data
-
-.. inheritance-diagram:: pyhmsa.fileformat.xmlhandler.datum.analysislist
-
+XML handler for analysis list data
 """
-
-# Script information for the file.
-__author__ = "Philippe T. Pinard"
-__email__ = "philippe.pinard@gmail.com"
-__version__ = "0.1"
-__copyright__ = "Copyright (c) 2014 Philippe T. Pinard"
-__license__ = "GPL v3"
 
 # Standard library modules.
 import xml.etree.ElementTree as etree
