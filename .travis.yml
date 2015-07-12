@@ -1,17 +1,27 @@
 language: python
+
+cache: pip
+
 python:
 - '2.7'
 - '3.4'
+
 before_install:
-- sudo pip install codecov
+- pip install codecov
+
 install:
 - pip install -r requirements.txt
 - python setup.py develop
+
 script:
 - nosetests
-after_success: codecov
+
+after_success: 
+  codecov
+
 notifications:
   email: false
+
 deploy:
   provider: pypi
   user: philippe.pinard
