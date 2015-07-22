@@ -1,15 +1,8 @@
-sudo: false
+sudo: true
 language: python
 cache:
   directories:
   - $HOME/.pip-cache/
-addons:
-  apt:
-    packages:
-    - python-all
-    - python3-all
-    - python-setuptools
-    - python3-setuptools
 python:
 - '2.7'
 - '3.4'
@@ -17,6 +10,7 @@ before_install:
 - pip install --upgrade pip
 - pip install --cache-dir $HOME/.pip-cache codecov
 - pip install --cache-dir $HOME/.pip-cache stdeb
+- sudo apt-get install python-all python3-all python-setuptools python3-setuptools
 install:
 - pip install --cache-dir $HOME/.pip-cache -r requirements.txt
 - python setup.py develop
