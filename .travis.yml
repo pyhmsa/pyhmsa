@@ -10,7 +10,7 @@ before_install:
 - pip install --upgrade pip
 - pip install --cache-dir $HOME/.pip-cache codecov
 - pip install --cache-dir $HOME/.pip-cache stdeb
-- sudo apt-get install python-all python3-all python-setuptools python3-setuptools
+- sudo apt-get install python-all-dev python3-all-dev debhelper python-setuptools python3-setuptools apt-file python-requests
 install:
 - pip install --cache-dir $HOME/.pip-cache -r requirements.txt
 - python setup.py develop
