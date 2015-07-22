@@ -19,7 +19,6 @@ after_success: codecov
 notifications:
   email: false
 deploy:
-  matrix:
   - provider: pypi
     user: philippe.pinard
     password:
