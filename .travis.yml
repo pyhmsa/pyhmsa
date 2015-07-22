@@ -20,7 +20,7 @@ after_success: codecov
 notifications:
   email: false
 before_deploy:
-- python setup.py bdist_deb
+- python setup.py --command-packages=stdeb.command bdist_deb
 deploy:
   - provider: pypi
     user: philippe.pinard

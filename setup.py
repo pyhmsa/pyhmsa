@@ -8,12 +8,6 @@ import codecs
 # Third party modules.
 from setuptools import setup, find_packages
 
-try:
-    from stdeb.command.sdist_dsc import sdist_dsc
-    from stdeb.command.bdist_deb import bdist_deb
-except ImportError:
-    sdist_dsc = bdist_deb = None
-
 # Local modules.
 
 # Globals and constants variables.
@@ -46,10 +40,6 @@ with codecs.open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
 
 packages = find_packages()
-
-cmdclass = {}
-if bdist_deb is not None: cmdclass['bdist_deb'] = bdist_deb
-if sdist_dsc is not None: cmdclass['sdist_dsc'] = sdist_dsc
 
 setup(name='pyHMSA',
       version=find_version('pyhmsa', '__init__.py'),
@@ -147,6 +137,4 @@ setup(name='pyHMSA',
             ['EMSA = pyhmsa.fileformat.exporter.emsa:ExporterEMSA',
              'RAW = pyhmsa.fileformat.exporter.raw:ExporterRAW'],
         },
-
-      cmdclass=cmdclass,
      )
