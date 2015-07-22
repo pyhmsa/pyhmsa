@@ -28,6 +28,7 @@ deploy:
       tags: true
       repo: pyhmsa/pyhmsa
       all_branches: true
+  - python setup.py bdist_deb
   - provider: packagecloud
     repository: python-hmsa
     username: ppinard
