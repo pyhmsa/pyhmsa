@@ -18,6 +18,8 @@ script:
 after_success: codecov
 notifications:
   email: false
+before_deploy:
+- python setup.py bdist_deb
 deploy:
   - provider: pypi
     user: philippe.pinard
@@ -28,7 +30,6 @@ deploy:
       tags: true
       repo: pyhmsa/pyhmsa
       all_branches: true
-  - python setup.py bdist_deb
   - provider: packagecloud
     repository: python-hmsa
     username: ppinard
