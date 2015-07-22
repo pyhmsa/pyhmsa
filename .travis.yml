@@ -1,40 +1,37 @@
 sudo: false
-
 language: python
-
 cache:
   directories:
-    - $HOME/.pip-cache/
-
+  - $HOME/.pip-cache/
 python:
 - '2.7'
 - '3.4'
-
 before_install:
 - pip install --upgrade pip
 - pip install --cache-dir $HOME/.pip-cache codecov
 - pip install --cache-dir $HOME/.pip-cache stdeb
-
 install:
 - pip install --cache-dir $HOME/.pip-cache -r requirements.txt
 - python setup.py develop
-
 script:
 - nosetests
-
-after_success: 
-  codecov
-
+after_success: codecov
 notifications:
   email: false
-
 deploy:
-  provider: pypi
-  user: philippe.pinard
-  password:
-    secure: nC/0Lj2H/5BZo4BAhc29fYa6AJZL+UBVfFBcoX57XMA3AD+iCHWH0HJJXoiGvKtP3M/NB1tXAB+5Tj0R6q0bUOiMnf1fulckAVHlPI7r9CfukS62/peWcJYxpsFCOhyiqkTbNnwsX2JdRdrO0U/tUztqWUlazK43ziQCDBdqPp4=
-  distributions: "sdist bdist_wheel"
-  on:
-    tags: true
-    repo: pyhmsa/pyhmsa
-    all_branches: true
+  matrix:
+  - provider: pypi
+    user: philippe.pinard
+    password:
+      secure: nC/0Lj2H/5BZo4BAhc29fYa6AJZL+UBVfFBcoX57XMA3AD+iCHWH0HJJXoiGvKtP3M/NB1tXAB+5Tj0R6q0bUOiMnf1fulckAVHlPI7r9CfukS62/peWcJYxpsFCOhyiqkTbNnwsX2JdRdrO0U/tUztqWUlazK43ziQCDBdqPp4=
+    distributions: sdist bdist_wheel
+    on:
+      tags: true
+      repo: pyhmsa/pyhmsa
+      all_branches: true
+  - provider: packagecloud
+    repository: python-hmsa
+    username: ppinard
+    dist: ubuntu/precise
+    token:
+      secure: k6cg9yBUwf1UXBl+fyUodw9CVaiaKg38VsfoSciIGNX4MJtC6kRC0Q2nUanRZsyHm6y8AkK/bC3Iek0ToLkoPxcGIiCi37xSZn6UEQ298huFMpEtoktit6LwCt3tFrJF84ytRgdiZHzlJawFhJeQDChK8lQOj1ZvGCdPhsayt5M=
