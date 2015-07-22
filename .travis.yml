@@ -1,4 +1,4 @@
-sudo: true
+sudo: false
 language: python
 cache:
   directories:
@@ -9,8 +9,6 @@ python:
 before_install:
 - pip install --upgrade pip
 - pip install --cache-dir $HOME/.pip-cache codecov
-- pip install --cache-dir $HOME/.pip-cache stdeb
-- sudo apt-get install python-all-dev python3-all-dev debhelper python-setuptools python3-setuptools apt-file python-requests
 install:
 - pip install --cache-dir $HOME/.pip-cache -r requirements.txt
 - python setup.py develop
@@ -19,8 +17,6 @@ script:
 after_success: codecov
 notifications:
   email: false
-before_deploy:
-- python setup.py --command-packages=stdeb.command bdist_deb
 deploy:
   - provider: pypi
     user: philippe.pinard
@@ -31,10 +27,3 @@ deploy:
       tags: true
       repo: pyhmsa/pyhmsa
       all_branches: true
-  - provider: packagecloud
-    repository: python-hmsa
-    username: ppinard
-    dist: ubuntu/precise
-    local-dir: dist
-    token:
-      secure: k6cg9yBUwf1UXBl+fyUodw9CVaiaKg38VsfoSciIGNX4MJtC6kRC0Q2nUanRZsyHm6y8AkK/bC3Iek0ToLkoPxcGIiCi37xSZn6UEQ298huFMpEtoktit6LwCt3tFrJF84ytRgdiZHzlJawFhJeQDChK8lQOj1ZvGCdPhsayt5M=
