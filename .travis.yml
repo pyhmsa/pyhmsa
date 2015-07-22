@@ -32,5 +32,6 @@ deploy:
     repository: python-hmsa
     username: ppinard
     dist: ubuntu/precise
+    local-dir: dist
     token:
       secure: k6cg9yBUwf1UXBl+fyUodw9CVaiaKg38VsfoSciIGNX4MJtC6kRC0Q2nUanRZsyHm6y8AkK/bC3Iek0ToLkoPxcGIiCi37xSZn6UEQ298huFMpEtoktit6LwCt3tFrJF84ytRgdiZHzlJawFhJeQDChK8lQOj1ZvGCdPhsayt5M=
