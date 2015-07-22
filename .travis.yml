@@ -3,6 +3,13 @@ language: python
 cache:
   directories:
   - $HOME/.pip-cache/
+addons:
+  apt:
+    packages:
+    - python-all
+    - python3-all
+    - python-setuptools
+    - python3-setuptools
 python:
 - '2.7'
 - '3.4'
