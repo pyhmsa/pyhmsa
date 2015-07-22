@@ -13,6 +13,7 @@ python:
 before_install:
 - pip install --upgrade pip
 - pip install --cache-dir $HOME/.pip-cache codecov
+- pip install --cache-dir $HOME/.pip-cache stdeb
 
 install:
 - pip install --cache-dir $HOME/.pip-cache -r requirements.txt
