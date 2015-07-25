@@ -3,6 +3,8 @@
 # Standard library modules.
 import os
 import re
+import sys
+import glob
 import codecs
 from distutils.core import Command
 from subprocess import check_call
@@ -52,16 +54,17 @@ class _bdist_fpm(Command):
         if self.dist_dir is None:
             self.dist_dir = "dist"
 
-    def _run(self, target, python_bin):
+    def _run(self, target):
         setup_filepath = os.path.join(BASEDIR, 'setup.py')
-        version = '2.7' if python_bin == 'python' else '3.4'
+
+        python_bin = 'python3' if sys.version_info.major == 3 else 'python'
+        version = '%i.%i' % (sys.version_info.major, sys.version_info.minor)
 
         args = ['fpm',
                 '-s', 'python',
                 '-t', target,
                 '--force',
                 '--verbose',
-#                '--package', self.dist_dir,
                 '--maintainer', 'Philippe Pinard <philippe.pinard@gmail.com>',
                 '--category', 'science',
                 '--depends', "%s >= %s" % (python_bin, version),
@@ -73,13 +76,15 @@ class _bdist_fpm(Command):
                 setup_filepath]
         check_call(args)
 
+        for srcfilepath in glob.glob('*.%s' % target):
+            self.move_file(srcfilepath, self.dist_dir)
+
 class bdist_deb(_bdist_fpm):
 
     description = 'Build deb '
 
     def run(self):
-        for python_bin in ['python', 'python3']:
-            self._run('deb', python_bin)
+        self._run('deb')
 
 # Get the long description from the relevant file
 with codecs.open('README.rst', encoding='utf-8') as f:
