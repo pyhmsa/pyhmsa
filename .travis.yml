@@ -14,8 +14,7 @@ python:
 before_install:
 - pip install --upgrade pip
 - pip install --cache-dir $HOME/.pip-cache codecov
-- gem install --user-install fpm
-- export PATH=$PATH:$HOME/.gem/ruby/1.9.1/bin
+- gem install fpm
 install:
 - pip install --cache-dir $HOME/.pip-cache -r requirements.txt
 - python setup.py develop
