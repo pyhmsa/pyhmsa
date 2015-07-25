@@ -43,3 +43,7 @@ deploy:
     local-dir: dist
     token:
       secure: n93Y348IqhGkoztlAJ8HIfs48kGIpyvp4ZZICM34dqseWKX2BkZwU3/fWEob9OT038rIcWNgOr3+VUqQyI0JTIvAU0rvvVbEvDN6yCbRFo8ckMvMLThe0pXHecpDxWjg3BuQJXDOdc7IuqhZU948yEH9OeOinRFhIDMK97Tz56Q=
+    on:
+      tags: true
+      repo: pyhmsa/pyhmsa
+      all_branches: true
