@@ -8,6 +8,7 @@ addons:
 cache:
   directories:
   - $HOME/.pip-cache/
+  - $HOME/.gem
 python:
 - '2.7'
 - '3.4'
@@ -22,6 +23,8 @@ script:
 after_success: codecov
 notifications:
   email: false
+before_deploy:
+- gem install --user-install fpm
 deploy:
   - provider: pypi
     user: philippe.pinard
