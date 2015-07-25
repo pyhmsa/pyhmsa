@@ -60,6 +60,7 @@ class _bdist_fpm(Command):
                 '-s', 'python',
                 '-t', target,
                 '--force',
+                '--verbose',
                 '--package', self.dist_dir,
                 '--maintainer', 'Philippe Pinard <philippe.pinard@gmail.com>',
                 '--category', 'science',
