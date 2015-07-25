@@ -1,5 +1,10 @@
 sudo: false
 language: python
+addons:
+  apt:
+    packages:
+    - ruby-dev
+    - gcc
 cache:
   directories:
   - $HOME/.pip-cache/
