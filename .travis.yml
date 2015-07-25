@@ -8,7 +8,6 @@ addons:
 cache:
   directories:
   - $HOME/.pip-cache/
-  - $HOME/.gem
 python:
 - '2.7'
 - '3.4'
@@ -25,8 +24,9 @@ script:
 after_success: codecov
 notifications:
   email: false
+before_deploy:
+  python setup.py bdist_deb
 deploy:
-  matrix:
   - provider: pypi
     user: philippe.pinard
     password:
@@ -40,5 +40,6 @@ deploy:
     repository: hmsa
     username: ppinard
     dist: ubuntu/precise
+    local-dir: dist
     token:
       secure: n93Y348IqhGkoztlAJ8HIfs48kGIpyvp4ZZICM34dqseWKX2BkZwU3/fWEob9OT038rIcWNgOr3+VUqQyI0JTIvAU0rvvVbEvDN6yCbRFo8ckMvMLThe0pXHecpDxWjg3BuQJXDOdc7IuqhZU948yEH9OeOinRFhIDMK97Tz56Q=
