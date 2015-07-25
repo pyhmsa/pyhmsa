@@ -24,7 +24,8 @@ after_success: codecov
 notifications:
   email: false
 before_deploy:
-  python setup.py bdist_deb
+- python setup.py bdist_deb -d dist
+- ls dist
 deploy:
   - provider: pypi
     user: philippe.pinard
