@@ -76,6 +76,7 @@ class _bdist_fpm(Command):
                 setup_filepath]
         check_call(args)
 
+        self.mkpath(self.dist_dir)
         for srcfilepath in glob.glob('*.%s' % target):
             self.move_file(srcfilepath, self.dist_dir)
 
