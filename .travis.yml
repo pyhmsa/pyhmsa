@@ -15,6 +15,7 @@ python:
 before_install:
 - pip install --upgrade pip
 - pip install --cache-dir $HOME/.pip-cache codecov
+- gem install --user-install fpm
 install:
 - pip install --cache-dir $HOME/.pip-cache -r requirements.txt
 - python setup.py develop
@@ -23,8 +24,6 @@ script:
 after_success: codecov
 notifications:
   email: false
-before_deploy:
-- gem install --user-install fpm
 deploy:
   - provider: pypi
     user: philippe.pinard
