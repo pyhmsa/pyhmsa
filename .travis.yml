@@ -16,6 +16,7 @@ before_install:
 - pip install --upgrade pip
 - pip install --cache-dir $HOME/.pip-cache codecov
 - gem install --user-install fpm
+- export PATH=$PATH:$HOME/.gem/ruby/1.9.1/bin
 install:
 - pip install --cache-dir $HOME/.pip-cache -r requirements.txt
 - python setup.py develop
@@ -25,6 +26,7 @@ after_success: codecov
 notifications:
   email: false
 deploy:
+  matrix:
   - provider: pypi
     user: philippe.pinard
     password:
@@ -34,3 +36,9 @@ deploy:
       tags: true
       repo: pyhmsa/pyhmsa
       all_branches: true
+  - provider: packagecloud
+    repository: hmsa
+    username: ppinard
+    dist: ubuntu/precise
+    token:
+      secure: n93Y348IqhGkoztlAJ8HIfs48kGIpyvp4ZZICM34dqseWKX2BkZwU3/fWEob9OT038rIcWNgOr3+VUqQyI0JTIvAU0rvvVbEvDN6yCbRFo8ckMvMLThe0pXHecpDxWjg3BuQJXDOdc7IuqhZU948yEH9OeOinRFhIDMK97Tz56Q=
