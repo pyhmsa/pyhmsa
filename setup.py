@@ -61,7 +61,7 @@ class _bdist_fpm(Command):
                 '-t', target,
                 '--force',
                 '--verbose',
-                '--package', self.dist_dir,
+#                '--package', self.dist_dir,
                 '--maintainer', 'Philippe Pinard <philippe.pinard@gmail.com>',
                 '--category', 'science',
                 '--depends', "%s >= %s" % (python_bin, version),
