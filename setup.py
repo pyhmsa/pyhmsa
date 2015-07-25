@@ -4,6 +4,8 @@
 import os
 import re
 import codecs
+from distutils.core import Command
+from subprocess import check_call
 
 # Third party modules.
 from setuptools import setup, find_packages
@@ -35,6 +37,49 @@ def find_version(*file_paths):
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
+class _bdist_fpm(Command):
+
+    description = 'Build using fpm (Effing Package Management)'
+
+    user_options = [('dist-dir=', 'd',
+                     "directory to put final built distributions in "
+                     "[default: dist]"), ]
+
+    def initialize_options(self):
+        self.dist_dir = None
+
+    def finalize_options(self):
+        if self.dist_dir is None:
+            self.dist_dir = "dist"
+
+    def _run(self, target, python_bin):
+        setup_filepath = os.path.join(BASEDIR, 'setup.py')
+        version = '2.7' if python_bin == 'python' else '3.4'
+
+        args = ['fpm',
+                '-s', 'python',
+                '-t', target,
+                '--force',
+                '--package', self.dist_dir,
+                '--maintainer', 'Philippe Pinard <philippe.pinard@gmail.com>',
+                '--category', 'science',
+                '--depends', "%s >= %s" % (python_bin, version),
+                '--depends', python_bin + '-numpy',
+                '--depends', python_bin + '-six',
+                '--no-python-dependencies',
+                '--python-bin', python_bin,
+                '--name', python_bin + '-hmsa',
+                setup_filepath]
+        check_call(args)
+
+class bdist_deb(_bdist_fpm):
+
+    description = 'Build deb '
+
+    def run(self):
+        for python_bin in ['python', 'python3']:
+            self._run('deb', python_bin)
+
 # Get the long description from the relevant file
 with codecs.open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
@@ -48,6 +93,8 @@ setup(name='pyHMSA',
 
       author='Philippe Pinard',
       author_email='philippe.pinard@gmail.com',
+      maintainer='Philippe Pinard',
+      maintainer_email='philippe.pinard@gmail.com',
 
       url='http://pyhmsa.readthedocs.org',
       license='MIT',
@@ -137,4 +184,6 @@ setup(name='pyHMSA',
             ['EMSA = pyhmsa.fileformat.exporter.emsa:ExporterEMSA',
              'RAW = pyhmsa.fileformat.exporter.raw:ExporterRAW'],
         },
+
+      cmdclass={'bdist_deb': bdist_deb},
      )
