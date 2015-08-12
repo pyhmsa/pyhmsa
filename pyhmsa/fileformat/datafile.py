@@ -85,7 +85,7 @@ class _BufferedDataFileReaderThread(_MonitorableThread):
         # Load handlers
         handlers = set()
         for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.condition'):
-            handler_class = entry_point.load(require=False)
+            handler_class = entry_point.resolve()
             handler = handler_class(datafile.version)
             handlers.add(handler)
 
@@ -130,7 +130,7 @@ class _BufferedDataFileReaderThread(_MonitorableThread):
         # Load handlers
         handlers = set()
         for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.datum'):
-            handler_class = entry_point.load(require=False)
+            handler_class = entry_point.resolve()
             handler = handler_class(datafile.version, hmsa_file,
                                     datafile.conditions)
             handlers.add(handler)
@@ -273,7 +273,7 @@ class _BufferedDataFileWriterThread(_MonitorableThread):
         # Load handlers
         handlers = set()
         for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.condition'):
-            handler_class = entry_point.load(require=False)
+            handler_class = entry_point.resolve()
             handler = handler_class(datafile.version)
             handlers.add(handler)
 
@@ -301,7 +301,7 @@ class _BufferedDataFileWriterThread(_MonitorableThread):
         # Load handlers
         handlers = set()
         for entry_point in iter_entry_points('pyhmsa.fileformat.xmlhandler.datum'):
-            handler_class = entry_point.load(require=False)
+            handler_class = entry_point.resolve()
             handler = handler_class(datafile.version, hmsa_file,
                                     datafile.conditions)
             handlers.add(handler)

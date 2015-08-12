@@ -112,7 +112,7 @@ def find_importers(filepath, extra_datafile=None, search_extra=True, *args, **kw
     # Load importers
     importers = {}
     for entry_point in iter_entry_points('pyhmsa.fileformat.importer'):
-        importer_class = entry_point.load(require=False)
+        importer_class = entry_point.resolve()
         importer = importer_class(extra_datafile=extra_datafile,
                                   search_extra=search_extra,
                                   *args, **kwargs)
