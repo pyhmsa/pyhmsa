@@ -18,6 +18,7 @@ class Data(_IdentifierDict):
     def __init__(self, datafile):
         _IdentifierDict.__init__(self)
         self._datafile = datafile
+        self._lock = datafile._lock
 
     def __setitem__(self, identifier, datum):
         if not isinstance(datum, _Datum):
@@ -39,15 +40,16 @@ class Data(_IdentifierDict):
                         break
             conditions[cidentifier] = condition
 
-        datum._conditions = conditions
-
-        _IdentifierDict.__setitem__(self, identifier, datum)
+        with self._lock:
+            datum._conditions = conditions
+            _IdentifierDict.__setitem__(self, identifier, datum)
 
     def __delitem__(self, identifier):
         datum = self[identifier]
 
         conditions = Conditions()
         conditions.update(datum.conditions)
-        datum._conditions = conditions
 
-        _IdentifierDict.__delitem__(self, identifier)
+        with self._lock:
+            datum._conditions = conditions
+            _IdentifierDict.__delitem__(self, identifier)

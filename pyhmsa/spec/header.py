@@ -6,6 +6,7 @@ Header element
 from collections import MutableMapping
 from abc import ABCMeta
 import datetime
+import threading
 
 # Third party modules.
 
@@ -32,9 +33,12 @@ class Header(_BaseHeader):
     timezone = TextAttribute(False, 'Timezone', 'timezone')
     checksum = ChecksumAttribute(False, 'Checksum', 'checksum')
 
-    def __new__(cls, title=None, author=None, owner=None, date=None,
+    def __new__(cls, datafile=None,
+                title=None, author=None, owner=None, date=None,
                 time=None, timezone=None, checksum=None, **kwargs):
         obj = _BaseHeader.__new__(cls)
+
+        obj._lock = datafile._lock if datafile else threading.Lock()
 
         obj.title = title
         obj.author = author
@@ -61,10 +65,12 @@ class Header(_BaseHeader):
 
     def __setitem__(self, key, value):
         if key.lower() in self.__attributes__:
-            setattr(self, key.lower(), value)
+            with self._lock:
+                setattr(self, key.lower(), value)
         else:
             validate_identifier(key)
-            self._extras[key] = value
+            with self._lock:
+                self._extras[key] = value
 
     def __getitem__(self, key):
         if key.lower() in self.__attributes__:
@@ -74,9 +80,18 @@ class Header(_BaseHeader):
 
     def __delitem__(self, key):
         if key.lower() in self.__attributes__:
-            delattr(self, key.lower())
+            with self._lock:
+                delattr(self, key.lower())
         else:
-            del self._extras[key]
+            with self._lock:
+                del self._extras[key]
+
+    def __getstate__(self):
+        # Required not to pickle lock
+        return dict(self.items())
+
+    def __setstate__(self, items):
+        self.update(**items)
 
     def set_datetime(self, dt):
         self.date = dt.date()

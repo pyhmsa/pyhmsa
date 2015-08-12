@@ -4,6 +4,7 @@ MSA hyper dimensional data file
 
 # Standard library modules.
 import os
+import threading
 
 # Third party modules.
 
@@ -35,6 +36,8 @@ class DataFile(object):
         :arg language: language of the data file (default and recommended
             language is ``en-US``)
         """
+        self._lock = threading.Lock()
+
         if filepath is not None:
             filepath = os.path.splitext(filepath)[0] + '.hmsa'
         self._filepath = filepath
@@ -43,9 +46,8 @@ class DataFile(object):
 
         self._language = language
 
-        self._header = Header()
-
-        self._conditions = Conditions()
+        self._header = Header(self)
+        self._conditions = Conditions(self)
         self._data = Data(self)
 
     @classmethod
@@ -142,7 +144,8 @@ class DataFile(object):
     @language.setter
     def language(self, language):
         validate_language_tag(language)
-        self._language = language
+        with self._lock:
+            self._language = language
 
     @property
     def filepath(self):
