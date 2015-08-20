@@ -39,7 +39,7 @@ class TestHeader(unittest.TestCase):
 
     def testpickle(self):
         self.header.title = 'Beep beep'
-        s = pickle.dumps(self.header)
+        s = pickle.dumps(self.header, pickle.HIGHEST_PROTOCOL)
         header = pickle.loads(s)
 
         self.assertEqual('Beep beep', header.title)
