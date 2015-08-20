@@ -197,6 +197,10 @@ class TestDataFileReader(unittest.TestCase):
         self.assertEqual(0, analysis[0])
         self.assertEqual(395, analysis[-1])
 
+    def testreader_wrongext(self):
+        reader = DataFileReader()
+        self.assertRaises(IOError, reader.read, 'test.abc')
+
 class TestDataFileWriter(unittest.TestCase):
 
     def setUp(self):

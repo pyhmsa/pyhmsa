@@ -143,9 +143,11 @@ class TestDataFile(unittest.TestCase):
 
     def testwrite(self):
         tmpdir = tempfile.mkdtemp()
-        xmlfilepath = os.path.join(tmpdir, 'breccia_eds.xml')
+        hmsafilepath = os.path.join(tmpdir, 'breccia_eds.hmsa')
 
-        self.datafile.write(xmlfilepath)
+        self.datafile.write(hmsafilepath)
+
+        self.assertEqual(hmsafilepath, self.datafile.filepath)
 
         shutil.rmtree(tmpdir, ignore_errors=True)
 
