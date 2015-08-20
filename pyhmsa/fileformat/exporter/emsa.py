@@ -60,6 +60,7 @@ class _ExporterEMSAThread(_ExporterThread):
         lines += self._create_required_keywords_lines(datafile, datum, detector)
         lines += self._create_optional_keywords_lines(datafile, datum, detector)
         lines += self._create_data_lines(datafile, datum, detector)
+        lines += self._create_checkum_lines(lines)
         return lines
 
     def _create_header_lines(self, datafile, datum, detector):
@@ -202,7 +203,7 @@ class _ExporterEMSAThread(_ExporterThread):
 
     def _create_checkum_lines(self, lines):
         value = calculate_checksum(lines)
-        return [_create_keyword_line('CHECKSUM', value)]
+        return _create_keyword_line('CHECKSUM', value)
 
 class ExporterEMSA(_Exporter):
 
