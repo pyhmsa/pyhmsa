@@ -10,6 +10,7 @@ import numpy as np
 # Local modules.
 from pyhmsa.spec.datum.datum import _Datum
 from pyhmsa.spec.datum.analysis import Analysis0D, Analysis1D, Analysis2D
+from pyhmsa.spec.condition.detector import DetectorSpectrometer
 
 # Globals and constants variables.
 
@@ -53,6 +54,17 @@ class AnalysisList0D(_AnalysisList):
     def toanalysis(self, analysis_index):
         return Analysis0D(self[analysis_index, 0], self.dtype,
                           conditions=self.conditions)
+
+    def get_ylabel(self):
+        ylabel = 'Values'
+
+        conditions = self.conditions.findvalues(DetectorSpectrometer)
+        if conditions:
+            condition = next(iter(conditions))
+            if condition.measurement_unit is not None:
+                ylabel += ' (%s)' % condition.measurement_unit
+
+        return ylabel
 
 class AnalysisList1D(_AnalysisList):
     """
