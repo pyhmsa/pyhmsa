@@ -5,7 +5,7 @@ Data File specification
 
 __author__ = "Philippe T. Pinard"
 __email__ = "philippe.pinard@gmail.com"
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 __copyright__ = "Copyright (c) 2013-2015 Philippe T. Pinard"
 __license__ = "MIT"
 
