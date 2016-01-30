@@ -47,9 +47,14 @@ class arrayunit(np.ndarray):
         return obj
 
     def __reduce__(self):
-        order = 'C' if self.flags['C_CONTIGUOUS'] else 'F'
-        return self.__class__, (self.shape, self.dtype, np.ravel(self),
-                                0, None, order, self.unit)
+        # Solution from http://stackoverflow.com/questions/26598109/preserve-custom-attributes-when-pickling-subclass-of-numpy-array
+        pickled_state = super().__reduce__()
+        new_state = pickled_state[2] + (self.unit,)
+        return (pickled_state[0], pickled_state[1], new_state)
+
+    def __setstate__(self, state):
+        self._unit = state[-1]
+        super().__setstate__(state[0:-1])
 
     def __array_finalize__(self, obj):
         if obj is None:
