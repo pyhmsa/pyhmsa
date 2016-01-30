@@ -6,6 +6,7 @@ addons:
     - ruby-dev
     - gcc
 cache:
+  apt: true
   directories:
   - $HOME/.pip-cache/
 python:
@@ -14,9 +15,8 @@ python:
 before_install:
 - pip install --upgrade pip
 - pip install --cache-dir $HOME/.pip-cache codecov
-- gem install fpm
 install:
-- pip install --cache-dir $HOME/.pip-cache -r requirements.txt
+- pip install --cache-dir $HOME/.pip-cache --upgrade -r requirements.txt
 - python setup.py develop
 script:
 - nosetests
@@ -24,6 +24,7 @@ after_success: codecov
 notifications:
   email: false
 before_deploy:
+- gem install fpm
 - python setup.py bdist_deb
 deploy:
   - provider: pypi
