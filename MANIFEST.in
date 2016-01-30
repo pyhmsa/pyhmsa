@@ -1,2 +1,4 @@
 recursive-include pyhmsa/testdata *
-recursive-include examples *
+recursive-include examples *include versioneer.py
+include pyhmsa/_version.py
+include versioneer.py
