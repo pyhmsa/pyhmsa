@@ -12,10 +12,8 @@ cache:
 python:
 - '2.7'
 - '3.4'
-before_install:
-- pip install --upgrade pip
-- pip install --cache-dir $HOME/.pip-cache codecov
 install:
+- pip install --cache-dir $HOME/.pip-cache --upgrade pip codecov
 - pip install --cache-dir $HOME/.pip-cache --upgrade -r requirements.txt
 - python setup.py develop
 script:
