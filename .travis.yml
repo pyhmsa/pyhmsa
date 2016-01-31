@@ -9,9 +9,14 @@ cache:
   apt: true
   directories:
   - $HOME/.pip-cache/
-python:
-- '2.7'
-- '3.4'
+matrix:
+  include:
+    - python: "3.5"
+      env: DEPLOY=yes
+      os: linux
+    - python: "2.7"
+      env: DEPLOY=no
+      os: linux
 install:
 - pip install --cache-dir $HOME/.pip-cache --upgrade pip codecov
 - pip install --cache-dir $HOME/.pip-cache --upgrade -r requirements.txt
@@ -33,7 +38,7 @@ deploy:
     on:
       tags: true
       repo: pyhmsa/pyhmsa
-      all_branches: true
+      condition: "$DEPLOY = yes"
   - provider: packagecloud
     repository: hmsa
     username: ppinard
@@ -45,4 +50,4 @@ deploy:
     on:
       tags: true
       repo: pyhmsa/pyhmsa
-      all_branches: true
+      condition: "$DEPLOY = yes"
