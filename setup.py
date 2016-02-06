@@ -105,8 +105,7 @@ setup(name='pyHMSA',
       packages=packages,
 
       install_requires=['numpy', 'six'],
-      setup_requires=['nose', 'coverage'],
-      tests_require=['Pillow'],
+      tests_require=['Pillow', 'nose', 'coverage'],
 
       zip_safe=True,
 
