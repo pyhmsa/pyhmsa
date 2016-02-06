@@ -103,7 +103,6 @@ setup(name='pyHMSA',
         ],
 
       packages=packages,
-      namespace_packages=packages,
 
       install_requires=['numpy', 'six'],
       setup_requires=['nose', 'coverage'],
