@@ -22,7 +22,7 @@ from pyhmsa.spec.condition.detector import \
      Window)
 from pyhmsa.spec.condition.calibration import CalibrationLinear
 from pyhmsa.spec.datum.analysis import Analysis1D
-
+from pyhmsa.type.unit import validate_unit
 from pyhmsa.util.parsedict import parsedict
 
 # Globals and constants variables.
@@ -281,6 +281,17 @@ class _ImporterEMSAThread(_ImporterThread):
         unit = keywords.get('XUNITS')
         gain = keywords.getfloat('XPERCHAN')
         offset = keywords.getfloat('OFFSET')
+        try:
+            unit = validate_unit(unit)
+        except ValueError as ex: # Attempt quick fix for common unit
+            if 'angstroms' in unit:
+                unit = 'nm'
+                gain /= 10.0
+                offset /= 10.0
+            elif 'eV' in unit:
+                unit = 'eV'
+            else:
+                raise ex
         kwargs['calibration'] = CalibrationLinear(quantity, unit, gain, offset)
 
         kwargs['measurement_unit'] = keywords.get('yunits')
