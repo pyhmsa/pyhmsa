@@ -17,6 +17,8 @@ from pyhmsa.type.numerical import convert_unit
 from pyhmsa.util.physics import wavelength_to_energy_eV, energy_to_wavelength_m
 
 # Globals and constants variables.
+from pyhmsa.type.unit import _PREFIXES_VALUES
+
 SIGNAL_TYPE_EDS = 'EDS'
 SIGNAL_TYPE_WDS = 'WDS'
 SIGNAL_TYPE_ELS = 'ELS'
@@ -273,7 +275,8 @@ class DetectorSpectrometer(_Detector):
 
     def get_calibration_energy(self):
         quantity = self.calibration.quantity.lower()
-        _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+        prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+        multiplier = _PREFIXES_VALUES[prefix]
 
         # From energy
         if quantity == 'energy' and baseunit == 'eV':
@@ -281,7 +284,7 @@ class DetectorSpectrometer(_Detector):
 
         # From wavelength
         if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
-            values = [wavelength_to_energy_eV(self.calibration(i)) \
+            values = [wavelength_to_energy_eV(self.calibration(i) * multiplier) \
                       for i in range(int(self.channel_count))]
             return CalibrationExplicit('Energy', 'eV', list(values))
 
@@ -291,7 +294,8 @@ class DetectorSpectrometer(_Detector):
 
     def get_calibration_wavelength(self):
         quantity = self.calibration.quantity.lower()
-        _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+        prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+        multiplier = _PREFIXES_VALUES[prefix]
 
         # From wavelength
         if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
@@ -299,7 +303,7 @@ class DetectorSpectrometer(_Detector):
 
         # From energy
         if quantity == 'energy' and baseunit == 'eV':
-            values = [energy_to_wavelength_m(self.calibration(i)) \
+            values = [energy_to_wavelength_m(self.calibration(i) * multiplier) \
                       for i in range(int(self.channel_count))]
             return CalibrationExplicit('Wavelength', 'm', list(values))
 
