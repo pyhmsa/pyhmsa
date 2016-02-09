@@ -276,7 +276,7 @@ class DetectorSpectrometer(_Detector):
     def get_calibration_energy(self):
         quantity = self.calibration.quantity.lower()
         prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
-        multiplier = _PREFIXES_VALUES[prefix]
+        multiplier = _PREFIXES_VALUES.get(prefix, 1.0)
 
         # From energy
         if quantity == 'energy' and baseunit == 'eV':
@@ -295,7 +295,7 @@ class DetectorSpectrometer(_Detector):
     def get_calibration_wavelength(self):
         quantity = self.calibration.quantity.lower()
         prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
-        multiplier = _PREFIXES_VALUES[prefix]
+        multiplier = _PREFIXES_VALUES.get(prefix, 1.0)
 
         # From wavelength
         if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
