@@ -13,6 +13,9 @@ pyHMSA
 .. image:: https://codecov.io/github/pyhmsa/pyhmsa/coverage.svg?branch=master
    :target: https://codecov.io/github/pyhmsa/pyhmsa?branch=master
 
+.. image:: https://zenodo.org/badge/doi/10.5281/zenodo.46773.svg
+   :target: http://dx.doi.org/10.5281/zenodo.46773
+
 pyHMSA is a pure Python implementation of the MSA / MAS / AMAS HyperDimensional 
 Data File (HMSA, for short) specifications. 
 This file format is intended to be a common exchange format for microscopy and 
