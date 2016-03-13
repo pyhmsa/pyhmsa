@@ -437,7 +437,8 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
             return DetectorSpectrometer.get_calibration_energy(self)
         except ValueError:
             quantity = self.calibration.quantity.lower()
-            _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+            prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+            multiplier = _PREFIXES_VALUES.get(prefix, 1.0)
 
             # From position
             if quantity == 'position' and baseunit == 'm':
@@ -447,10 +448,16 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
 
                 if self.rowland_circle_diameter is None:
                     raise ValueError('Element "rowland_circle_diameter" is not defined')
-                rownload_m = convert_unit('m', self.rowland_circle_diameter)
+                rowland_m = convert_unit('m', self.rowland_circle_diameter)
 
-                values = [wavelength_to_energy_eV(self.calibration(i) / rownload_m * d_spacing) \
-                          for i in range(int(self.channel_count))]
+                values = []
+                for i in range(int(self.channel_count)):
+                    v = self.calibration(i) * multiplier
+                    v /= rowland_m
+                    v *= d_spacing
+                    v = wavelength_to_energy_eV(v)
+                    values.append(v)
+
                 return CalibrationExplicit('Energy', 'eV', list(values))
 
         raise ValueError('Cannot convert calibration to energy')
@@ -462,7 +469,8 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
             return DetectorSpectrometer.get_calibration_wavelength(self)
         except ValueError:
             quantity = self.calibration.quantity.lower()
-            _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+            prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+            multiplier = _PREFIXES_VALUES.get(prefix, 1.0)
 
             # From position
             if quantity == 'position' and baseunit == 'm':
@@ -472,10 +480,15 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
 
                 if self.rowland_circle_diameter is None:
                     raise ValueError('Element "rowland_circle_diameter" is not defined')
-                rownload_m = convert_unit('m', self.rowland_circle_diameter)
+                rowland_m = convert_unit('m', self.rowland_circle_diameter)
 
-                values = [self.calibration(i) / rownload_m * d_spacing \
-                          for i in range(int(self.channel_count))]
+                values = []
+                for i in range(int(self.channel_count)):
+                    v = self.calibration(i) * multiplier
+                    v /= rowland_m
+                    v *= d_spacing
+                    values.append(v)
+
                 return CalibrationExplicit('Wavelength', 'm', list(values))
 
         raise ValueError('Cannot convert calibration to wavelength')
@@ -484,7 +497,8 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
 
     def get_calibration_position(self):
         quantity = self.calibration.quantity.lower()
-        _prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+        prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
+        multiplier = _PREFIXES_VALUES.get(prefix, 1.0)
 
         # From position
         if quantity == 'position' and baseunit == 'm':
@@ -497,15 +511,25 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
 
         if self.rowland_circle_diameter is None:
             raise ValueError('Element "rowland_circle_diameter" is not defined')
-        rownload_m = convert_unit('m', self.rowland_circle_diameter)
+        rowland_m = convert_unit('m', self.rowland_circle_diameter)
 
         if quantity == 'wavelength' and baseunit in ['m', u'\u00c5']:
-            values = [self.calibration(i) * rownload_m / d_spacing \
-                      for i in range(int(self.channel_count))]
+            values = []
+            for i in range(int(self.channel_count)):
+                v = self.calibration(i) * multiplier
+                v *= rowland_m
+                v /= d_spacing
+                values.append(v)
+
             return CalibrationExplicit('Position', 'm', list(values))
         elif quantity == 'energy' and baseunit == 'eV':
-            values = [energy_to_wavelength_m(self.calibration(i)) * rownload_m / d_spacing \
-                      for i in range(int(self.channel_count))]
+            values = []
+            for i in range(int(self.channel_count)):
+                v = energy_to_wavelength_m(self.calibration(i) * multiplier)
+                v *= rowland_m
+                v /= d_spacing
+                values.append(v)
+
             return CalibrationExplicit('Position', 'm', list(values))
 
         raise ValueError('Cannot convert calibration to position')
