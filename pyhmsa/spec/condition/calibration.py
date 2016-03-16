@@ -8,13 +8,16 @@ Calibration of measurements
 import numpy as np
 
 # Local modules.
+from pyhmsa.spec.condition.condition import _Condition
 from pyhmsa.util.parameter import \
-    (Parameter, TextAttribute, NumericalAttribute, UnitAttribute,
+    (TextAttribute, NumericalAttribute, UnitAttribute,
      TextListAttribute)
 
 # Globals and constants variables.
 
-class _Calibration(Parameter):
+class _Calibration(_Condition):
+
+    TEMPLATE = 'Calibration'
 
     quantity = TextAttribute(True, 'Quantity', 'physical quantity')
     unit = UnitAttribute(None, True, 'Unit', 'unit')
@@ -44,6 +47,8 @@ class _Calibration(Parameter):
 
 class CalibrationConstant(_Calibration):
 
+    CLASS = 'Constant'
+
     value = NumericalAttribute(None, True, "Value", "constant value")
 
     def __init__(self, quantity, unit, value):
@@ -67,6 +72,8 @@ class CalibrationConstant(_Calibration):
         return 0 if value == self.value else -1
 
 class CalibrationLinear(_Calibration):
+
+    CLASS = 'Linear'
 
     gain = NumericalAttribute(None, True, "Gain", "gain")
     offset = NumericalAttribute(None, True, "Offset", "offset")
@@ -104,6 +111,8 @@ class CalibrationLinear(_Calibration):
 
 class CalibrationPolynomial(_Calibration):
 
+    CLASS = 'Polynomial'
+
     coefficients = NumericalAttribute(None, True, 'Coefficients', 'polynomial coefficients')
 
     def __init__(self, quantity, unit, coefficients):
@@ -137,6 +146,8 @@ class CalibrationPolynomial(_Calibration):
         return self._func
 
 class CalibrationExplicit(_Calibration):
+
+    CLASS = 'Explicit'
 
     values = NumericalAttribute(None, True, "Values", "explicit values")
     labels = TextListAttribute(False, 'Labels', 'text labels for each of the calibration points')
