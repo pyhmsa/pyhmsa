@@ -52,16 +52,37 @@ class _ImageRaster2D(_ImageRaster):
         position_center = acq.positions.get(POSITION_LOCATION_CENTER)
         position_end = acq.positions.get(POSITION_LOCATION_END)
 
+        width, height = self.shape[:2]
+        dx = convert_unit('mm', acq.step_size_x)
+        dy = convert_unit('mm', acq.step_size_y)
+
         if position_start and position_end:
             pass
+
         elif position_start and position_center:
             delta = position_center - position_start
             position_end = position_center + delta
+
         elif position_center and position_end:
             delta = position_end - position_center
             position_start = position_center - delta
+
+        elif position_start:
+            delta = SpecimenPosition(dx * width, dy * height)
+            position_end = position_start + delta
+
+        elif position_center:
+            delta = SpecimenPosition(dx * width / 2, dy * height / 2)
+            position_start = position_center - delta
+            position_end = position_center + delta
+
+        elif position_end:
+            delta = SpecimenPosition(dx * width, dy * height)
+            position_start = position_end - delta
+
         else:
-            raise ValueError('At least two positions must be defined in acquisition condition')
+            position_start = SpecimenPosition(0, 0)
+            position_end = SpecimenPosition(dx * width, dy * height)
 
         if convert_unit('degrees', position_start.r) != convert_unit('degrees', position_end.r):
             raise ValueError('Positions must have the same rotation: %s != %s' % \
