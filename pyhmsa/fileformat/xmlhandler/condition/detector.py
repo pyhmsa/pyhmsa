@@ -12,6 +12,7 @@ from pyhmsa.spec.condition.detector import \
     (DetectorCamera, DetectorSpectrometer, DetectorSpectrometerCL,
      DetectorSpectrometerWDS, DetectorSpectrometerXEDS, Window, WindowLayer)
 from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
+from pyhmsa.fileformat.xmlhandler.condition.condition import _ConditionXMLHandler
 
 # Globals and constants variables.
 
@@ -45,24 +46,15 @@ class WindowXMLHandler(_XMLHandler):
 
         return element
 
-class DetectorCameraXMLHandler(_XMLHandler):
-
-    def can_parse(self, element):
-        return element.tag == 'Detector' and element.get('Class') == 'Camera'
-
-    def parse(self, element):
-        return self._parse_parameter(element, DetectorCamera)
-
-    def can_convert(self, obj):
-        return type(obj) is DetectorCamera
-
-    def convert(self, obj):
-        return self._convert_parameter(obj, 'Detector', {'Class': 'Camera'})
-
-class _DetectorSpectrometerXMLHandler(_XMLHandler):
+class DetectorCameraXMLHandler(_ConditionXMLHandler):
 
     def __init__(self, version):
-        _XMLHandler.__init__(self, version)
+        super().__init__(DetectorCamera, version)
+
+class _DetectorSpectrometerXMLHandler(_ConditionXMLHandler):
+
+    def __init__(self, clasz, version):
+        super().__init__(clasz, version)
         self._handler_window = WindowXMLHandler(version)
 
     def _parse_calibration(self, element):
@@ -90,6 +82,11 @@ class _DetectorSpectrometerXMLHandler(_XMLHandler):
             return Window()
         return self._handler_window.parse(subelement)
 
+    def parse(self, element):
+        obj = super().parse(element)
+        obj.calibration = self._parse_calibration(element)
+        return obj
+
     def _convert_calibration(self, obj):
         # Load handlers
         handlers = set()
@@ -108,78 +105,47 @@ class _DetectorSpectrometerXMLHandler(_XMLHandler):
     def _convert_window(self, obj):
         return [self._handler_window.convert(obj.window)]
 
-class DetectorSpectrometerXMLHandler(_DetectorSpectrometerXMLHandler):
-
-    def can_parse(self, element):
-        return element.tag == 'Detector' and element.get('Class') == 'Spectrometer'
-
-    def parse(self, element):
-        obj = self._parse_parameter(element, DetectorSpectrometer)
-        obj.calibration = self._parse_calibration(element)
-        return obj
-
-    def can_convert(self, obj):
-        return type(obj) is DetectorSpectrometer
-
     def convert(self, obj):
-        element = self._convert_parameter(obj, 'Detector', {'Class': 'Spectrometer'})
+        element = super().convert(obj)
         element.extend(self._convert_calibration(obj))
         return element
+
+class DetectorSpectrometerXMLHandler(_DetectorSpectrometerXMLHandler):
+
+    def __init__(self, version):
+        super().__init__(DetectorSpectrometer, version)
 
 class DetectorSpectrometerCLXMLHandler(_DetectorSpectrometerXMLHandler):
 
-    def can_parse(self, element):
-        return element.tag == 'Detector' and element.get('Class') == 'Spectrometer/CL'
-
-    def parse(self, element):
-        obj = self._parse_parameter(element, DetectorSpectrometerCL)
-        obj.calibration = self._parse_calibration(element)
-        return obj
-
-    def can_convert(self, obj):
-        return type(obj) is DetectorSpectrometerCL
-
-    def convert(self, obj):
-        element = self._convert_parameter(obj, 'Detector', {'Class': 'Spectrometer/CL'})
-        element.extend(self._convert_calibration(obj))
-        return element
+    def __init__(self, version):
+        super().__init__(DetectorSpectrometerCL, version)
 
 class DetectorSpectrometerWDSXMLHandler(_DetectorSpectrometerXMLHandler):
 
-    def can_parse(self, element):
-        return element.tag == 'Detector' and element.get('Class') == 'Spectrometer/WDS'
+    def __init__(self, version):
+        super().__init__(DetectorSpectrometerWDS, version)
 
     def parse(self, element):
-        obj = self._parse_parameter(element, DetectorSpectrometerWDS)
-        obj.calibration = self._parse_calibration(element)
+        obj = super().parse(element)
         obj.window = self._parse_window(element)
         return obj
 
-    def can_convert(self, obj):
-        return type(obj) is DetectorSpectrometerWDS
-
     def convert(self, obj):
-        element = self._convert_parameter(obj, 'Detector', {'Class': 'Spectrometer/WDS'})
-        element.extend(self._convert_calibration(obj))
+        element = super().convert(obj)
         element.extend(self._convert_window(obj))
         return element
 
 class DetectorSpectrometerXEDSXMLHandler(_DetectorSpectrometerXMLHandler):
 
-    def can_parse(self, element):
-        return element.tag == 'Detector' and element.get('Class') == 'Spectrometer/XEDS'
+    def __init__(self, version):
+        super().__init__(DetectorSpectrometerXEDS, version)
 
     def parse(self, element):
-        obj = self._parse_parameter(element, DetectorSpectrometerXEDS)
-        obj.calibration = self._parse_calibration(element)
+        obj = super().parse(element)
         obj.window = self._parse_window(element)
         return obj
 
-    def can_convert(self, obj):
-        return type(obj) is DetectorSpectrometerXEDS
-
     def convert(self, obj):
-        element = self._convert_parameter(obj, 'Detector', {'Class': 'Spectrometer/XEDS'})
-        element.extend(self._convert_calibration(obj))
+        element = super().convert(obj)
         element.extend(self._convert_window(obj))
         return element

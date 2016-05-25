@@ -8,20 +8,11 @@ XML handler for instrument condition
 
 # Local modules.
 from pyhmsa.spec.condition.instrument import Instrument
-from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
+from pyhmsa.fileformat.xmlhandler.condition.condition import _ConditionXMLHandler
 
 # Globals and constants variables.
 
-class InstrumentXMLHandler(_XMLHandler):
+class InstrumentXMLHandler(_ConditionXMLHandler):
 
-    def can_parse(self, element):
-        return element.tag == 'Instrument'
-
-    def parse(self, element):
-        return self._parse_parameter(element, Instrument)
-
-    def can_convert(self, obj):
-        return type(obj) is Instrument
-
-    def convert(self, obj):
-        return self._convert_parameter(obj, 'Instrument')
+    def __init__(self, version):
+        super().__init__(Instrument, version)

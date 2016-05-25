@@ -8,17 +8,17 @@ XML handler for region condition
 
 # Local modules.
 from pyhmsa.spec.condition.region import RegionOfInterest
-from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
+from pyhmsa.fileformat.xmlhandler.condition.condition import _ConditionXMLHandler
 
 # Globals and constants variables.
 
-class RegionOfInterestXMLHandler(_XMLHandler):
+class RegionOfInterestXMLHandler(_ConditionXMLHandler):
 
-    def can_parse(self, element):
-        return element.tag == 'RegionOfInterest'
+    def __init__(self, version):
+        super().__init__(RegionOfInterest, version)
 
     def parse(self, element):
-        obj = self._parse_parameter(element, RegionOfInterest)
+        obj = super().parse(element)
 
         subelement = element.find('StartChannel')
         if subelement is None:
@@ -33,11 +33,8 @@ class RegionOfInterestXMLHandler(_XMLHandler):
         obj.channels = (start, end)
         return obj
 
-    def can_convert(self, obj):
-        return type(obj) is RegionOfInterest
-
     def convert(self, obj):
-        element = self._convert_parameter(obj, 'RegionOfInterest')
+        element = super().convert(obj)
 
         value = obj.start_channel
         attrib = type('MockAttribute', (object,), {'xmlname': 'StartChannel'})

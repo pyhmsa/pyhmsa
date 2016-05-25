@@ -8,34 +8,17 @@ XML handler for probe condition
 
 # Local modules.
 from pyhmsa.spec.condition.probe import ProbeEM, ProbeTEM
-from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
+from pyhmsa.fileformat.xmlhandler.condition.condition import _ConditionXMLHandler
 
 # Globals and constants variables.
 
-class ProbeEMXMLHandler(_XMLHandler):
+class ProbeEMXMLHandler(_ConditionXMLHandler):
 
-    def can_parse(self, element):
-        return element.tag == 'Probe' and element.get('Class') == 'EM'
+    def __init__(self, version):
+        super().__init__(ProbeEM, version)
 
-    def parse(self, element):
-        return self._parse_parameter(element, ProbeEM)
+class ProbeTEMXMLHandler(_ConditionXMLHandler):
 
-    def can_convert(self, obj):
-        return type(obj) is ProbeEM
+    def __init__(self, version):
+        super().__init__(ProbeTEM, version)
 
-    def convert(self, obj):
-        return self._convert_parameter(obj, 'Probe', {'Class': 'EM'})
-
-class ProbeTEMXMLHandler(_XMLHandler):
-
-    def can_parse(self, element):
-        return element.tag == 'Probe' and element.get('Class') == 'TEM'
-
-    def parse(self, element):
-        return self._parse_parameter(element, ProbeTEM)
-
-    def can_convert(self, obj):
-        return type(obj) is ProbeTEM
-
-    def convert(self, obj):
-        return self._convert_parameter(obj, 'Probe', {'Class': 'TEM'})

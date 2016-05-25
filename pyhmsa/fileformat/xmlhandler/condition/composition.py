@@ -9,14 +9,14 @@ import xml.etree.ElementTree as etree
 
 # Local modules.
 from pyhmsa.spec.condition.composition import CompositionElemental
-from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
+from pyhmsa.fileformat.xmlhandler.condition.condition import _ConditionXMLHandler
 
 # Globals and constants variables.
 
-class CompositionElementalXMLHandler(_XMLHandler):
+class CompositionElementalXMLHandler(_ConditionXMLHandler):
 
-    def can_parse(self, element):
-        return element.tag == 'Composition' and element.get('Class') == 'Elemental'
+    def __init__(self, version):
+        super().__init__(CompositionElemental, version)
 
     def parse(self, element):
         units = []
@@ -39,9 +39,6 @@ class CompositionElementalXMLHandler(_XMLHandler):
         composition = CompositionElemental(unit)
         composition.update(tmpcomposition)
         return composition
-
-    def can_convert(self, obj):
-        return type(obj) is CompositionElemental
 
     def convert(self, obj):
         element = etree.Element('Composition', {'Class': 'Elemental'})

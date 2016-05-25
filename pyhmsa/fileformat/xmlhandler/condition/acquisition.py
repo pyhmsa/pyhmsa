@@ -13,37 +13,25 @@ from pyhmsa.spec.condition.acquisition import \
     (AcquisitionPoint, AcquisitionMultipoint,
      AcquisitionRasterLinescan, AcquisitionRasterXY, AcquisitionRasterXYZ)
 from pyhmsa.spec.condition.specimenposition import SpecimenPosition
-from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
+from pyhmsa.fileformat.xmlhandler.condition.condition import _ConditionXMLHandler
 from pyhmsa.util.parameter import ObjectAttribute
 
 # Globals and constants variables.
 
-class AcquisitionPointXMLHandler(_XMLHandler):
-
-    def can_parse(self, element):
-        return element.tag == 'Acquisition' and element.get('Class') == 'Point'
-
-    def parse(self, element):
-        return self._parse_parameter(element, AcquisitionPoint)
-
-    def can_convert(self, obj):
-        return type(obj) is AcquisitionPoint
-
-    def convert(self, obj):
-        return self._convert_parameter(obj, 'Acquisition', {'Class': 'Point'})
-
-class AcquisitionMultipointXMLHandler(_XMLHandler):
+class AcquisitionPointXMLHandler(_ConditionXMLHandler):
 
     def __init__(self, version):
-        _XMLHandler.__init__(self, version)
+        super().__init__(AcquisitionPoint, version)
+
+class AcquisitionMultipointXMLHandler(_ConditionXMLHandler):
+
+    def __init__(self, version):
+        super().__init__(AcquisitionMultipoint, version)
         self._attrib_specimen_position = \
             ObjectAttribute(SpecimenPosition, xmlname='SpecimenPosition')
 
-    def can_parse(self, element):
-        return element.tag == 'Acquisition' and element.get('Class') == 'Multipoint'
-
     def parse(self, element):
-        obj = self._parse_parameter(element, AcquisitionMultipoint)
+        obj = super().parse(element)
 
         for subelement in element.findall('./Positions/SpecimenPosition'):
             position = \
@@ -57,11 +45,8 @@ class AcquisitionMultipointXMLHandler(_XMLHandler):
 
         return obj
 
-    def can_convert(self, obj):
-        return type(obj) is AcquisitionMultipoint
-
     def convert(self, obj):
-        element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Multipoint'})
+        element = super().convert(obj)
 
         value = np.uint32(len(obj.positions))
         attrib = type('MockAttribute', (object,), {'xmlname': 'PointCount'})
@@ -78,10 +63,10 @@ class AcquisitionMultipointXMLHandler(_XMLHandler):
 
         return element
 
-class _AcquisitionRasterXMLHandler(_XMLHandler):
+class _AcquisitionRasterXMLHandler(_ConditionXMLHandler):
 
-    def __init__(self, version):
-        _XMLHandler.__init__(self, version)
+    def __init__(self, clasz, version):
+        super().__init__(clasz, version)
         self._attrib_specimen_position = \
             ObjectAttribute(SpecimenPosition, xmlname='SpecimenPosition')
 
@@ -97,6 +82,11 @@ class _AcquisitionRasterXMLHandler(_XMLHandler):
 
         return positions
 
+    def parse(self, element):
+        obj = super().parse(element)
+        obj.positions.update(self._parse_positions(element))
+        return obj
+
     def _convert_positions(self, obj):
         elements = []
 
@@ -109,56 +99,23 @@ class _AcquisitionRasterXMLHandler(_XMLHandler):
 
         return elements
 
-class AcquisitionRasterLinescanXMLHandler(_AcquisitionRasterXMLHandler):
-
-    def can_parse(self, element):
-        return element.tag == 'Acquisition' and element.get('Class') == 'Raster/Linescan'
-
-    def parse(self, element):
-        obj = self._parse_parameter(element, AcquisitionRasterLinescan)
-        obj.positions.update(self._parse_positions(element))
-        return obj
-
-    def can_convert(self, obj):
-        return type(obj) is AcquisitionRasterLinescan
-
     def convert(self, obj):
-        element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Raster/Linescan'})
+        element = super().convert(obj)
         element.extend(self._convert_positions(obj))
         return element
+
+class AcquisitionRasterLinescanXMLHandler(_AcquisitionRasterXMLHandler):
+
+    def __init__(self, version):
+        super().__init__(AcquisitionRasterLinescan, version)
 
 class AcquisitionRasterXYXMLHandler(_AcquisitionRasterXMLHandler):
 
-    def can_parse(self, element):
-        return element.tag == 'Acquisition' and element.get('Class') == 'Raster/XY'
-
-    def parse(self, element):
-        obj = self._parse_parameter(element, AcquisitionRasterXY)
-        obj.positions.update(self._parse_positions(element))
-        return obj
-
-    def can_convert(self, obj):
-        return type(obj) is AcquisitionRasterXY
-
-    def convert(self, obj):
-        element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Raster/XY'})
-        element.extend(self._convert_positions(obj))
-        return element
+    def __init__(self, version):
+        super().__init__(AcquisitionRasterXY, version)
 
 class AcquisitionRasterXYZXMLHandler(_AcquisitionRasterXMLHandler):
 
-    def can_parse(self, element):
-        return element.tag == 'Acquisition' and element.get('Class') == 'Raster/XYZ'
+    def __init__(self, version):
+        super().__init__(AcquisitionRasterXYZ, version)
 
-    def parse(self, element):
-        obj = self._parse_parameter(element, AcquisitionRasterXYZ)
-        obj.positions.update(self._parse_positions(element))
-        return obj
-
-    def can_convert(self, obj):
-        return type(obj) is AcquisitionRasterXYZ
-
-    def convert(self, obj):
-        element = self._convert_parameter(obj, 'Acquisition', {'Class': 'Raster/XYZ'})
-        element.extend(self._convert_positions(obj))
-        return element

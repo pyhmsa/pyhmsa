@@ -10,62 +10,27 @@ XML handler for calibrations
 from pyhmsa.spec.condition.calibration import \
     (CalibrationConstant, CalibrationLinear,
      CalibrationPolynomial, CalibrationExplicit)
-from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
+from pyhmsa.fileformat.xmlhandler.condition.condition import _ConditionXMLHandler
 
 # Globals and constants variables.
 
-class CalibrationConstantXMLHandler(_XMLHandler):
+class CalibrationConstantXMLHandler(_ConditionXMLHandler):
 
-    def can_parse(self, element):
-        return element.tag == 'Calibration' and element.get('Class') == 'Constant'
+    def __init__(self, version):
+        super().__init__(CalibrationConstant, version)
 
-    def parse(self, element):
-        return self._parse_parameter(element, CalibrationConstant)
+class CalibrationLinearXMLHandler(_ConditionXMLHandler):
 
-    def can_convert(self, obj):
-        return type(obj) is CalibrationConstant
+    def __init__(self, version):
+        super().__init__(CalibrationLinear, version)
 
-    def convert(self, obj):
-        return self._convert_parameter(obj, 'Calibration', {'Class': 'Constant'})
+class CalibrationPolynomialXMLHandler(_ConditionXMLHandler):
 
-class CalibrationLinearXMLHandler(_XMLHandler):
+    def __init__(self, version):
+        super().__init__(CalibrationPolynomial, version)
 
-    def can_parse(self, element):
-        return element.tag == 'Calibration' and element.get('Class') == 'Linear'
+class CalibrationExplicitXMLHandler(_ConditionXMLHandler):
 
-    def parse(self, element):
-        return self._parse_parameter(element, CalibrationLinear)
+    def __init__(self, version):
+        super().__init__(CalibrationExplicit, version)
 
-    def can_convert(self, obj):
-        return type(obj) is CalibrationLinear
-
-    def convert(self, obj):
-        return self._convert_parameter(obj, 'Calibration', {'Class': 'Linear'})
-
-class CalibrationPolynomialXMLHandler(_XMLHandler):
-
-    def can_parse(self, element):
-        return element.tag == 'Calibration' and element.get('Class') == 'Polynomial'
-
-    def parse(self, element):
-        return self._parse_parameter(element, CalibrationPolynomial)
-
-    def can_convert(self, obj):
-        return type(obj) is CalibrationPolynomial
-
-    def convert(self, obj):
-        return self._convert_parameter(obj, 'Calibration', {'Class': 'Polynomial'})
-
-class CalibrationExplicitXMLHandler(_XMLHandler):
-
-    def can_parse(self, element):
-        return element.tag == 'Calibration' and element.get('Class') == 'Explicit'
-
-    def parse(self, element):
-        return self._parse_parameter(element, CalibrationExplicit)
-
-    def can_convert(self, obj):
-        return type(obj) is CalibrationExplicit
-
-    def convert(self, obj):
-        return self._convert_parameter(obj, 'Calibration', {'Class': 'Explicit'})
