@@ -6,6 +6,7 @@ XML handler for analysis data
 import xml.etree.ElementTree as etree
 
 # Third party modules.
+import numpy as np
 
 # Local modules.
 from pyhmsa.fileformat.xmlhandler.datum.datum import _DatumXMLHandler
@@ -56,7 +57,7 @@ class Analysis1DXMLHandler(_DatumXMLHandler):
 
         conditions = self._parse_include_conditions(element)
 
-        return Analysis1D(channel, dtype, buffer, order='F', conditions=conditions)
+        return Analysis1D(channel, dtype, buffer, conditions=conditions)
 
     def can_convert(self, obj):
         return isinstance(obj, Analysis1D)
@@ -84,10 +85,12 @@ class Analysis2DXMLHandler(_DatumXMLHandler):
         v = dimensions['V']
 
         buffer = self._parse_binary(element)
+        buffer = np.reshape(buffer, (u, v), order='F')
+        buffer = np.ravel(buffer)
 
         conditions = self._parse_include_conditions(element)
 
-        return Analysis2D(u, v, dtype, buffer, order='F', conditions=conditions)
+        return Analysis2D(u, v, dtype, buffer, conditions=conditions)
 
     def can_convert(self, obj):
         return isinstance(obj, Analysis2D)

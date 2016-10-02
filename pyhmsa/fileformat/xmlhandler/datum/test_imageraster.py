@@ -30,6 +30,7 @@ class TestImageRaster2DXMLHandler(BaseTestCaseDatum):
         self.xml_filepath = os.path.join(testdata, 'imageraster2d.xml')
 
         buffer = sum(np.indices((5, 5), dtype=np.uint8))
+        buffer[0, 1] = 212
         self.obj = ImageRaster2D(5, 5, np.uint8, buffer)
 
     def testparse(self):
@@ -40,6 +41,8 @@ class TestImageRaster2DXMLHandler(BaseTestCaseDatum):
         self.assertEqual((5, 5), obj.shape)
         self.assertEqual(np.uint8, obj.dtype.type)
         self.assertEqual(0, obj[0, 0])
+        self.assertEqual(212, obj[0, 1])
+        self.assertEqual(1, obj[1, 0])
         self.assertEqual(8, obj[-1, -1])
 
     def testconvert(self):

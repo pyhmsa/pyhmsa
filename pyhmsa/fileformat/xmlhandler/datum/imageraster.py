@@ -32,10 +32,12 @@ class ImageRaster2DXMLHandler(_DatumXMLHandler):
         y = collections['Y']
 
         buffer = self._parse_binary(element)
+        buffer = np.reshape(buffer, (x, y), order='F')
+        buffer = np.ravel(buffer)
 
         conditions = self._parse_include_conditions(element)
 
-        return ImageRaster2D(x, y, dtype, buffer, order='F',
+        return ImageRaster2D(x, y, dtype, buffer,
                              conditions=conditions)
 
     def can_convert(self, obj):
