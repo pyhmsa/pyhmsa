@@ -6,6 +6,8 @@ Generic definition of parameters
 import datetime
 import inspect
 from collections import OrderedDict
+import logging
+logger = logging.getLogger(__name__)
 
 import numpy as np
 import six
@@ -63,6 +65,9 @@ class _Attribute(object):
     def is_required(self):
         return self._required
 
+    def equal(self, val1, val2):
+        return val1 == val2
+
     @property
     def name(self):
         return self._name
@@ -109,6 +114,9 @@ class NumericalAttribute(_Attribute):
     def __init__(self, default_unit=None, required=False, xmlname=None, doc=None):
         _Attribute.__init__(self, required, xmlname, doc)
         self._default_unit = default_unit
+        # TODO adjust tolerance
+        self._tol_abs = 1.e-8
+        self._tol_rel = 1.e-5
 
     def _prepare_value(self, value):
         if isinstance(value, tuple) and \
@@ -125,8 +133,12 @@ class NumericalAttribute(_Attribute):
 
         # Change set method to allow unit input
         methods['set_%s' % name] = \
-            lambda instance, value, unit=None: \
+            lambda instance, value, unit = None: \
                 self.__set__(instance, (value, unit or self.default_unit))
+
+    def equal(self, val1, val2):
+        # TODO consider unit
+        return np.isclose(val1, val2, self._tol_rel, self._tol_abs, True)
 
     @property
     def default_unit(self):
@@ -153,6 +165,16 @@ class TextListAttribute(TextAttribute):
 
         for value in values:
             TextAttribute._validate_value(self, value)
+
+    def equal(self, val1, val2):
+        if len(val1) != len(val2):
+            return False
+
+        for v1, v2 in zip(val1, val2):
+            if v1 != v2:
+                return False
+
+        return True
 
 
 class AtomicNumberAttribute(NumericalAttribute):
@@ -226,7 +248,7 @@ class XRayLineAttribute(_Attribute):
 
         # Change set method to allow unit input
         methods['set_%s' % name] = \
-            lambda instance, value, notation=None: \
+            lambda instance, value, notation = None: \
                 self.__set__(instance, (value, notation or self.default_notation))
 
     @property
@@ -315,8 +337,19 @@ class NumericalRangeAttribute(NumericalAttribute):
 
         # Change set method to allow two values and unit input
         methods['set_%s' % name] = \
-            lambda instance, vmin, vmax, unit=None: \
+            lambda instance, vmin, vmax, unit = None: \
                 self.__set__(instance, ((vmin, vmax), unit or self._default_unit))
+
+    def equal(self, val1, val2):
+        if len(val1) != len(val2):
+            return False
+
+        for v1, v2 in zip(val1, val2):
+            # TODO consider unit
+            if not np.isclose(v1, v2, self._tol_rel, self._tol_abs, True):
+                return False
+
+        return True
 
 
 class OrderedNumericalAttribute(NumericalAttribute):
@@ -327,6 +360,17 @@ class OrderedNumericalAttribute(NumericalAttribute):
             raise ValueError('At least one value must be specified')
         if not all(values[i] <= values[i + 1] for i in range(len(values) - 1)):
             raise ValueError('Values are not sorted')
+
+    def equal(self, val1, val2):
+        if len(val1) != len(val2):
+            return False
+
+        for v1, v2 in zip(val1, val2):
+            # TODO consider unit
+            if not np.isclose(v1, v2, self._tol_rel, self._tol_abs, True):
+                return False
+
+        return True
 
 
 class DateAttribute(_Attribute):
@@ -388,83 +432,14 @@ class ParameterMetaclass(type):
             if isinstance(type(self), type(other)):
                 return False
 
-            # TODO adjust tolerance
-            tol_abs = 1.e-8
-            tol_rel = 1.e-5
-
             try:
-                for key in self.__attributes__.keys():
-                    attr1 = self.__attributes__[key]
-                    # attr2 = other.__attributes__[key]
-
-                    if attr1.is_required():
-                        res = True
-                        val1 = attr1.__get__(self)
-                        val2 = attr1.__get__(other)
-
-                        if isinstance(attr1, FrozenAttribute):
-                            res = val1 == val2
-
-                        elif isinstance(attr1, TextListAttribute):
-                            res = len(val1) == len(val2)
-                            for v1, v2 in zip(val1, val2):
-                                res = res and (v1 == v2)
-
-                        elif isinstance(attr1, AtomicNumberAttribute):
-                            res = val1 == val2
-
-                        elif isinstance(attr1, UnitAttribute):
-                            res = val1 == val2
-
-                        elif isinstance(attr1, XRayLineAttribute):
-                            res = val1 == val2
-
-                        elif isinstance(attr1, ObjectAttribute):
-                            res = val1 == val2
-
-                        elif isinstance(attr1, EnumAttribute):
-                            res = val1 == val2
-
-                        elif isinstance(attr1, BoolAttribute):
-                            res = val1 == val2
-
-                        elif isinstance(attr1, NumericalRangeAttribute):
-                            res = len(val1) == len(val2)
-                            for v1, v2 in zip(val1, val2):
-                                # TODO consider unit
-                                res = res and np.isclose(v1, v2, tol_rel, tol_abs, True)
-
-                        elif isinstance(attr1, OrderedNumericalAttribute):
-                            res = len(val1) == len(val2)
-                            for v1, v2 in zip(val1, val2):
-                                # TODO consider unit
-                                res = res and np.isclose(v1, v2, tol_rel, tol_abs, True)
-
-                        elif isinstance(attr1, DateAttribute):
-                            res = val1 == val2
-
-                        elif isinstance(attr1, TimeAttribute):
-                            res = val1 == val2
-
-                        elif isinstance(attr1, ChecksumAttribute):
-                            res = val1 == val2
-
-                        elif isinstance(attr1, NumericalAttribute):
-                            # TODO consider unit
-                            res = res and np.isclose(val1, val2, tol_rel, tol_abs, True)
-
-                        elif isinstance(attr1, TextAttribute):
-                            res = val1 == val2
-
-                        else:
-                            res = val1 == val2
-
-                        if not res:
-                            return False
-
-            except Exception as e:
-                # TODO log debug info
-                print(e)
+                for key, attr in self.__attributes__.items():
+                    val1 = attr.__get__(self)
+                    val2 = attr.__get__(other)
+                    if not attr.equal(val1, val2):
+                        return False
+            except:
+                logger.exception('Exception during __eq__')
                 return False
 
             return True
