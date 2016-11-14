@@ -39,7 +39,7 @@ class Specimen(_Condition):
         :arg composition: composition (optional)
         :arg temperature: temperature (optional)
         """
-        _Condition.__init__(self)
+        super().__init__()
 
         self.name = name
         self.description = description
@@ -94,8 +94,8 @@ class SpecimenMultilayer(Specimen):
         :arg temperature: temperature (optional)
         :arg layers: layers (optional)
         """
-        Specimen.__init__(self, name, description, origin, formula,
-                          composition, temperature)
+        super().__init__(name, description, origin, formula,
+                         composition, temperature)
 
         if layers is None:
             layers = []

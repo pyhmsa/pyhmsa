@@ -18,7 +18,7 @@ from pyhmsa.spec.condition.composition import CompositionElemental
 class TestSpecimenXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = SpecimenXMLHandler(1.0)
 
@@ -65,7 +65,7 @@ class TestSpecimenXMLHandler(unittest.TestCase):
 class TestSpecimenMultilayerXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = SpecimenMultilayerXMLHandler(1.0)
 

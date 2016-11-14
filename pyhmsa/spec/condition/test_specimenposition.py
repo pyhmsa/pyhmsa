@@ -15,7 +15,7 @@ from pyhmsa.spec.condition.specimenposition import SpecimenPosition
 class TestSpecimenPosition(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.position = SpecimenPosition(y=5.0, r=90.0)
 

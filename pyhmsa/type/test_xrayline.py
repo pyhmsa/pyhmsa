@@ -16,7 +16,7 @@ from pyhmsa.type.xrayline import NOTATION_SIEGBAHN, NOTATION_IUPAC
 class Testxrayline(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.x = xrayline('Ma', NOTATION_SIEGBAHN, 'M5-N6,7')
 

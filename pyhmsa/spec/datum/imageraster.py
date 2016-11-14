@@ -148,7 +148,7 @@ class _ImageRaster2D(_ImageRaster):
 
     @property
     def collection_dimensions(self):
-        dims = _ImageRaster.collection_dimensions.fget(self) # @UndefinedVariable
+        dims = super().collection_dimensions
         dims['X'] = self.x
         dims['Y'] = self.y
         return dims
@@ -164,8 +164,8 @@ class ImageRaster2D(_ImageRaster2D):
                 buffer=None, offset=0, strides=None, order=None,
                 conditions=None):
         shape = (x, y)
-        return _ImageRaster2D.__new__(cls, shape, dtype,
-                                      buffer, offset, strides, order, conditions)
+        return super().__new__(cls, shape, dtype,
+                               buffer, offset, strides, order, conditions)
 
     def toanalysis(self, x, y):
         return Analysis0D(self[x, y], self.dtype, conditions=self.conditions)
@@ -184,8 +184,8 @@ class ImageRaster2DSpectral(_ImageRaster2D):
                 buffer=None, offset=0, strides=None, order=None,
                 conditions=None):
         shape = (x, y, channels)
-        return _ImageRaster2D.__new__(cls, shape, dtype,
-                                      buffer, offset, strides, order, conditions)
+        return super().__new__(cls, shape, dtype,
+                               buffer, offset, strides, order, conditions)
 
     @property
     def channels(self):
@@ -193,7 +193,7 @@ class ImageRaster2DSpectral(_ImageRaster2D):
 
     @property
     def datum_dimensions(self):
-        dims = _ImageRaster2D.datum_dimensions.fget(self) # @UndefinedVariable
+        dims = super().datum_dimensions
         dims['Channel'] = self.channels
         return dims
 
@@ -214,8 +214,8 @@ class ImageRaster2DHyperimage(_ImageRaster2D):
                 buffer=None, offset=0, strides=None, order=None,
                 conditions=None):
         shape = (x, y, u, v)
-        return _ImageRaster2D.__new__(cls, shape, dtype,
-                                      buffer, offset, strides, order, conditions)
+        return super().__new__(cls, shape, dtype,
+                               buffer, offset, strides, order, conditions)
 
     @property
     def u(self):
@@ -227,7 +227,7 @@ class ImageRaster2DHyperimage(_ImageRaster2D):
 
     @property
     def datum_dimensions(self):
-        dims = _ImageRaster2D.datum_dimensions.fget(self) # @UndefinedVariable
+        dims = super().datum_dimensions
         dims['U'] = self.u
         dims['V'] = self.v
         return dims

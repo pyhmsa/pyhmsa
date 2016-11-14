@@ -39,7 +39,7 @@ class MockParameter(Parameter):
 class TestModule(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.mock = MockParameter()
 

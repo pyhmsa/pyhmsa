@@ -29,7 +29,7 @@ class ImporterMock(_Importer):
 class TestImporter(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.imp = ImporterMock(search_extra=False)
 

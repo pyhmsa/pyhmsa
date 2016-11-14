@@ -26,7 +26,7 @@ from pyhmsa.spec.condition.elementalid import ElementalID
 class TestDataFile(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.datafile = DataFile()
 

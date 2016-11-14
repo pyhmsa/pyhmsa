@@ -20,7 +20,7 @@ from pyhmsa.fileformat.xmlhandler.xmlhandler import \
 class _DatumXMLHandler(_XMLHandler):
 
     def __init__(self, version, hmsa_file, conditions):
-        _XMLHandler.__init__(self, version)
+        super().__init__(version)
         if hmsa_file.closed:
             raise ValueError('HMSA file object is closed')
 #        if not hmsa_file.seekable():

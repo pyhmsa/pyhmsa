@@ -27,7 +27,7 @@ from pyhmsa.spec.condition.detector import \
 class TestWindowXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = WindowXMLHandler(1.0)
 
@@ -65,7 +65,7 @@ class TestWindowXMLHandler(unittest.TestCase):
 class TestDetectorCameraXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = DetectorCameraXMLHandler(1.0)
 
@@ -146,7 +146,7 @@ class TestDetectorCameraXMLHandler(unittest.TestCase):
 class TestDetectorSpectrometerXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = DetectorSpectrometerXMLHandler(1.0)
 
@@ -190,7 +190,7 @@ class TestDetectorSpectrometerXMLHandler(unittest.TestCase):
 class TestDetectorSpectrometerCLXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = DetectorSpectrometerCLXMLHandler(1.0)
 
@@ -226,7 +226,7 @@ class TestDetectorSpectrometerCLXMLHandler(unittest.TestCase):
 class TestDetectorSpectrometerWDSXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = DetectorSpectrometerWDSXMLHandler(1.0)
 
@@ -288,7 +288,7 @@ class TestDetectorSpectrometerWDSXMLHandler(unittest.TestCase):
 class TestDetectorSpectrometerXEDSXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = DetectorSpectrometerXEDSXMLHandler(1.0)
 

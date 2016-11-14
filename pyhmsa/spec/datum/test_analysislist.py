@@ -17,7 +17,7 @@ from pyhmsa.spec.condition.condition import _Condition
 class TestAnalysisList0D(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.datum = AnalysisList0D(3)
         self.datum.conditions['Test'] = _Condition()
@@ -42,7 +42,7 @@ class TestAnalysisList0D(unittest.TestCase):
 class TestAnalysisList1D(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.datum = AnalysisList1D(3, 5)
         self.datum.conditions['Test'] = _Condition()
@@ -71,7 +71,7 @@ class TestAnalysisList1D(unittest.TestCase):
 class TestAnalysisList2D(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.datum = AnalysisList2D(3, 5, 5)
         self.datum.conditions['Test'] = _Condition()

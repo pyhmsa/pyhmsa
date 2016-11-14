@@ -36,7 +36,7 @@ class Header(_BaseHeader):
     def __new__(cls, datafile=None,
                 title=None, author=None, owner=None, date=None,
                 time=None, timezone=None, checksum=None, **kwargs):
-        obj = _BaseHeader.__new__(cls)
+        obj = super().__new__(cls)
 
         obj._lock = datafile._lock if datafile else threading.Lock()
 

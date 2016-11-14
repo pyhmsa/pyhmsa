@@ -34,7 +34,7 @@ class MockParameter(Parameter):
 class Test_XMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = _XMLHandler(1.0)
         self.obj = MockParameter(2.0)

@@ -25,7 +25,7 @@ from pyhmsa.spec.condition.detector import XEDS_TECHNOLOGY_SDD, SIGNAL_TYPE_EDS
 class TestExporterEMSA(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.tmpdir = tempfile.mkdtemp()
         self.exp = ExporterEMSA()

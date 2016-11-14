@@ -16,7 +16,7 @@ from pyhmsa.spec.condition.probe import GUN_TYPE_LAB6, LENS_MODE_IMAGE
 class Test_Probe(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.probe = _Probe()
 
@@ -29,7 +29,7 @@ class Test_Probe(unittest.TestCase):
 class TestProbeEM(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.probe = ProbeEM(15.0)
 
@@ -129,7 +129,7 @@ class TestProbeEM(unittest.TestCase):
 class TestProbeTEM(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.probe = ProbeTEM(15.0, LENS_MODE_IMAGE)
 

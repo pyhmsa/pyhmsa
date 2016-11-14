@@ -28,7 +28,7 @@ class Instrument(_Condition):
         :arg model: model (required)
         :arg serial_number: serial number (optional)
         """
-        _Condition.__init__(self)
+        super().__init__()
 
         self.manufacturer = manufacturer
         self.model = model

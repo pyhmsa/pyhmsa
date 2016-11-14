@@ -15,7 +15,7 @@ from pyhmsa.spec.condition.condition import _Condition
 class TestConditions(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.cnds = Conditions()
 
