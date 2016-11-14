@@ -1,26 +1,21 @@
 """ """
 
 # Standard library modules.
-import unittest
-import logging
 import datetime
+import logging
+import unittest
 
-# Third party modules.
-
-# Local modules.
+from pyhmsa.type.checksum import Checksum
+from pyhmsa.type.xrayline import NOTATION_IUPAC, NOTATION_SIEGBAHN
+from pyhmsa.type.xrayline import xrayline
 from pyhmsa.util.parameter import \
     (Parameter, _Attribute, FrozenAttribute, NumericalAttribute, TextAttribute,
-     AtomicNumberAttribute, UnitAttribute, XRayLineAttribute, ObjectAttribute,
-     EnumAttribute, NumericalRangeAttribute, DateAttribute, TimeAttribute,
-     ChecksumAttribute)
-from pyhmsa.type.checksum import Checksum
-from pyhmsa.type.xrayline import xrayline
+     TextListAttribute, AtomicNumberAttribute, UnitAttribute, XRayLineAttribute,
+     ObjectAttribute, EnumAttribute, BoolAttribute, NumericalRangeAttribute,
+     OrderedNumericalAttribute, DateAttribute, TimeAttribute, ChecksumAttribute)
 
-# Globals and constants variables.
-from pyhmsa.type.xrayline import NOTATION_IUPAC, NOTATION_SIEGBAHN
 
 class MockParameter(Parameter):
-
     required = _Attribute(True, xmlname='XMLNAME')
     notrequired = _Attribute(False)
     frozen = FrozenAttribute(list)
@@ -36,8 +31,8 @@ class MockParameter(Parameter):
     time = TimeAttribute()
     checksum = ChecksumAttribute()
 
-class TestModule(unittest.TestCase):
 
+class TestModule(unittest.TestCase):
     def setUp(self):
         unittest.TestCase.setUp(self)
 
@@ -203,6 +198,138 @@ class TestModule(unittest.TestCase):
 
         self.assertRaises(ValueError, self.mock.set_checksum, object())
 
-if __name__ == '__main__': # pragma: no cover
+    def _generate_parameter(self, dif_list=None, req_list=None):
+
+        if not dif_list:
+            dif_list = []
+
+        if not req_list:
+            req_list = []
+
+        # is an attribute required
+        req_val = {'required': False,
+                   'notrequired': False,
+                   'frozen': False,
+                   'numerical': False,
+                   'text': False,
+                   'textList': False,
+                   'atomic_number': False,
+                   'unit': False,
+                   'line': False,
+                   'object': False,
+                   'enum': False,
+                   'bool': False,
+                   'numerical_range': False,
+                   'ordered_numerical': False,
+                   'date': False,
+                   'time': False,
+                   'checksum': False}
+
+        # default values for attributes
+        def_val = {'required': 'abc',
+                   'notrequired': 'def',
+                   'frozen': None,
+                   'numerical': (1.1, 'nm'),
+                   'text': 'hello world',
+                   'textList': ['hello', 'world'],
+                   'atomic_number': 25,
+                   'unit': 'A',
+                   'line': 'Ma',
+                   'object': 5,
+                   'enum': 'b',
+                   'bool': True,
+                   'numerical_range': [1.1, 2.2],
+                   'ordered_numerical': [1, 2, 3, 4],
+                   'date': '2013-12-24',
+                   'time': '20:31:15',
+                   'checksum': Checksum('53AAD59C05D59A40AD746D6928EA6D2D526865FD',
+                                        'SHA-1')}
+
+        # values that differ from defaults
+        dif_val = {'required': 'def',
+                   'notrequired': 'abc',
+                   'frozen': None,
+                   'numerical': (1.2, 'nm'),
+                   'text': 'goodbye world',
+                   'textList': ['goodbye', 'world'],
+                   'atomic_number': 26,
+                   'unit': 'm',
+                   'line': ('M5-N6,7', NOTATION_IUPAC),
+                   'object': 6,
+                   'enum': 'c',
+                   'bool': False,
+                   'numerical_range': [1.001, 2.2007],
+                   'ordered_numerical': [2, 3, 4, 5],
+                   'date': '2013-12-25',
+                   'time': '20:31:16',
+                   'checksum': Checksum('63AAD59C05D59A40AD746D6928EA6D2D526865FD',
+                                        'SHA-1')}
+
+        # set attribute status to required
+        for key in req_list:
+            if key not in req_val:
+                raise ValueError
+            req_val[key] = True
+
+        class MyParameter(Parameter):
+            required = _Attribute(required=req_val['required'], xmlname='XMLNAME')
+            notrequired = _Attribute(required=req_val['notrequired'])
+            frozen = FrozenAttribute(list)
+            numerical = NumericalAttribute('m', required=req_val['numerical'])
+            text = TextAttribute(required=req_val['text'])
+            textList = TextListAttribute(required=req_val['textList'])
+            atomic_number = AtomicNumberAttribute(required=req_val['atomic_number'])
+            unit = UnitAttribute(required=req_val['unit'])
+            line = XRayLineAttribute(required=req_val['line'])
+            object = ObjectAttribute(int, required=req_val['object'])
+            enum = EnumAttribute(['a', 'b', 'c'], required=req_val['enum'])
+            bool = BoolAttribute(required=req_val['bool'])
+            numerical_range = NumericalRangeAttribute('s', -4.0, 4.0,
+                                                      required=req_val['numerical_range'])
+            ordered_numerical = OrderedNumericalAttribute(required=req_val['ordered_numerical'])
+            date = DateAttribute(required=req_val['date'])
+            time = TimeAttribute(required=req_val['time'])
+            checksum = ChecksumAttribute(required=req_val['checksum'])
+
+        m = MyParameter()
+
+        # initialize attributes
+        for key in m.__attributes__.keys():
+            if key == 'frozen':
+                continue
+            if key in dif_list:
+                m.__attributes__[key].__set__(m, dif_val[key])
+            else:
+                m.__attributes__[key].__set__(m, def_val[key])
+
+        return m
+
+    def test__eq__(self):
+
+        attr_list = ['date', 'numerical', 'textList', 'enum', 'time', 'unit', 'notrequired',
+                     'ordered_numerical', 'text', 'required', 'line', 'frozen', 'bool',
+                     'numerical_range', 'atomic_number', 'object', 'checksum']
+
+        m1 = self._generate_parameter(req_list=attr_list)
+        m2 = self._generate_parameter(req_list=attr_list)
+        m3 = self._generate_parameter(req_list=attr_list, dif_list=attr_list)
+
+        self.assertEqual(m2, m1)
+        self.assertNotEqual(m3, m1)
+
+        del m2
+        del m3
+
+        for a1 in attr_list:
+            for a2 in attr_list:
+                if a1 != 'frozen' and a2 != 'frozen':
+                    m4 = self._generate_parameter(req_list=[a1], dif_list=[a2])
+                    if a1 == a2:
+                        self.assertNotEqual(m4, m1)
+                    else:
+                        self.assertEqual(m4, m1)
+
+
+if __name__ == '__main__':  # pragma: no cover
     logging.getLogger().setLevel(logging.DEBUG)
     unittest.main()

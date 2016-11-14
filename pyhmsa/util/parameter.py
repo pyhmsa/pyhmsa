@@ -3,24 +3,21 @@ Generic definition of parameters
 """
 
 # Standard library modules.
-import inspect
 import datetime
+import inspect
 from collections import OrderedDict
 
-# Third party modules.
 import numpy as np
 import six
-
-# Local modules.
+from pyhmsa.type.checksum import Checksum
 from pyhmsa.type.numerical import convert_value
 from pyhmsa.type.unit import validate_unit
-from pyhmsa.type.checksum import Checksum
 from pyhmsa.type.xrayline import xrayline, NOTATION_SIEGBAHN
+
 
 # Globals and constants variables.
 
 class _Attribute(object):
-
     def __init__(self, required=False, xmlname=None, doc=None):
         """
         Creates a new parameter.
@@ -74,8 +71,8 @@ class _Attribute(object):
     def xmlname(self):
         return self._xmlname
 
-class FrozenAttribute(_Attribute):
 
+class FrozenAttribute(_Attribute):
     def __init__(self, class_or_value, args=(), kwargs=None, xmlname=None, doc=None):
         _Attribute.__init__(self, True, xmlname, doc)
 
@@ -105,17 +102,17 @@ class FrozenAttribute(_Attribute):
     def _new(self, cls, clsname, bases, methods, name):
         _Attribute._new(self, cls, clsname, bases, methods, name)
 
-        methods.pop('set_%s' % name) # Remove set method
+        methods.pop('set_%s' % name)  # Remove set method
+
 
 class NumericalAttribute(_Attribute):
-
     def __init__(self, default_unit=None, required=False, xmlname=None, doc=None):
         _Attribute.__init__(self, required, xmlname, doc)
         self._default_unit = default_unit
 
     def _prepare_value(self, value):
         if isinstance(value, tuple) and \
-                len(value) == 2 and \
+                        len(value) == 2 and \
                 (isinstance(value[1], six.string_types) or value[1] is None):
             unit = value[1] or self.default_unit
             value = value[0]
@@ -128,23 +125,23 @@ class NumericalAttribute(_Attribute):
 
         # Change set method to allow unit input
         methods['set_%s' % name] = \
-            lambda instance, value, unit = None: \
+            lambda instance, value, unit=None: \
                 self.__set__(instance, (value, unit or self.default_unit))
 
     @property
     def default_unit(self):
         return self._default_unit
 
-class TextAttribute(_Attribute):
 
+class TextAttribute(_Attribute):
     def _validate_value(self, value):
         _Attribute._validate_value(self, value)
 
         if value is not None and len(value.strip()) == 0 and self.is_required():
             raise ValueError('%s is required' % self.name)
 
-class TextListAttribute(TextAttribute):
 
+class TextListAttribute(TextAttribute):
     def _prepare_value(self, values):
         if values is None:
             return None
@@ -157,8 +154,8 @@ class TextListAttribute(TextAttribute):
         for value in values:
             TextAttribute._validate_value(self, value)
 
-class AtomicNumberAttribute(NumericalAttribute):
 
+class AtomicNumberAttribute(NumericalAttribute):
     def __init__(self, required=False, xmlname=None, doc=None):
         NumericalAttribute.__init__(self, None, required, xmlname, doc)
 
@@ -176,8 +173,8 @@ class AtomicNumberAttribute(NumericalAttribute):
         if value is not None and value > 118:
             raise ValueError('Atomic number cannot be greater than Uuo')
 
-class UnitAttribute(TextAttribute):
 
+class UnitAttribute(TextAttribute):
     def __init__(self, default_unit=None, required=False, xmlname=None, doc=None):
         TextAttribute.__init__(self, required, xmlname, doc)
         self._default_unit = default_unit
@@ -200,8 +197,8 @@ class UnitAttribute(TextAttribute):
     def default_unit(self):
         return self._default_unit
 
-class XRayLineAttribute(_Attribute):
 
+class XRayLineAttribute(_Attribute):
     def __init__(self, default_notation=NOTATION_SIEGBAHN,
                  required=False, xmlname=None, doc=None):
         _Attribute.__init__(self, required, xmlname, doc)
@@ -212,7 +209,7 @@ class XRayLineAttribute(_Attribute):
             return value
 
         if isinstance(value, tuple) and \
-                len(value) == 2 and \
+                        len(value) == 2 and \
                 (isinstance(value[1], six.string_types) or value[1] is None):
             notation = value[1] or self.default_notation
             value = value[0]
@@ -229,15 +226,15 @@ class XRayLineAttribute(_Attribute):
 
         # Change set method to allow unit input
         methods['set_%s' % name] = \
-            lambda instance, value, notation = None: \
+            lambda instance, value, notation=None: \
                 self.__set__(instance, (value, notation or self.default_notation))
 
     @property
     def default_notation(self):
         return self._default_notation
 
-class ObjectAttribute(_Attribute):
 
+class ObjectAttribute(_Attribute):
     def __init__(self, type_, required=False, xmlname=None, doc=None):
         _Attribute.__init__(self, required, xmlname, doc)
         self._type = type_
@@ -252,8 +249,8 @@ class ObjectAttribute(_Attribute):
     def type_(self):
         return self._type
 
-class EnumAttribute(TextAttribute):
 
+class EnumAttribute(TextAttribute):
     def __init__(self, values, required=False, xmlname=None, doc=None):
         TextAttribute.__init__(self, required, xmlname, doc)
         self._values = tuple(values)
@@ -269,8 +266,8 @@ class EnumAttribute(TextAttribute):
         if value is not None and value not in self._values:
             raise ValueError('Unknown %s: %s' % (self.name, value))
 
-class BoolAttribute(_Attribute):
 
+class BoolAttribute(_Attribute):
     def __init__(self, required=False, xmlname=None, doc=None):
         _Attribute.__init__(self, required=required, xmlname=xmlname, doc=doc)
 
@@ -285,12 +282,12 @@ class BoolAttribute(_Attribute):
         if value is not None and not isinstance(value, bool):
             raise ValueError('Value of %s is not a bool: %s' % (self.name, value))
 
-class NumericalRangeAttribute(NumericalAttribute):
 
+class NumericalRangeAttribute(NumericalAttribute):
     def __init__(self, default_unit=None, minvalue=-np.inf, maxvalue=np.inf,
-                  required=False, xmlname=None, doc=None):
+                 required=False, xmlname=None, doc=None):
         NumericalAttribute.__init__(self, default_unit, required, xmlname, doc)
-        if minvalue > maxvalue: # pragma: no cover
+        if minvalue > maxvalue:  # pragma: no cover
             raise ValueError('Minimum value greater than maximum value')
         self._limitmin = minvalue
         self._limitmax = maxvalue
@@ -318,11 +315,11 @@ class NumericalRangeAttribute(NumericalAttribute):
 
         # Change set method to allow two values and unit input
         methods['set_%s' % name] = \
-            lambda instance, vmin, vmax, unit = None: \
+            lambda instance, vmin, vmax, unit=None: \
                 self.__set__(instance, ((vmin, vmax), unit or self._default_unit))
 
-class OrderedNumericalAttribute(NumericalAttribute):
 
+class OrderedNumericalAttribute(NumericalAttribute):
     def _validate_value(self, values):
         NumericalAttribute._validate_value(self, values)
 
@@ -331,32 +328,32 @@ class OrderedNumericalAttribute(NumericalAttribute):
         if not all(values[i] <= values[i + 1] for i in range(len(values) - 1)):
             raise ValueError('Values are not sorted')
 
-class DateAttribute(_Attribute):
 
+class DateAttribute(_Attribute):
     def _prepare_value(self, value):
         if value is not None and not isinstance(value, datetime.date):
             dt = datetime.datetime.strptime(value, '%Y-%m-%d')
             value = datetime.date(dt.year, dt.month, dt.day)
         return value
 
-class TimeAttribute(_Attribute):
 
+class TimeAttribute(_Attribute):
     def _prepare_value(self, value):
         if value is not None and not isinstance(value, datetime.time):
             dt = datetime.datetime.strptime(value, '%H:%M:%S')
             value = datetime.time(dt.hour, dt.minute, dt.second)
         return value
 
-class ChecksumAttribute(_Attribute):
 
+class ChecksumAttribute(_Attribute):
     def _validate_value(self, value):
         _Attribute._validate_value(self, value)
 
         if value is not None and not isinstance(value, Checksum):
             raise ValueError('Value must be a Checksum object')
 
-class ParameterMetaclass(type):
 
+class ParameterMetaclass(type):
     def __new__(cls, clsname, bases, methods):
         attributes = OrderedDict()
 
@@ -383,8 +380,98 @@ class ParameterMetaclass(type):
                     continue
                 reprstr.append('%s=%s' % (name, value))
             return '<%s(%s)>' % (self.__class__.__name__, ', '.join(reprstr))
+
         methods['__repr__'] = _repr
 
+        # Add __eq__ method
+        def _eq(self, other):
+            if isinstance(type(self), type(other)):
+                return False
+
+            # TODO adjust tolerance
+            tol_abs = 1.e-8
+            tol_rel = 1.e-5
+
+            try:
+                for key in self.__attributes__.keys():
+                    attr1 = self.__attributes__[key]
+                    # attr2 = other.__attributes__[key]
+
+                    if attr1.is_required():
+                        res = True
+                        val1 = attr1.__get__(self)
+                        val2 = attr1.__get__(other)
+
+                        if isinstance(attr1, FrozenAttribute):
+                            res = val1 == val2
+
+                        elif isinstance(attr1, TextListAttribute):
+                            res = len(val1) == len(val2)
+                            for v1, v2 in zip(val1, val2):
+                                res = res and (v1 == v2)
+
+                        elif isinstance(attr1, AtomicNumberAttribute):
+                            res = val1 == val2
+
+                        elif isinstance(attr1, UnitAttribute):
+                            res = val1 == val2
+
+                        elif isinstance(attr1, XRayLineAttribute):
+                            res = val1 == val2
+
+                        elif isinstance(attr1, ObjectAttribute):
+                            res = val1 == val2
+
+                        elif isinstance(attr1, EnumAttribute):
+                            res = val1 == val2
+
+                        elif isinstance(attr1, BoolAttribute):
+                            res = val1 == val2
+
+                        elif isinstance(attr1, NumericalRangeAttribute):
+                            res = len(val1) == len(val2)
+                            for v1, v2 in zip(val1, val2):
+                                # TODO consider unit
+                                res = res and np.isclose(v1, v2, tol_rel, tol_abs, True)
+
+                        elif isinstance(attr1, OrderedNumericalAttribute):
+                            res = len(val1) == len(val2)
+                            for v1, v2 in zip(val1, val2):
+                                # TODO consider unit
+                                res = res and np.isclose(v1, v2, tol_rel, tol_abs, True)
+
+                        elif isinstance(attr1, DateAttribute):
+                            res = val1 == val2
+
+                        elif isinstance(attr1, TimeAttribute):
+                            res = val1 == val2
+
+                        elif isinstance(attr1, ChecksumAttribute):
+                            res = val1 == val2
+
+                        elif isinstance(attr1, NumericalAttribute):
+                            # TODO consider unit
+                            res = res and np.isclose(val1, val2, tol_rel, tol_abs, True)
+
+                        elif isinstance(attr1, TextAttribute):
+                            res = val1 == val2
+
+                        else:
+                            res = val1 == val2
+
+                        if not res:
+                            return False
+
+            except Exception as e:
+                # TODO log debug info
+                print(e)
+                return False
+
+            return True
+
+        methods['__eq__'] = _eq
+
         return type.__new__(cls, clsname, bases, methods)
+
 
 Parameter = ParameterMetaclass('Parameter', (object,), {})
