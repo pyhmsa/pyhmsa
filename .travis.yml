@@ -14,7 +14,7 @@ matrix:
     - python: "3.5"
       env: DEPLOY=yes
       os: linux
-    - python: "2.7"
+    - python: "3.4"
       env: DEPLOY=no
       os: linux
 install:
