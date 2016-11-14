@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 import numpy as np
 import six
 from pyhmsa.type.checksum import Checksum
-from pyhmsa.type.numerical import convert_value
+from pyhmsa.type.numerical import convert_value, convert_unit
 from pyhmsa.type.unit import validate_unit
 from pyhmsa.type.xrayline import xrayline, NOTATION_SIEGBAHN
 
@@ -114,7 +114,7 @@ class NumericalAttribute(_Attribute):
     def __init__(self, default_unit=None, required=False, xmlname=None, doc=None):
         _Attribute.__init__(self, required, xmlname, doc)
         self._default_unit = default_unit
-        # TODO adjust tolerance
+        # TODO: adjust tolerance
         self._tol_abs = 1.e-8
         self._tol_rel = 1.e-5
 
@@ -137,7 +137,11 @@ class NumericalAttribute(_Attribute):
                 self.__set__(instance, (value, unit or self.default_unit))
 
     def equal(self, val1, val2):
-        # TODO consider unit
+        try:
+            val1 = convert_unit(val1, self.default_unit)
+            val2 = convert_unit(val2, self.default_unit)
+        except ValueError: # Unit mismatch
+            return False
         return np.isclose(val1, val2, self._tol_rel, self._tol_abs, True)
 
     @property
@@ -345,8 +349,7 @@ class NumericalRangeAttribute(NumericalAttribute):
             return False
 
         for v1, v2 in zip(val1, val2):
-            # TODO consider unit
-            if not np.isclose(v1, v2, self._tol_rel, self._tol_abs, True):
+            if not super().equal(v1, v2):
                 return False
 
         return True
@@ -366,8 +369,7 @@ class OrderedNumericalAttribute(NumericalAttribute):
             return False
 
         for v1, v2 in zip(val1, val2):
-            # TODO consider unit
-            if not np.isclose(v1, v2, self._tol_rel, self._tol_abs, True):
+            if not super().equal(v1, v2):
                 return False
 
         return True
