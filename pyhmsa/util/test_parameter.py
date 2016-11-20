@@ -275,7 +275,7 @@ class TestModule(unittest.TestCase):
             required = _Attribute(required=req_val['required'], xmlname='XMLNAME')
             notrequired = _Attribute(required=req_val['notrequired'])
             frozen = FrozenAttribute(list)
-            numerical = NumericalAttribute('m', required=req_val['numerical'])
+            numerical = NumericalAttribute('nm', required=req_val['numerical'])
             text = TextAttribute(required=req_val['text'])
             textList = TextListAttribute(required=req_val['textList'])
             atomic_number = AtomicNumberAttribute(required=req_val['atomic_number'])
@@ -306,9 +306,13 @@ class TestModule(unittest.TestCase):
 
     def test__eq__(self):
 
-        attr_list = ['date', 'numerical', 'textList', 'enum', 'time', 'unit', 'notrequired',
+        #attr_list = ['date', 'numerical', 'textList', 'enum', 'time', 'unit', 'notrequired',
+        #             'ordered_numerical', 'text', 'required', 'line', 'frozen', 'bool',
+        #             'numerical_range', 'atomic_number', 'object', 'checksum']
+
+        attr_list = ['date', 'textList', 'enum', 'time', 'unit', 'notrequired',
                      'ordered_numerical', 'text', 'required', 'line', 'frozen', 'bool',
-                     'numerical_range', 'atomic_number', 'object', 'checksum']
+                     'numerical_range', 'atomic_number', 'object', 'checksum', 'numerical']
 
         m1 = self._generate_parameter(req_list=attr_list)
         m2 = self._generate_parameter(req_list=attr_list)
@@ -320,14 +324,11 @@ class TestModule(unittest.TestCase):
         del m2
         del m3
 
-        for a1 in attr_list:
-            for a2 in attr_list:
-                if a1 != 'frozen' and a2 != 'frozen':
-                    m4 = self._generate_parameter(req_list=[a1], dif_list=[a2])
-                    if a1 == a2:
-                        self.assertNotEqual(m4, m1)
-                    else:
-                        self.assertEqual(m4, m1)
+        for a in attr_list:
+            if a == 'frozen':
+                continue
+            m4 = self._generate_parameter(dif_list=[a])
+            self.assertNotEqual(m4, m1)
 
 
 if __name__ == '__main__':  # pragma: no cover

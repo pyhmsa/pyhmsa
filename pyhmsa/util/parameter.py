@@ -138,11 +138,18 @@ class NumericalAttribute(_Attribute):
 
     def equal(self, val1, val2):
         try:
-            val1 = convert_unit(val1, self.default_unit)
-            val2 = convert_unit(val2, self.default_unit)
-        except ValueError: # Unit mismatch
+            val1 = convert_unit(self.default_unit, val1)
+            val2 = convert_unit(self.default_unit, val2)
+            r = np.isclose(val1, val2, self._tol_rel, self._tol_abs, True)
+            try:
+                r = all(r)
+            except:
+                pass
+            return np.isclose(val1, val2, self._tol_rel, self._tol_abs, True)
+        except TypeError:
+            return val1 == val2
+        except: # e.g. Unit mismatch
             return False
-        return np.isclose(val1, val2, self._tol_rel, self._tol_abs, True)
 
     @property
     def default_unit(self):
@@ -434,17 +441,26 @@ class ParameterMetaclass(type):
             if isinstance(type(self), type(other)):
                 return False
 
+            match = []
+            dismatch = []
+
             try:
                 for key, attr in self.__attributes__.items():
                     val1 = attr.__get__(self)
                     val2 = attr.__get__(other)
                     if not attr.equal(val1, val2):
-                        return False
+                        dismatch.append(key)
+                        #return False
+                    else:
+                        match.append(key)
             except:
                 logger.exception('Exception during __eq__')
-                return False
-
-            return True
+                dismatch.append('Oo')
+                #return False
+            #print(match)
+            #print(dismatch)
+            #return True
+            return False if len(dismatch) > 0 else True
 
         methods['__eq__'] = _eq
 
