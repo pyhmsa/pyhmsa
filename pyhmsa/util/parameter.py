@@ -145,10 +145,13 @@ class NumericalAttribute(_Attribute):
                 r = all(r)
             except:
                 pass
-            return np.isclose(val1, val2, self._tol_rel, self._tol_abs, True)
-        except TypeError:
+            return r
+        except:
+            pass
+
+        try:
             return val1 == val2
-        except: # e.g. Unit mismatch
+        except:
             return False
 
     @property
@@ -441,26 +444,16 @@ class ParameterMetaclass(type):
             if isinstance(type(self), type(other)):
                 return False
 
-            match = []
-            dismatch = []
-
             try:
                 for key, attr in self.__attributes__.items():
                     val1 = attr.__get__(self)
                     val2 = attr.__get__(other)
                     if not attr.equal(val1, val2):
-                        dismatch.append(key)
-                        #return False
-                    else:
-                        match.append(key)
+                        return False
             except:
                 logger.exception('Exception during __eq__')
-                dismatch.append('Oo')
-                #return False
-            #print(match)
-            #print(dismatch)
-            #return True
-            return False if len(dismatch) > 0 else True
+                return False
+            return True
 
         methods['__eq__'] = _eq
 
