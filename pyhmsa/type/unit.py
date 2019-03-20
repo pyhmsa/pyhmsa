@@ -62,7 +62,8 @@ _NON_SI_UNITS = frozenset([u'\u00b0', # deg,
                            'wt_ppm',
                            'mol_ppb',
                            'vol_ppb',
-                           'wt_ppb'])
+                           'wt_ppb',
+                           'cps/nA'])
 
 _UNITS = _SI_UNITS | _SI_DERIVED_UNITS | _NON_SI_UNITS
 
