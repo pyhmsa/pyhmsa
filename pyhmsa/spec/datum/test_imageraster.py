@@ -21,7 +21,7 @@ from pyhmsa.spec.condition.acquisition import \
 class TestModule(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -79,7 +79,7 @@ class TestModule(unittest.TestCase):
 class TestImageRaster2D(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.datum = ImageRaster2D(7, 7)
         self.datum.conditions['Test'] = _Condition()
@@ -228,7 +228,7 @@ class TestImageRaster2D(unittest.TestCase):
 class TestImageRaster2DSpectral(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.datum = ImageRaster2DSpectral(5, 5, 3)
         self.datum.conditions['Test'] = _Condition()
@@ -261,7 +261,7 @@ class TestImageRaster2DSpectral(unittest.TestCase):
 class TestImageRaster2DHyperimage(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.datum = ImageRaster2DHyperimage(5, 5, 3, 3)
         self.datum.conditions['Test'] = _Condition()

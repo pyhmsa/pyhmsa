@@ -17,7 +17,7 @@ from pyhmsa.type.checksum import Checksum
 class TestHeader(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.header = Header()
         self.header['Extra1'] = 'Test'

@@ -17,7 +17,7 @@ from pyhmsa.spec.condition.elementalid import ElementalID, ElementalIDXray
 class TestElementalIDXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = ElementalIDXMLHandler(1.0)
 
@@ -48,7 +48,7 @@ class TestElementalIDXMLHandler(unittest.TestCase):
 class TestElementalIDXrayXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = ElementalIDXrayXMLHandler(1.0)
 

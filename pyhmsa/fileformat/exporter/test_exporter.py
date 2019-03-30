@@ -32,7 +32,7 @@ class ExporterMock(_Exporter):
 class Test_Exporter(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.tmpdir = tempfile.mkdtemp()
         self.exp = ExporterMock()

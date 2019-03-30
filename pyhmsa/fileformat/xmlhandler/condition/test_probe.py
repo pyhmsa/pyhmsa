@@ -18,7 +18,7 @@ from pyhmsa.spec.condition.probe import GUN_TYPE_LAB6, LENS_MODE_IMAGE
 class TestProbeEMXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = ProbeEMXMLHandler(1.0)
 
@@ -82,7 +82,7 @@ class TestProbeEMXMLHandler(unittest.TestCase):
 class TestProbeTEMXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = ProbeTEMXMLHandler(1.0)
 

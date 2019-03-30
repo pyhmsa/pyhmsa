@@ -21,7 +21,7 @@ class _ImporterThread(_MonitorableThread):
 
     def __init__(self, filepath, *args, **kwargs):
         args = (filepath,) + args
-        _MonitorableThread.__init__(self, args=args, kwargs=kwargs)
+        super().__init__(args=args, kwargs=kwargs)
 
     def _run(self, filepath, *args, **kwargs):
         raise NotImplementedError
@@ -31,7 +31,7 @@ class _Importer(_Monitorable):
     SUPPORTED_EXTENSIONS = ()
 
     def __init__(self, extra_datafile=None, search_extra=True):
-        _Monitorable.__init__(self)
+        super().__init__()
 
         if extra_datafile is None:
             extra_datafile = DataFile()

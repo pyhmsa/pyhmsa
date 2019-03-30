@@ -31,7 +31,7 @@ class _AnalysisList(_Datum):
 
     @property
     def collection_dimensions(self):
-        dims = _Datum.collection_dimensions.fget(self) # @UndefinedVariable
+        dims = super().collection_dimensions
         dims['Analysis'] = self.analysis_count
         return dims
 
@@ -48,8 +48,8 @@ class AnalysisList0D(_AnalysisList):
                 buffer=None, offset=0, strides=None, order=None,
                 conditions=None):
         shape = (analysis_count, 1)
-        return _AnalysisList.__new__(cls, shape, dtype,
-                                     buffer, offset, strides, order, conditions)
+        return super().__new__(cls, shape, dtype,
+                               buffer, offset, strides, order, conditions)
 
     def toanalysis(self, analysis_index):
         return Analysis0D(self[analysis_index, 0], self.dtype,
@@ -97,8 +97,8 @@ class AnalysisList1D(_AnalysisList):
                 buffer=None, offset=0, strides=None, order=None,
                 conditions=None):
         shape = (analysis_count, channels)
-        return _AnalysisList.__new__(cls, shape, dtype,
-                                     buffer, offset, strides, order, conditions)
+        return super().__new__(cls, shape, dtype,
+                               buffer, offset, strides, order, conditions)
 
     @property
     def channels(self):
@@ -106,7 +106,7 @@ class AnalysisList1D(_AnalysisList):
 
     @property
     def datum_dimensions(self):
-        dims = _Datum.datum_dimensions.fget(self) # @UndefinedVariable
+        dims = super().datum_dimensions
         dims['Channel'] = self.channels
         return dims
 
@@ -126,8 +126,8 @@ class AnalysisList2D(_AnalysisList):
                 buffer=None, offset=0, strides=None, order=None,
                 conditions=None):
         shape = (analysis_count, u, v)
-        return _AnalysisList.__new__(cls, shape, dtype,
-                                     buffer, offset, strides, order, conditions)
+        return super().__new__(cls, shape, dtype,
+                               buffer, offset, strides, order, conditions)
 
     @property
     def u(self):
@@ -139,7 +139,7 @@ class AnalysisList2D(_AnalysisList):
 
     @property
     def datum_dimensions(self):
-        dims = _Datum.datum_dimensions.fget(self) # @UndefinedVariable
+        dims = super().datum_dimensions
         dims['U'] = self.u
         dims['V'] = self.v
         return dims

@@ -16,7 +16,7 @@ from pyhmsa.spec.condition.conditions import Conditions, WeakConditions
 class Data(_IdentifierDict):
 
     def __init__(self, datafile):
-        _IdentifierDict.__init__(self)
+        super().__init__()
         self._datafile = datafile
         self._lock = datafile._lock
 
@@ -42,7 +42,7 @@ class Data(_IdentifierDict):
 
         with self._lock:
             datum._conditions = conditions
-            _IdentifierDict.__setitem__(self, identifier, datum)
+            super().__setitem__(identifier, datum)
 
     def __delitem__(self, identifier):
         datum = self[identifier]
@@ -52,4 +52,4 @@ class Data(_IdentifierDict):
 
         with self._lock:
             datum._conditions = conditions
-            _IdentifierDict.__delitem__(self, identifier)
+            super().__delitem__(identifier)

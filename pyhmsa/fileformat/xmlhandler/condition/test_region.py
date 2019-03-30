@@ -16,7 +16,7 @@ from pyhmsa.spec.condition.region import RegionOfInterest
 class TestRegionOfInterestXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = RegionOfInterestXMLHandler(1.0)
 

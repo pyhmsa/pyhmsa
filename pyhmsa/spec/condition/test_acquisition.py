@@ -23,7 +23,7 @@ from pyhmsa.spec.condition.acquisition import \
 class Test_Acquisition(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.acq = _Acquisition(5.0)
 
@@ -83,7 +83,7 @@ class Test_Acquisition(unittest.TestCase):
 class TestAcquisitionPosition(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         position = SpecimenPosition(x=5, y=5, z=11)
         self.acq = AcquisitionPoint(position, total_time=10.0)
@@ -110,7 +110,7 @@ class TestAcquisitionPosition(unittest.TestCase):
 class TestAcquisitionMultipoint(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.acq = AcquisitionMultipoint()
         self.acq.positions.append(SpecimenPosition(x=5, y=5, z=11))
@@ -147,7 +147,7 @@ class TestAcquisitionMultipoint(unittest.TestCase):
 class Test_AcquisitionRaster(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.acq = _AcquisitionRaster(RASTER_MODE_STAGE)
 
@@ -168,7 +168,7 @@ class Test_AcquisitionRaster(unittest.TestCase):
 class TestAcquisitionRasterLinescan(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.acq = AcquisitionRasterLinescan(100, (0.5, 'nm'))
 
@@ -218,7 +218,7 @@ class TestAcquisitionRasterLinescan(unittest.TestCase):
 class TestAcquisitionRasterXY(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.acq = AcquisitionRasterXY(4, 5)
 
@@ -283,7 +283,7 @@ class TestAcquisitionRasterXY(unittest.TestCase):
 class TestAcquisitionRasterXYZ(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.acq = AcquisitionRasterXYZ(4, 5, 6)
 

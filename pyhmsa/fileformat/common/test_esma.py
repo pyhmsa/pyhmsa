@@ -15,10 +15,10 @@ from pyhmsa.fileformat.common.emsa import calculate_checksum
 class TestModule(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
     def tearDown(self):
-        unittest.TestCase.tearDown(self)
+        super().tearDown()
 
     def testcalculate_checksum(self):
         lines = ['abc']

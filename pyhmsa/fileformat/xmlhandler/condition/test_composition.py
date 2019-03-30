@@ -23,7 +23,7 @@ from pyhmsa.spec.condition.composition import CompositionElemental
 class TestCompositionXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = CompositionElementalXMLHandler(1.0)
 

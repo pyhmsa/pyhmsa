@@ -2,11 +2,7 @@
 
 # Standard library modules.
 import os
-import sys
-import glob
 import codecs
-from distutils.core import Command
-from subprocess import check_call
 
 # Third party modules.
 from setuptools import setup, find_packages
@@ -17,101 +13,18 @@ import versioneer
 # Globals and constants variables.
 BASEDIR = os.path.abspath(os.path.dirname(__file__))
 
-class _bdist_fpm(Command):
-
-    description = 'Build using fpm (Effing Package Management)'
-
-    user_options = [('dist-dir=', 'd',
-                     "directory to put final built distributions in "
-                     "[default: dist]"), ]
-
-    def initialize_options(self):
-        self.dist_dir = None
-
-    def finalize_options(self):
-        if self.dist_dir is None:
-            self.dist_dir = "dist"
-
-    def _run(self, target):
-        setup_filepath = os.path.join(BASEDIR, 'setup.py')
-
-        python_bin = 'python3' if sys.version_info.major == 3 else 'python'
-        version = '%i.%i' % (sys.version_info.major, sys.version_info.minor)
-
-        args = ['fpm',
-                '-s', 'python',
-                '-t', target,
-                '--force',
-                '--verbose',
-                '--maintainer', 'Philippe Pinard <philippe.pinard@gmail.com>',
-                '--category', 'science',
-                '--depends', "%s >= %s" % (python_bin, version),
-                '--depends', python_bin + '-numpy',
-                '--depends', python_bin + '-six',
-                '--no-python-dependencies',
-                '--python-bin', python_bin,
-                '--name', python_bin + '-hmsa',
-                setup_filepath]
-        check_call(args)
-
-        self.mkpath(self.dist_dir)
-        for srcfilepath in glob.glob('*.%s' % target):
-            self.move_file(srcfilepath, self.dist_dir)
-
-class bdist_deb(_bdist_fpm):
-
-    description = 'Build deb '
-
-    def run(self):
-        self._run('deb')
-
 # Get the long description from the relevant file
 with codecs.open('README.rst', encoding='utf-8') as f:
     long_description = f.read()
 
-packages = find_packages()
+PACKAGES = find_packages()
 
-cmdclass = versioneer.get_cmdclass()
-cmdclass['bdist_deb'] = bdist_deb
+CMDCLASS = versioneer.get_cmdclass()
 
-setup(name='pyHMSA',
-      version=versioneer.get_version(),
-      description='Python implementation of the MSA / MAS / AMAS Hyper-Dimensional Data File specification',
-      long_description=long_description,
+INSTALL_REQUIRES = ['numpy', 'six']
+EXTRAS_REQUIRE = {'develop': ['pillow', 'nose', 'coverage']}
 
-      author='Philippe Pinard',
-      author_email='philippe.pinard@gmail.com',
-      maintainer='Philippe Pinard',
-      maintainer_email='philippe.pinard@gmail.com',
-
-      url='http://pyhmsa.readthedocs.org',
-      license='MIT',
-      keywords='microscopy microanalysis hmsa file format',
-
-      classifiers=[
-        'Development Status :: 4 - Beta',
-        'Intended Audience :: Developers',
-        'Intended Audience :: Science/Research',
-        'Operating System :: OS Independent',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Topic :: Scientific/Engineering :: Physics',
-        ],
-
-      packages=packages,
-
-      install_requires=['numpy', 'six'],
-      tests_require=['Pillow', 'nose', 'coverage'],
-
-      zip_safe=False,
-
-      test_suite='nose.collector',
-
-      entry_points=\
+ENTRY_POINTS = \
         {'pyhmsa.fileformat.xmlhandler.condition':
             ['AcquisitionPoint = pyhmsa.fileformat.xmlhandler.condition.acquisition:AcquisitionPointXMLHandler',
              'AcquisitionMultipoint = pyhmsa.fileformat.xmlhandler.condition.acquisition:AcquisitionMultipointXMLHandler',
@@ -174,7 +87,44 @@ setup(name='pyHMSA',
          'pyhmsa.fileformat.exporter':
             ['EMSA = pyhmsa.fileformat.exporter.emsa:ExporterEMSA',
              'RAW = pyhmsa.fileformat.exporter.raw:ExporterRAW'],
-        },
+        }
 
-      cmdclass=cmdclass,
+setup(name='pyHMSA',
+      version=versioneer.get_version(),
+      description='Python implementation of the MSA / MAS / AMAS Hyper-Dimensional Data File specification',
+      long_description=long_description,
+
+      author='Philippe Pinard',
+      author_email='philippe.pinard@gmail.com',
+      maintainer='Philippe Pinard',
+      maintainer_email='philippe.pinard@gmail.com',
+
+      url='http://pyhmsa.readthedocs.org',
+      license='MIT',
+      keywords='microscopy microanalysis hmsa file format',
+
+      classifiers=[
+        'Development Status :: 4 - Beta',
+        'Intended Audience :: Developers',
+        'Intended Audience :: Science/Research',
+        'Operating System :: OS Independent',
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Topic :: Scientific/Engineering :: Physics',
+        ],
+
+      packages=PACKAGES,
+
+      install_requires=INSTALL_REQUIRES,
+      extras_require=EXTRAS_REQUIRE,
+
+      zip_safe=False,
+
+      test_suite='nose.collector',
+
+      cmdclass=CMDCLASS,
+
+      entry_points=ENTRY_POINTS,
      )

@@ -18,7 +18,7 @@ from pyhmsa.spec.condition.condition import _Condition
 class TestAnalysis0D(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.datum = Analysis0D(4.0)
         self.datum.conditions['Test'] = _Condition()
@@ -39,7 +39,7 @@ class TestAnalysis0D(unittest.TestCase):
 class TestAnalysis1D(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.datum = Analysis1D(5)
         self.datum.conditions['Test'] = _Condition()
@@ -87,7 +87,7 @@ class TestAnalysis1D(unittest.TestCase):
 class TestAnalysis2D(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         testdata = os.path.join(os.path.dirname(__file__), '..', '..', 'testdata')
         self.im = Image.open(os.path.join(testdata, 'diffraction_pattern.png'))

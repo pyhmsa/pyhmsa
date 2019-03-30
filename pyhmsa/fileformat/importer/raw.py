@@ -26,7 +26,7 @@ class _ImporterRAWThread(_ImporterThread):
 
     def __init__(self, raw_filepath):
         rpl_filepath = os.path.splitext(raw_filepath)[0] + '.rpl'
-        _ImporterThread.__init__(self, raw_filepath, rpl_filepath)
+        super().__init__(raw_filepath, rpl_filepath)
 
     def _run(self, raw_filepath, rpl_filepath, *args, **kwargs):
         # Read RPL

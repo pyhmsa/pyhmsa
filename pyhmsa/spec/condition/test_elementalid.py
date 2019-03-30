@@ -15,7 +15,7 @@ from pyhmsa.spec.condition.elementalid import ElementalID, ElementalIDXray
 class TestElementalID(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.element = ElementalID(11)
 
@@ -55,7 +55,7 @@ class TestElementalID(unittest.TestCase):
 class TestElementalIDXray(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.element = ElementalIDXray(11, 'Ma')
 

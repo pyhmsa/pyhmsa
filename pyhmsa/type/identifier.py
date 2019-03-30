@@ -11,7 +11,6 @@ import re
 import weakref
 
 # Third party modules.
-import six
 
 # Local modules.
 
@@ -76,7 +75,7 @@ class _BaseIdentifierDict(object):
             self.add(identifier, datum)
 
     def _find(self, match):
-        if isinstance(match, six.string_types):
+        if isinstance(match, str):
             return dict((key, value) for key, value in self.items() \
                         if fnmatch.fnmatch(key, match))
         elif inspect.isclass(match):
@@ -98,7 +97,7 @@ class _BaseIdentifierDict(object):
 class _IdentifierDict(MutableMapping, _BaseIdentifierDict):
 
     def __init__(self):
-        _BaseIdentifierDict.__init__(self)
+        super().__init__()
         self._data = {}
 
     def __repr__(self):
@@ -134,8 +133,7 @@ class _IdentifierDict(MutableMapping, _BaseIdentifierDict):
 class _WeakValueIdentifierDict(weakref.WeakValueDictionary, _BaseIdentifierDict):
 
     def __init__(self):
-        weakref.WeakValueDictionary.__init__(self)
-        _BaseIdentifierDict.__init__(self)
+        super().__init__()
 
     def __repr__(self):
         return '<%s(%s)>' % (self.__class__.__name__,
@@ -143,4 +141,4 @@ class _WeakValueIdentifierDict(weakref.WeakValueDictionary, _BaseIdentifierDict)
 
     def __setitem__(self, identifier, item):
         validate_identifier(identifier)
-        weakref.WeakValueDictionary.__setitem__(self, identifier, item)
+        super().__setitem__(identifier, item)

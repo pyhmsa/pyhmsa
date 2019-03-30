@@ -24,7 +24,7 @@ import xml.etree.ElementTree as etree
 class BaseTestCaseDatum(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.tmpdir = tempfile.mkdtemp()
 

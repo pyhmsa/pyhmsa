@@ -48,7 +48,7 @@ class _Acquisition(_Condition):
         :arg total_time: total real time taken to collect all measurements (optional)
         :arg dwell_time_live: analogous detector live time for each individual measurement (optional)
         """
-        _Condition.__init__(self)
+        super().__init__()
 
         self.dwell_time = dwell_time
         self.total_time = total_time
@@ -72,7 +72,7 @@ class AcquisitionPoint(_Acquisition):
         :arg total_time: total real time taken to collect all measurements (optional)
         :arg dwell_time_live: analogous detector live time for each individual measurement (optional)
         """
-        _Acquisition.__init__(self, dwell_time, total_time, dwell_time_live)
+        super().__init__(dwell_time, total_time, dwell_time_live)
 
         self.position = position
 
@@ -93,7 +93,7 @@ class AcquisitionMultipoint(_Acquisition):
         :arg total_time: total real time taken to collect all measurements (optional)
         :arg dwell_time_live: analogous detector live time for each individual measurement (optional)
         """
-        _Acquisition.__init__(self, dwell_time, total_time, dwell_time_live)
+        super().__init__(dwell_time, total_time, dwell_time_live)
 
         if positions is None:
             positions = []
@@ -117,7 +117,7 @@ class _AcquisitionRaster(_Acquisition):
         :arg total_time: total real time taken to collect all measurements (optional)
         :arg dwell_time_live: analogous detector live time for each individual measurement (optional)
         """
-        _Acquisition.__init__(self, dwell_time, total_time, dwell_time_live)
+        super().__init__(dwell_time, total_time, dwell_time_live)
 
         self.raster_mode = raster_mode
 
@@ -150,8 +150,7 @@ class AcquisitionRasterLinescan(_AcquisitionRaster):
         :arg total_time: total real time taken to collect all measurements (optional)
         :arg dwell_time_live: analogous detector live time for each individual measurement (optional)
         """
-        _AcquisitionRaster.__init__(self, raster_mode,
-                                    dwell_time, total_time, dwell_time_live)
+        super().__init__(raster_mode, dwell_time, total_time, dwell_time_live)
 
         self.step_count = step_count
         self.step_size = step_size
@@ -238,8 +237,7 @@ class AcquisitionRasterXY(_AcquisitionRaster):
         :arg total_time: total real time taken to collect all measurements (optional)
         :arg dwell_time_live: analogous detector live time for each individual measurement (optional)
         """
-        _AcquisitionRaster.__init__(self, raster_mode,
-                                    dwell_time, total_time, dwell_time_live)
+        super().__init__(raster_mode, dwell_time, total_time, dwell_time_live)
 
         self.step_count_x = step_count_x
         self.step_count_y = step_count_y
@@ -326,8 +324,7 @@ class AcquisitionRasterXYZ(_AcquisitionRaster):
         :arg total_time: total real time taken to collect all measurements (optional)
         :arg dwell_time_live: analogous detector live time for each individual measurement (optional)
         """
-        _AcquisitionRaster.__init__(self, raster_mode,
-                                    dwell_time, total_time, dwell_time_live)
+        super().__init__(raster_mode, dwell_time, total_time, dwell_time_live)
 
         self.step_count_x = step_count_x
         self.step_count_y = step_count_y

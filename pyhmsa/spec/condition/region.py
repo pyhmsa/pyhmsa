@@ -27,7 +27,7 @@ class RegionOfInterest(_Condition):
         :arg start_channel: start channel (required)
         :arg end_channel: end channel (required)
         """
-        _Condition.__init__(self)
+        super().__init__()
 
         self.channels = (start_channel, end_channel)
 

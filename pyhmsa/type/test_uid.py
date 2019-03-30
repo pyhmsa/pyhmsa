@@ -14,7 +14,7 @@ from pyhmsa.type.uid import generate_uid
 class TestModule(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)

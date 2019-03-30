@@ -12,7 +12,7 @@ from pyhmsa.fileformat.xmlhandler.xmlhandler import _XMLHandler
 class _ConditionXMLHandler(_XMLHandler):
 
     def __init__(self, clasz, version):
-        _XMLHandler.__init__(self, version)
+        super().__init__(version)
         self._class = clasz
 
     def can_parse(self, element):

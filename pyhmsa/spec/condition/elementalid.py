@@ -28,7 +28,7 @@ class ElementalID(_Condition):
 
         :arg z: atomic number (required)
         """
-        _Condition.__init__(self)
+        super().__init__()
 
         if atomic_number is not None:
             self.atomic_number = atomic_number
@@ -64,7 +64,7 @@ class ElementalIDXray(ElementalID):
         :arg line: x-ray line (required)
         :arg energy: energy of x-ray line (optional)
         """
-        ElementalID.__init__(self, atomic_number, symbol)
+        super().__init__(atomic_number, symbol)
 
         if line is None:
             raise ValueError('x-ray line is required')

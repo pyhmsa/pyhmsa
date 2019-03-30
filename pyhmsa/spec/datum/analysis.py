@@ -32,8 +32,8 @@ class Analysis0D(_Analysis):
                 offset=0, strides=None, order=None,
                 conditions=None):
         buffer = np.array(value, dtype=dtype)
-        return _Analysis.__new__(cls, (), dtype,
-                                 buffer, offset, strides, order, conditions)
+        return super().__new__(cls, (), dtype,
+                               buffer, offset, strides, order, conditions)
 
 class Analysis1D(_Analysis):
     """
@@ -49,8 +49,8 @@ class Analysis1D(_Analysis):
         if channels <= 0:
             raise ValueError('Number of channel must be greater than 0')
         shape = (channels,)
-        return _Analysis.__new__(cls, shape, dtype,
-                                 buffer, offset, strides, order, conditions)
+        return super().__new__(cls, shape, dtype,
+                               buffer, offset, strides, order, conditions)
 
     def get_xdata(self, calibration=None):
         xs = range(self.channels)
@@ -115,7 +115,7 @@ class Analysis1D(_Analysis):
 
     @property
     def datum_dimensions(self):
-        dims = _Analysis.datum_dimensions.fget(self) # @UndefinedVariable
+        dims = super().datum_dimensions
         dims['Channel'] = self.channels
         return dims
 
@@ -139,8 +139,8 @@ class Analysis2D(_Analysis):
         if u <= 0 or v <= 0:
             raise ValueError('Dimension must be greater than 0')
         shape = (u, v)
-        return _Analysis.__new__(cls, shape, dtype,
-                                 buffer, offset, strides, order, conditions)
+        return super().__new__(cls, shape, dtype,
+                               buffer, offset, strides, order, conditions)
 
     @property
     def u(self):
@@ -152,7 +152,7 @@ class Analysis2D(_Analysis):
 
     @property
     def datum_dimensions(self):
-        dims = _Analysis.datum_dimensions.fget(self) # @UndefinedVariable
+        dims = super().datum_dimensions
         dims['U'] = self.u
         dims['V'] = self.v
         return dims

@@ -77,7 +77,7 @@ class ProbeEM(_Probe):
         :arg scan_magnification: scan magnification (optional)
         :arg working_distance: working distance (optional)
         """
-        _Probe.__init__(self)
+        super().__init__()
 
         self.beam_voltage = beam_voltage
         self.beam_current = beam_current
@@ -125,7 +125,7 @@ class ProbeTEM(ProbeEM):
         :arg camera_magnification: camera magnification (optional)
         :arg convergence_angle: semi-angle of incident beam (optional)
         """
-        ProbeEM.__init__(self, beam_voltage, beam_current, gun_type,
+        super().__init__(beam_voltage, beam_current, gun_type,
                          emission_current, filament_current, extractor_bias,
                          beam_diameter, chamber_pressure, gun_pressure,
                          scan_magnification, working_distance)

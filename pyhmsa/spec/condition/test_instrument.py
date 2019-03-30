@@ -15,7 +15,7 @@ from pyhmsa.spec.condition.instrument import Instrument
 class TestInstrument(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.instrument = Instrument('Example Inc', 'Example Model 123')
 
