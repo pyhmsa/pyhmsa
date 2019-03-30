@@ -72,6 +72,18 @@ class TestAnalysis1D(unittest.TestCase):
         self.assertEqual(5, len(xy))
         self.assertEqual(2, xy.shape[1])
 
+    def testxlabel(self):
+        self.assertEqual('Channels', self.datum.get_xlabel())
+
+        self.datum.set_xlabel("Test", 'cps/nA')
+        self.assertEqual('Test (cps/nA)', self.datum.get_xlabel())
+
+    def testylabel(self):
+        self.assertEqual('Values', self.datum.get_ylabel())
+
+        self.datum.set_ylabel("Test", 'cps/nA')
+        self.assertEqual('Test (cps/nA)', self.datum.get_ylabel())
+
 class TestAnalysis2D(unittest.TestCase):
 
     def setUp(self):

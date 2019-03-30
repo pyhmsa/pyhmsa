@@ -39,6 +39,18 @@ class TestAnalysisList0D(unittest.TestCase):
         self.assertAlmostEqual(5.0, analysis, 4)
         self.assertEqual(1, len(analysis.conditions))
 
+    def testxlabel(self):
+        self.assertEqual('Analysis', self.datum.get_xlabel())
+
+        self.datum.set_xlabel("Test", 'cps/nA')
+        self.assertEqual('Test (cps/nA)', self.datum.get_xlabel())
+
+    def testylabel(self):
+        self.assertEqual('Values', self.datum.get_ylabel())
+
+        self.datum.set_ylabel("Test", 'cps/nA')
+        self.assertEqual('Test (cps/nA)', self.datum.get_ylabel())
+
 class TestAnalysisList1D(unittest.TestCase):
 
     def setUp(self):

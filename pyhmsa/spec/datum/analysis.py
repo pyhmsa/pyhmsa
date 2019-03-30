@@ -18,8 +18,6 @@ class _Analysis(_Datum):
     Stores a single measurement of a specimen at a single point in space or
     time.
     """
-    pass
-
     TEMPLATE = "Analysis"
 
 class Analysis0D(_Analysis):
@@ -68,28 +66,42 @@ class Analysis1D(_Analysis):
 
         return np.array(xs)
 
+    def set_xlabel(self, xlabel="", unit=""):
+        xlabel += ' (%s)' % unit
+        self._xlabel = xlabel
+
+    def set_ylabel(self, ylabel="", unit=""):
+        ylabel += ' (%s)' % unit
+        self._ylabel = ylabel
+
     def get_xlabel(self, calibration=None):
-        xlabel = 'Channels'
+        xlabel = getattr(self, '_xlabel', None)
 
-        if calibration is None:
-            conditions = self.conditions.findvalues(DetectorSpectrometer)
-            if conditions:
-                condition = next(iter(conditions))
-                calibration = condition.calibration
+        if xlabel is None:
+            xlabel = 'Channels'
 
-        if calibration is not None:
-            xlabel = '%s (%s)' % (calibration.quantity, calibration.unit)
+            if calibration is None:
+                conditions = self.conditions.findvalues(DetectorSpectrometer)
+                if conditions:
+                    condition = next(iter(conditions))
+                    calibration = condition.calibration
+
+            if calibration is not None:
+                xlabel = '%s (%s)' % (calibration.quantity, calibration.unit)
 
         return xlabel
 
     def get_ylabel(self):
-        ylabel = 'Values'
+        ylabel = getattr(self, '_ylabel', None)
 
-        conditions = self.conditions.findvalues(DetectorSpectrometer)
-        if conditions:
-            condition = next(iter(conditions))
-            if condition.measurement_unit is not None:
-                ylabel += ' (%s)' % condition.measurement_unit
+        if ylabel is None:
+            ylabel = 'Values'
+
+            conditions = self.conditions.findvalues(DetectorSpectrometer)
+            if conditions:
+                condition = next(iter(conditions))
+                if condition.measurement_unit is not None:
+                    ylabel += ' (%s)' % condition.measurement_unit
 
         return ylabel
 

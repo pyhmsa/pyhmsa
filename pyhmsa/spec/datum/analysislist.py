@@ -55,14 +55,33 @@ class AnalysisList0D(_AnalysisList):
         return Analysis0D(self[analysis_index, 0], self.dtype,
                           conditions=self.conditions)
 
-    def get_ylabel(self):
-        ylabel = 'Values'
+    def set_xlabel(self, xlabel="", unit=""):
+        xlabel += ' (%s)' % unit
+        self._xlabel = xlabel
 
-        conditions = self.conditions.findvalues(DetectorSpectrometer)
-        if conditions:
-            condition = next(iter(conditions))
-            if condition.measurement_unit is not None:
-                ylabel += ' (%s)' % condition.measurement_unit
+    def set_ylabel(self, ylabel="", unit=""):
+        ylabel += ' (%s)' % unit
+        self._ylabel = ylabel
+
+    def get_xlabel(self):
+        xlabel = getattr(self, '_xlabel', None)
+
+        if xlabel is None:
+            xlabel = 'Analysis'
+
+        return xlabel
+
+    def get_ylabel(self):
+        ylabel = getattr(self, '_ylabel', None)
+
+        if ylabel is None:
+            ylabel = 'Values'
+
+            conditions = self.conditions.findvalues(DetectorSpectrometer)
+            if conditions:
+                condition = next(iter(conditions))
+                if condition.measurement_unit is not None:
+                    ylabel += ' (%s)' % condition.measurement_unit
 
         return ylabel
 
