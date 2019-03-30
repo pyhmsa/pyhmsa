@@ -87,7 +87,7 @@ ENTRY_POINTS = \
          'pyhmsa.fileformat.exporter':
             ['EMSA = pyhmsa.fileformat.exporter.emsa:ExporterEMSA',
              'RAW = pyhmsa.fileformat.exporter.raw:ExporterRAW'],
-        },
+        }
 
 setup(name='pyHMSA',
       version=versioneer.get_version(),
