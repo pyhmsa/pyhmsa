@@ -11,7 +11,6 @@ import re
 import weakref
 
 # Third party modules.
-import six
 
 # Local modules.
 
@@ -76,7 +75,7 @@ class _BaseIdentifierDict(object):
             self.add(identifier, datum)
 
     def _find(self, match):
-        if isinstance(match, six.string_types):
+        if isinstance(match, str):
             return dict((key, value) for key, value in self.items() \
                         if fnmatch.fnmatch(key, match))
         elif inspect.isclass(match):
