@@ -23,8 +23,6 @@ class _AnalysisList(_Datum):
     Each row (first index) represents a point measurement.
     """
 
-    xlabel = ""
-    ylabel = ""
     TEMPLATE = 'AnalysisList'
 
     @property
@@ -59,22 +57,24 @@ class AnalysisList0D(_AnalysisList):
 
     def set_xlabel(self, xlabel="", unit=""):
         xlabel += ' (%s)' % unit
-        self.xlabel = xlabel
+        self._xlabel = xlabel
 
     def set_ylabel(self, ylabel="", unit=""):
         ylabel += ' (%s)' % unit
-        self.ylabel = ylabel
+        self._ylabel = ylabel
 
     def get_xlabel(self):
-        if self.xlabel == "":
+        xlabel = getattr(self, '_xlabel', None)
+
+        if xlabel is None:
             xlabel = 'Analysis'
-        else:
-            xlabel = self.xlabel
 
         return xlabel
 
     def get_ylabel(self):
-        if self.ylabel == "":
+        ylabel = getattr(self, '_ylabel', None)
+
+        if ylabel is None:
             ylabel = 'Values'
 
             conditions = self.conditions.findvalues(DetectorSpectrometer)
@@ -82,8 +82,6 @@ class AnalysisList0D(_AnalysisList):
                 condition = next(iter(conditions))
                 if condition.measurement_unit is not None:
                     ylabel += ' (%s)' % condition.measurement_unit
-        else:
-            ylabel = self.ylabel
 
         return ylabel
 

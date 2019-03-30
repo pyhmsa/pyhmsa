@@ -18,10 +18,6 @@ class _Analysis(_Datum):
     Stores a single measurement of a specimen at a single point in space or
     time.
     """
-    pass
-
-    xlabel = ""
-    ylabel = ""
     TEMPLATE = "Analysis"
 
 class Analysis0D(_Analysis):
@@ -72,14 +68,16 @@ class Analysis1D(_Analysis):
 
     def set_xlabel(self, xlabel="", unit=""):
         xlabel += ' (%s)' % unit
-        self.xlabel = xlabel
+        self._xlabel = xlabel
 
     def set_ylabel(self, ylabel="", unit=""):
         ylabel += ' (%s)' % unit
-        self.ylabel = ylabel
+        self._ylabel = ylabel
 
     def get_xlabel(self, calibration=None):
-        if self.xlabel == "":
+        xlabel = getattr(self, '_xlabel', None)
+
+        if xlabel is None:
             xlabel = 'Channels'
 
             if calibration is None:
@@ -91,13 +89,12 @@ class Analysis1D(_Analysis):
             if calibration is not None:
                 xlabel = '%s (%s)' % (calibration.quantity, calibration.unit)
 
-        else:
-            xlabel = self.xlabel
-
         return xlabel
 
     def get_ylabel(self):
-        if self.ylabel == "":
+        ylabel = getattr(self, '_ylabel', None)
+
+        if ylabel is None:
             ylabel = 'Values'
 
             conditions = self.conditions.findvalues(DetectorSpectrometer)
@@ -105,8 +102,6 @@ class Analysis1D(_Analysis):
                 condition = next(iter(conditions))
                 if condition.measurement_unit is not None:
                     ylabel += ' (%s)' % condition.measurement_unit
-        else:
-            ylabel = self.ylabel
 
         return ylabel
 
