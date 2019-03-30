@@ -28,13 +28,9 @@ to the user's script.
 The only dependency of pyHMSA is to `NumPy <http://www.numpy.org>`_, in order
 to represent the multi-dimensional data.
 
-pyHMSA is written to support both Python 2 and 3.
+pyHMSA is written to support both Python 3.6+.
 
 The library is provided under the MIT license.
-
-pyHMSA was developed as part of the doctorate thesis project of 
-Philippe T. Pinard at RWTH Aachen University (Aachen, Germany) under the 
-supervision of Dr. Silvia Richter.
 
 More information can be found at the website:
 
@@ -45,6 +41,29 @@ GitHub repository:
 
 https://github.com/pyhmsa/pyhmsa
 
-pyHMSA was developed as part of the doctorate thesis project of 
-Philippe T. Pinard at RWTH Aachen University (Aachen, Germany) under the 
+Release notes
+=============
+
+0.2
+---
+
+- Drop Python 2 support
+
+Contributors
+============
+
+* `@nkipi <https://github.com/nkipi>`_
+* `@silrichter <https://github.com/silrichter>`_
+
+License
+=======
+
+The library is provided under the MIT license.
+
+*pyxray* was partially developed as part of the doctorate thesis project of
+Philippe T. Pinard at RWTH Aachen University (Aachen, Germany) under the
 supervision of Dr. Silvia Richter.
+
+Copyright (c) 2015-2016/06 Philippe Pinard and Silvia Richter
+
+Copyright (c) 2016/06-2019 Philippe Pinard
