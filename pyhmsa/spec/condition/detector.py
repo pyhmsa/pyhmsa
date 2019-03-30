@@ -163,7 +163,7 @@ class _Detector(_Condition):
         :arg semi_angle: semi-angle (optional)
         :arg temperature: temperature (optional)
         """
-        _Condition.__init__(self)
+        super().__init__()
 
         self.signal_type = signal_type
         self.manufacturer = manufacturer
@@ -219,9 +219,9 @@ class DetectorCamera(_Detector):
         :arg semi_angle: semi-angle (optional)
         :arg temperature: temperature (optional)
         """
-        _Detector.__init__(self, signal_type, manufacturer, model,
-                           serial_number, measurement_unit, elevation, azimuth,
-                           distance, area, solid_angle, semi_angle, temperature)
+        super().__init__(signal_type, manufacturer, model,
+                         serial_number, measurement_unit, elevation, azimuth,
+                         distance, area, solid_angle, semi_angle, temperature)
 
         self.pixel_count_u = pixel_count_u
         self.pixel_count_v = pixel_count_v
@@ -265,9 +265,9 @@ class DetectorSpectrometer(_Detector):
         :arg semi_angle: semi-angle (optional)
         :arg temperature: temperature (optional)
         """
-        _Detector.__init__(self, signal_type, manufacturer, model,
-                           serial_number, measurement_unit, elevation, azimuth,
-                           distance, area, solid_angle, semi_angle, temperature)
+        super().__init__(signal_type, manufacturer, model,
+                         serial_number, measurement_unit, elevation, azimuth,
+                         distance, area, solid_angle, semi_angle, temperature)
 
         self.channel_count = channel_count
         self.calibration = calibration
@@ -354,11 +354,11 @@ class DetectorSpectrometerCL(DetectorSpectrometer):
         :arg semi_angle: semi-angle (optional)
         :arg temperature: temperature (optional)
         """
-        DetectorSpectrometer.__init__(self, channel_count, calibration,
-                                      collection_mode, signal_type, manufacturer,
-                                      model, serial_number, measurement_unit,
-                                      elevation, azimuth, distance, area,
-                                      solid_angle, semi_angle, temperature)
+        super().__init__(channel_count, calibration,
+                         collection_mode, signal_type, manufacturer,
+                         model, serial_number, measurement_unit,
+                         elevation, azimuth, distance, area,
+                         solid_angle, semi_angle, temperature)
 
         self.grating_d = grating_d
 
@@ -417,11 +417,11 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
         :arg semi_angle: semi-angle (optional)
         :arg temperature: temperature (optional)
         """
-        DetectorSpectrometer.__init__(self, channel_count, calibration,
-                                      collection_mode, signal_type, manufacturer,
-                                      model, serial_number, measurement_unit,
-                                      elevation, azimuth, distance, area,
-                                      solid_angle, semi_angle, temperature)
+        super().__init__(channel_count, calibration,
+                         collection_mode, signal_type, manufacturer,
+                         model, serial_number, measurement_unit,
+                         elevation, azimuth, distance, area,
+                         solid_angle, semi_angle, temperature)
         self.dispersion_element = dispersion_element
         self.crystal_2d = crystal_2d
         self.rowland_circle_diameter = rowland_circle_diameter
@@ -434,7 +434,7 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
 
     def get_calibration_energy(self):
         try:
-            return DetectorSpectrometer.get_calibration_energy(self)
+            return super().get_calibration_energy()
         except ValueError:
             quantity = self.calibration.quantity.lower()
             prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
@@ -466,7 +466,7 @@ class DetectorSpectrometerWDS(DetectorSpectrometer):
 
     def get_calibration_wavelength(self):
         try:
-            return DetectorSpectrometer.get_calibration_wavelength(self)
+            return super().get_calibration_wavelength()
         except ValueError:
             quantity = self.calibration.quantity.lower()
             prefix, baseunit, _exponent = parse_unit(self.calibration.unit)
@@ -582,11 +582,11 @@ class DetectorSpectrometerXEDS(DetectorSpectrometer):
         :arg semi_angle: semi-angle (optional)
         :arg temperature: temperature (optional)
         """
-        DetectorSpectrometer.__init__(self, channel_count, calibration,
-                                      collection_mode, signal_type, manufacturer,
-                                      model, serial_number, measurement_unit,
-                                      elevation, azimuth, distance, area,
-                                      solid_angle, semi_angle, temperature)
+        super().__init__(channel_count, calibration,
+                         collection_mode, signal_type, manufacturer,
+                         model, serial_number, measurement_unit,
+                         elevation, azimuth, distance, area,
+                         solid_angle, semi_angle, temperature)
         self.technology = technology
         self.nominal_throughput = nominal_throughput
         self.time_constant = time_constant

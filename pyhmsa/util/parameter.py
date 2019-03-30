@@ -9,7 +9,6 @@ from collections import OrderedDict
 
 # Third party modules.
 import numpy as np
-import six
 
 # Local modules.
 from pyhmsa.type.numerical import convert_value
@@ -77,7 +76,7 @@ class _Attribute(object):
 class FrozenAttribute(_Attribute):
 
     def __init__(self, class_or_value, args=(), kwargs=None, xmlname=None, doc=None):
-        _Attribute.__init__(self, True, xmlname, doc)
+        super().__init__(True, xmlname, doc)
 
         self._value = class_or_value
         self._klass_args = args
@@ -103,20 +102,20 @@ class FrozenAttribute(_Attribute):
         raise AttributeError("Frozen parameter (%s)" % self._name)
 
     def _new(self, cls, clsname, bases, methods, name):
-        _Attribute._new(self, cls, clsname, bases, methods, name)
+        super()._new(cls, clsname, bases, methods, name)
 
         methods.pop('set_%s' % name) # Remove set method
 
 class NumericalAttribute(_Attribute):
 
     def __init__(self, default_unit=None, required=False, xmlname=None, doc=None):
-        _Attribute.__init__(self, required, xmlname, doc)
+        super().__init__(required, xmlname, doc)
         self._default_unit = default_unit
 
     def _prepare_value(self, value):
         if isinstance(value, tuple) and \
                 len(value) == 2 and \
-                (isinstance(value[1], six.string_types) or value[1] is None):
+                (isinstance(value[1], str) or value[1] is None):
             unit = value[1] or self.default_unit
             value = value[0]
         else:
@@ -124,7 +123,7 @@ class NumericalAttribute(_Attribute):
         return convert_value(value, unit)
 
     def _new(self, cls, clsname, bases, methods, name):
-        _Attribute._new(self, cls, clsname, bases, methods, name)
+        super()._new(cls, clsname, bases, methods, name)
 
         # Change set method to allow unit input
         methods['set_%s' % name] = \
@@ -138,7 +137,7 @@ class NumericalAttribute(_Attribute):
 class TextAttribute(_Attribute):
 
     def _validate_value(self, value):
-        _Attribute._validate_value(self, value)
+        super()._validate_value(value)
 
         if value is not None and len(value.strip()) == 0 and self.is_required():
             raise ValueError('%s is required' % self.name)
@@ -155,21 +154,21 @@ class TextListAttribute(TextAttribute):
             return
 
         for value in values:
-            TextAttribute._validate_value(self, value)
+            super()._validate_value(value)
 
 class AtomicNumberAttribute(NumericalAttribute):
 
     def __init__(self, required=False, xmlname=None, doc=None):
-        NumericalAttribute.__init__(self, None, required, xmlname, doc)
+        super().__init__(None, required, xmlname, doc)
 
     def _prepare_value(self, value):
-        value = NumericalAttribute._prepare_value(self, value)
+        value = super()._prepare_value(value)
         if value is None:
             return None
         return np.uint8(value)
 
     def _validate_value(self, value):
-        NumericalAttribute._validate_value(self, value)
+        super()._validate_value(value)
 
         if value is not None and value < 1:
             raise ValueError('Atomic number cannot be less than Hydrogen')
@@ -179,11 +178,11 @@ class AtomicNumberAttribute(NumericalAttribute):
 class UnitAttribute(TextAttribute):
 
     def __init__(self, default_unit=None, required=False, xmlname=None, doc=None):
-        TextAttribute.__init__(self, required, xmlname, doc)
+        super().__init__(required, xmlname, doc)
         self._default_unit = default_unit
 
     def _prepare_value(self, value):
-        value = TextAttribute._prepare_value(self, value)
+        value = super()._prepare_value(value)
         value = value or self.default_unit
         try:
             value = validate_unit(value)
@@ -192,7 +191,7 @@ class UnitAttribute(TextAttribute):
         return value
 
     def _validate_value(self, value):
-        TextAttribute._validate_value(self, value)
+        super()._validate_value(value)
         if value is not None:
             validate_unit(value)
 
@@ -204,7 +203,7 @@ class XRayLineAttribute(_Attribute):
 
     def __init__(self, default_notation=NOTATION_SIEGBAHN,
                  required=False, xmlname=None, doc=None):
-        _Attribute.__init__(self, required, xmlname, doc)
+        super().__init__(required, xmlname, doc)
         self._default_notation = default_notation
 
     def _prepare_value(self, value):
@@ -213,7 +212,7 @@ class XRayLineAttribute(_Attribute):
 
         if isinstance(value, tuple) and \
                 len(value) == 2 and \
-                (isinstance(value[1], six.string_types) or value[1] is None):
+                (isinstance(value[1], str) or value[1] is None):
             notation = value[1] or self.default_notation
             value = value[0]
         else:
@@ -225,7 +224,7 @@ class XRayLineAttribute(_Attribute):
         return xrayline(value, notation)
 
     def _new(self, cls, clsname, bases, methods, name):
-        _Attribute._new(self, cls, clsname, bases, methods, name)
+        super()._new(cls, clsname, bases, methods, name)
 
         # Change set method to allow unit input
         methods['set_%s' % name] = \
@@ -239,11 +238,11 @@ class XRayLineAttribute(_Attribute):
 class ObjectAttribute(_Attribute):
 
     def __init__(self, type_, required=False, xmlname=None, doc=None):
-        _Attribute.__init__(self, required, xmlname, doc)
+        super().__init__(required, xmlname, doc)
         self._type = type_
 
     def _validate_value(self, value):
-        _Attribute._validate_value(self, value)
+        super()._validate_value(value)
 
         if value is not None and not isinstance(value, self._type):
             raise ValueError('Value must be of type "%s"' % self._type)
@@ -255,7 +254,7 @@ class ObjectAttribute(_Attribute):
 class EnumAttribute(TextAttribute):
 
     def __init__(self, values, required=False, xmlname=None, doc=None):
-        TextAttribute.__init__(self, required, xmlname, doc)
+        super().__init__(required, xmlname, doc)
         self._values = tuple(values)
 
     def _prepare_value(self, value):
@@ -264,7 +263,7 @@ class EnumAttribute(TextAttribute):
         return value
 
     def _validate_value(self, value):
-        _Attribute._validate_value(self, value)
+        super()._validate_value(value)
 
         if value is not None and value not in self._values:
             raise ValueError('Unknown %s: %s' % (self.name, value))
@@ -272,7 +271,7 @@ class EnumAttribute(TextAttribute):
 class BoolAttribute(_Attribute):
 
     def __init__(self, required=False, xmlname=None, doc=None):
-        _Attribute.__init__(self, required=required, xmlname=xmlname, doc=doc)
+        super().__init__(required=required, xmlname=xmlname, doc=doc)
 
     def _prepare_value(self, value):
         if value is None:
@@ -280,7 +279,7 @@ class BoolAttribute(_Attribute):
         return bool(value)
 
     def _validate_value(self, value):
-        _Attribute._validate_value(self, value)
+        super()._validate_value(value)
 
         if value is not None and not isinstance(value, bool):
             raise ValueError('Value of %s is not a bool: %s' % (self.name, value))
@@ -289,14 +288,14 @@ class NumericalRangeAttribute(NumericalAttribute):
 
     def __init__(self, default_unit=None, minvalue=-np.inf, maxvalue=np.inf,
                   required=False, xmlname=None, doc=None):
-        NumericalAttribute.__init__(self, default_unit, required, xmlname, doc)
+        super().__init__(default_unit, required, xmlname, doc)
         if minvalue > maxvalue: # pragma: no cover
             raise ValueError('Minimum value greater than maximum value')
         self._limitmin = minvalue
         self._limitmax = maxvalue
 
     def _validate_value(self, value):
-        NumericalAttribute._validate_value(self, value)
+        super()._validate_value(value)
 
         if value is None:
             return
@@ -314,7 +313,7 @@ class NumericalRangeAttribute(NumericalAttribute):
             raise ValueError("Upper value is greater than limit")
 
     def _new(self, cls, clsname, bases, methods, name):
-        NumericalAttribute._new(self, cls, clsname, bases, methods, name)
+        super()._new(cls, clsname, bases, methods, name)
 
         # Change set method to allow two values and unit input
         methods['set_%s' % name] = \
@@ -324,7 +323,7 @@ class NumericalRangeAttribute(NumericalAttribute):
 class OrderedNumericalAttribute(NumericalAttribute):
 
     def _validate_value(self, values):
-        NumericalAttribute._validate_value(self, values)
+        super()._validate_value(values)
 
         if len(values) == 0:
             raise ValueError('At least one value must be specified')
@@ -350,7 +349,7 @@ class TimeAttribute(_Attribute):
 class ChecksumAttribute(_Attribute):
 
     def _validate_value(self, value):
-        _Attribute._validate_value(self, value)
+        super()._validate_value(value)
 
         if value is not None and not isinstance(value, Checksum):
             raise ValueError('Value must be a Checksum object')
@@ -385,6 +384,6 @@ class ParameterMetaclass(type):
             return '<%s(%s)>' % (self.__class__.__name__, ', '.join(reprstr))
         methods['__repr__'] = _repr
 
-        return type.__new__(cls, clsname, bases, methods)
+        return super().__new__(cls, clsname, bases, methods)
 
 Parameter = ParameterMetaclass('Parameter', (object,), {})

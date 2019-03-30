@@ -17,7 +17,7 @@ from pyhmsa.type.checksum import Checksum
 class TestHeaderXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = HeaderXMLHandler(1.0)
 

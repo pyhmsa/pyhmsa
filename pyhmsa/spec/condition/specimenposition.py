@@ -44,7 +44,7 @@ class SpecimenPosition(_Condition):
         :arg r: rotation
         :arg t: tilt
         """
-        _Condition.__init__(self)
+        super().__init__()
 
         self.x = x
         self.y = y

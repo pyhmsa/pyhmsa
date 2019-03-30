@@ -23,7 +23,7 @@ from pyhmsa.spec.condition.specimenposition import SpecimenPosition
 class TestSpecimenPositionXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = SpecimenPositionXMLHandler(1.0)
 

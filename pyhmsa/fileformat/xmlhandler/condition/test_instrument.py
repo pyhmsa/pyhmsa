@@ -16,7 +16,7 @@ from pyhmsa.spec.condition.instrument import Instrument
 class TestInstrumentXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = InstrumentXMLHandler(1.0)
 

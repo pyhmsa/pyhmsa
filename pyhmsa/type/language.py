@@ -488,7 +488,7 @@ def validate_language_tag(tag):
 class langstr(str):
 
     def __new__(cls, value, altvalues):
-        obj = str.__new__(cls, value)
+        obj = super().__new__(cls, value)
 
         obj._alternatives = {}
         for language_tag, altvalue in altvalues.items():

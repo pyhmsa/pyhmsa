@@ -8,7 +8,6 @@ from collections import MutableMapping
 
 # Third party modules.
 import numpy as np
-import six
 
 # Local modules.
 from pyhmsa.util.parameter import ParameterMetaclass, UnitAttribute
@@ -33,7 +32,7 @@ class _Composition(_Condition):
 
         :arg unit: unit in which the composition is defined (required)
         """
-        _Condition.__init__(self)
+        super().__init__()
 
         if unit not in _COMPOSITION_UNITS: # FIXME
             raise ValueError('Invalid unit for composition')
@@ -59,7 +58,7 @@ class CompositionElemental(_BaseCompositionElemental):
 
         :arg unit: unit in which the composition is defined (required)
         """
-        _Composition.__init__(self, unit)
+        super().__init__(unit)
 
         self._data = {}
 
@@ -74,14 +73,14 @@ class CompositionElemental(_BaseCompositionElemental):
         return len(self._data)
 
     def __getitem__(self, key):
-        if isinstance(key, six.string_types):
+        if isinstance(key, str):
             key = ep.get_atomic_number(key)
         return self._data[key]
 
     def __setitem__(self, key, item):
         if key is None:
             return
-        if isinstance(key, six.string_types):
+        if isinstance(key, str):
             key = ep.get_atomic_number(key)
         if key < 1:
             raise ValueError('Atomic number cannot be less than hydrogen')
@@ -90,7 +89,7 @@ class CompositionElemental(_BaseCompositionElemental):
         self._data[np.uint8(key)] = convert_value(item)
 
     def __delitem__(self, key):
-        if isinstance(key, six.string_types):
+        if isinstance(key, str):
             key = ep.get_atomic_number(key)
         del self._data[key]
 

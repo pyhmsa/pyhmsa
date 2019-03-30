@@ -17,7 +17,7 @@ from pyhmsa.spec.condition.calibration import \
 class Test_Calibration(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.cal = _Calibration('Energy', 'eV')
 
@@ -41,7 +41,7 @@ class Test_Calibration(unittest.TestCase):
 class TestCalibrationConstant(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.cal = CalibrationConstant('Energy', 'eV', -237.098251)
 
@@ -72,7 +72,7 @@ class TestCalibrationConstant(unittest.TestCase):
 class TestCalibrationLinear(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.cal = CalibrationLinear('Energy', 'eV', 2.49985, -237.098251)
 
@@ -106,7 +106,7 @@ class TestCalibrationLinear(unittest.TestCase):
 class TestCalibrationPolynomial(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.cal = CalibrationPolynomial('Energy', 'eV', (-2.255, 0.677, 0.134, -0.018))
 
@@ -145,7 +145,7 @@ class TestCalibrationPolynomial(unittest.TestCase):
 class TestCalibrationExplicit(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.cal = CalibrationExplicit('Energy', 'eV',
                                        (-2.255, -0.018, 0.134, 0.677),

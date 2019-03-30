@@ -16,7 +16,7 @@ from pyhmsa.type.numerical import convert_value, validate_dtype, convert_unit
 class TestModule(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -101,7 +101,7 @@ class TestModule(unittest.TestCase):
 class Testarrayunit(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.v = convert_value(5.0, 's')
 

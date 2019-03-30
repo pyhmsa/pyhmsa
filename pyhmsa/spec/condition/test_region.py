@@ -15,7 +15,7 @@ from pyhmsa.spec.condition.region import RegionOfInterest
 class TestRegionOfInterest(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.roi = RegionOfInterest(556, 636)
 

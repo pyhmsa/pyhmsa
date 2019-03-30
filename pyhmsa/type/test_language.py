@@ -15,7 +15,7 @@ from pyhmsa.type.language import langstr
 class Testlangstr(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.s1 = langstr('Test1', {'en-US': 'TEST', 'en-CA': 'test'})
 

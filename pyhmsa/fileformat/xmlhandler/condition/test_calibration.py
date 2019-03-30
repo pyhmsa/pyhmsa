@@ -20,7 +20,7 @@ from pyhmsa.fileformat.xmlhandler.condition.calibration import \
 class TestCalibrationConstantXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = CalibrationConstantXMLHandler(1.0)
 
@@ -60,7 +60,7 @@ class TestCalibrationConstantXMLHandler(unittest.TestCase):
 class TestCalibrationLinearXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = CalibrationLinearXMLHandler(1.0)
 
@@ -102,7 +102,7 @@ class TestCalibrationLinearXMLHandler(unittest.TestCase):
 class TestCalibrationPolynomialXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = CalibrationPolynomialXMLHandler(1.0)
 
@@ -147,7 +147,7 @@ class TestCalibrationPolynomialXMLHandler(unittest.TestCase):
 class TestCalibrationExplicitXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = CalibrationExplicitXMLHandler(1.0)
 

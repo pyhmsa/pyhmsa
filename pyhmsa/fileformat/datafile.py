@@ -36,12 +36,9 @@ def _extract_filepath(filepath):
 
     return filepath_xml, filepath_hmsa
 
-class _BufferedDataFileReaderThread(_MonitorableThread):
+class _DataFileReaderMixin:
 
-    def __init__(self, xml_file, hmsa_file):
-        _MonitorableThread.__init__(self, args=(xml_file, hmsa_file,))
-
-    def _run(self, xml_file, hmsa_file, *args, **kwargs):
+    def _read(self, xml_file, hmsa_file, *args, **kwargs):
         self._update_status(0.0, 'Running')
         if self.is_cancelled(): return
 
@@ -149,7 +146,15 @@ class _BufferedDataFileReaderThread(_MonitorableThread):
                     datafile.data[key] = handler.parse(element)
                     break
 
-class _DataFileReaderThread(_BufferedDataFileReaderThread):
+class _BufferedDataFileReaderThread(_MonitorableThread, _DataFileReaderMixin):
+
+    def __init__(self, xml_file, hmsa_file):
+        super().__init__(args=(xml_file, hmsa_file,))
+
+    def _run(self, xml_file, hmsa_file, *args, **kwargs):
+        return self._read(xml_file, hmsa_file)
+
+class _DataFileReaderThread(_MonitorableThread, _DataFileReaderMixin):
 
     def __init__(self, filepath):
         filepath_xml, filepath_hmsa = _extract_filepath(filepath)
@@ -158,7 +163,7 @@ class _DataFileReaderThread(_BufferedDataFileReaderThread):
         if not os.path.exists(filepath_hmsa):
             raise IOError('HMSA file is missing')
 
-        _MonitorableThread.__init__(self, args=(filepath,))
+        super().__init__(args=(filepath,))
 
     def _run(self, filepath, *args, **kwargs):
         self._update_status(0.0, 'Running')
@@ -169,8 +174,7 @@ class _DataFileReaderThread(_BufferedDataFileReaderThread):
         xml_file = open(filepath_xml, 'rb')
         hmsa_file = open(filepath_hmsa, 'rb')
         try:
-            datafile = \
-                _BufferedDataFileReaderThread._run(self, xml_file, hmsa_file)
+            datafile = self._read(xml_file, hmsa_file)
             if self.is_cancelled(): return
             datafile._filepath = filepath_hmsa
         finally:
@@ -197,12 +201,9 @@ class DataFileReader(_Monitorable):
         """
         self._start(filepath, xml_file, hmsa_file)
 
-class _BufferedDataFileWriterThread(_MonitorableThread):
+class _DataFileWriterMixin:
 
-    def __init__(self, datafile, xml_file, hmsa_file):
-        _MonitorableThread.__init__(self, args=(datafile, xml_file, hmsa_file))
-
-    def _run(self, datafile, xml_file, hmsa_file, *args, **kwargs):
+    def _write(self, datafile, xml_file, hmsa_file, *args, **kwargs):
         self._update_status(0.0, 'Running')
         if self.is_cancelled(): return
 
@@ -326,14 +327,22 @@ class _BufferedDataFileWriterThread(_MonitorableThread):
 
         root.append(element)
 
-class _DataFileWriterThread(_BufferedDataFileWriterThread):
+class _BufferedDataFileWriterThread(_MonitorableThread, _DataFileWriterMixin):
+
+    def __init__(self, datafile, xml_file, hmsa_file):
+        super().__init__(args=(datafile, xml_file, hmsa_file))
+
+    def _run(self, datafile, xml_file, hmsa_file, *args, **kwargs):
+        return self._write(datafile, xml_file, hmsa_file)
+
+class _DataFileWriterThread(_MonitorableThread, _DataFileWriterMixin):
 
     def __init__(self, datafile, filepath=None):
         if filepath is None:
             filepath = datafile.filepath
         if filepath is None:
             raise ValueError('No filepath given and none defined in datafile')
-        _MonitorableThread.__init__(self, args=(datafile, filepath))
+        super().__init__(args=(datafile, filepath))
 
     def _run(self, datafile, filepath, *args, **kwargs):
         self._update_status(0.0, 'Running')
@@ -342,7 +351,7 @@ class _DataFileWriterThread(_BufferedDataFileWriterThread):
         xml_file = io.BytesIO()
         hmsa_file = io.BytesIO()
         try:
-            _BufferedDataFileWriterThread._run(self, datafile, xml_file, hmsa_file)
+            self._write(datafile, xml_file, hmsa_file)
 
             filepath_xml, filepath_hmsa = _extract_filepath(filepath)
             with open(filepath_xml, 'wb') as fp:

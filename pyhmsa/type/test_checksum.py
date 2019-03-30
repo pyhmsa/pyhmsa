@@ -17,7 +17,7 @@ from pyhmsa.type.checksum import CHECKSUM_ALGORITHM_SHA1, CHECKSUM_ALGORITHM_SUM
 class TestChecksum(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.checksum = Checksum('aBc', CHECKSUM_ALGORITHM_SHA1)
 
@@ -40,7 +40,7 @@ class TestChecksum(unittest.TestCase):
 class TestModule(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.buffer = b'abcdefGhij'
 
