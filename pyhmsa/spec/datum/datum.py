@@ -27,8 +27,8 @@ class _Datum(np.ndarray):
         if buffer is None:
             buffer = np.zeros(shape, dtype)
 
-        obj = np.ndarray.__new__(cls, shape, dtype, buffer, offset=offset,
-                                 strides=strides, order=order)
+        obj = super().__new__(cls, shape, dtype, buffer, offset=offset,
+                              strides=strides, order=order)
 
         obj._conditions = Conditions()
         if conditions is not None:

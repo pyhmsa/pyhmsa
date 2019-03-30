@@ -14,7 +14,7 @@ from pyhmsa.type.unit import validate_unit, parse_unit, _UNITS, _PREFIXES
 class TestModule(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)

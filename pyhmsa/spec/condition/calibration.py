@@ -61,7 +61,7 @@ class CalibrationConstant(_Calibration):
         :arg unit: unit (required)
         :arg value: value (required)
         """
-        _Calibration.__init__(self, quantity, unit)
+        super().__init__(quantity, unit)
 
         self.value = value
 
@@ -92,7 +92,7 @@ class CalibrationLinear(_Calibration):
             position, etc.) corresponding to the first measurement ordinal
             (required)
         """
-        _Calibration.__init__(self, quantity, unit)
+        super().__init__(quantity, unit)
 
         self.gain = gain
         self.offset = offset
@@ -126,7 +126,7 @@ class CalibrationPolynomial(_Calibration):
         :arg unit: unit (required)
         :arg coefficients: iterable of coefficients (required)
         """
-        _Calibration.__init__(self, quantity, unit)
+        super().__init__(quantity, unit)
 
         self.coefficients = coefficients
 
@@ -165,7 +165,7 @@ class CalibrationExplicit(_Calibration):
         :arg unit: unit (required)
         :arg values: explicit values (required)
         """
-        _Calibration.__init__(self, quantity, unit)
+        super().__init__(quantity, unit)
 
         self.values = values
         self.labels = labels

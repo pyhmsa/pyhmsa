@@ -18,7 +18,7 @@ class _MonitorableThread(threading.Thread):
 
     def __init__(self, group=None, target=None, name=None,
                  args=(), kwargs=None):
-        threading.Thread.__init__(self, group, target, name, args, kwargs)
+        super().__init__(group, target, name, args, kwargs)
 
         self._progress = 0.0
         self._status = ''
@@ -26,19 +26,13 @@ class _MonitorableThread(threading.Thread):
         self._cancel_event = threading.Event()
         self._result = None
 
-        # Note: Requires in Python 2 only
-        self._args = args
-        if kwargs is None:
-            kwargs = {}
-        self._kwargs = kwargs
-
     def _update_status(self, progress, status):
         logger.debug('In %s: %s (%s%%)', self.name, status, progress * 100.0)
         self._progress = progress
         self._status = status
 
     def _run(self, *args, **kwargs):
-        threading.Thread.run(self)
+        super().run()
 
     def start(self):
         self._exception = None
@@ -46,7 +40,7 @@ class _MonitorableThread(threading.Thread):
         self._result = None
 
         logger.debug('Starting %s' % self.name)
-        threading.Thread.start(self)
+        super().start()
 
         self._progress = 0.0
         self._status = 'Running'
@@ -72,7 +66,7 @@ class _MonitorableThread(threading.Thread):
     def is_alive(self):
         if self._exception is not None:
             raise self._exception
-        return threading.Thread.is_alive(self)
+        return super().is_alive()
 
     def is_cancelled(self):
         return self._cancel_event.is_set()
@@ -81,7 +75,7 @@ class _MonitorableThread(threading.Thread):
         if self._exception is not None:
             raise self._exception
 
-        threading.Thread.join(self, timeout)
+        super().join(timeout)
 
         if self._exception is not None:
             raise self._exception

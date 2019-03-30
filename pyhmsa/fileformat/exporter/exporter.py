@@ -16,7 +16,7 @@ class _ExporterThread(_MonitorableThread):
 
     def __init__(self, datafile, dirpath, *args, **kwargs):
         args = (datafile, dirpath,) + args
-        _MonitorableThread.__init__(self, args=args, kwargs=kwargs)
+        super().__init__(args=args, kwargs=kwargs)
 
     def _run(self, datafile, dirpath, *args, **kwargs):
         raise NotImplementedError
@@ -25,7 +25,7 @@ class _Exporter(_Monitorable):
 
     def _create_thread(self, datafile, dirpath, *args, **kwargs):
         args = (datafile, dirpath,) + args
-        _Monitorable._create_thread(self, *args, **kwargs)
+        super()._create_thread(*args, **kwargs)
 
     def validate(self, datafile):
         pass

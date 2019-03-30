@@ -23,7 +23,7 @@ from pyhmsa.spec.condition.acquisition import RASTER_MODE_STAGE, RASTER_MODE_Z_F
 class TestAcquisitionPointXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = AcquisitionPointXMLHandler(1.0)
 
@@ -85,7 +85,7 @@ class TestAcquisitionPointXMLHandler(unittest.TestCase):
 class TestAcquisitionMultipointXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = AcquisitionMultipointXMLHandler(1.0)
 
@@ -150,7 +150,7 @@ class TestAcquisitionMultipointXMLHandler(unittest.TestCase):
 class TestAcquisitionRasterLinescanXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = AcquisitionRasterLinescanXMLHandler(1.0)
 
@@ -206,7 +206,7 @@ class TestAcquisitionRasterLinescanXMLHandler(unittest.TestCase):
 class TestAcquisitionRasterXYXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = AcquisitionRasterXYXMLHandler(1.0)
 
@@ -250,7 +250,7 @@ class TestAcquisitionRasterXYXMLHandler(unittest.TestCase):
 class TestAcquisitionRasterXYZXMLHandler(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.h = AcquisitionRasterXYZXMLHandler(1.0)
 

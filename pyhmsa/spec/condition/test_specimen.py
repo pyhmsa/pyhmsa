@@ -17,7 +17,7 @@ from pyhmsa.spec.condition.composition import CompositionElemental
 class TestSpecimen(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.spc = Specimen('Cryolite')
 
@@ -82,7 +82,7 @@ class TestSpecimen(unittest.TestCase):
 class TestSpecimenLayer(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.layer = SpecimenLayer()
 
@@ -130,7 +130,7 @@ class TestSpecimenLayer(unittest.TestCase):
 class TestSpecimenMultilayer(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.spc = SpecimenMultilayer('Carbon coated cryolite')
 

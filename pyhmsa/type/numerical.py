@@ -37,8 +37,7 @@ class arrayunit(np.ndarray):
     def __new__(cls, shape, dtype=np.float32, buffer=None, offset=0,
                  strides=None, order=None, unit=None):
         validate_dtype(dtype)
-        obj = np.ndarray.__new__(cls, shape, dtype, buffer, offset, strides,
-                                 order)
+        obj = super().__new__(cls, shape, dtype, buffer, offset, strides, order)
 
         if unit is not None:
             unit = validate_unit(unit)
@@ -48,13 +47,13 @@ class arrayunit(np.ndarray):
 
     def __reduce__(self):
         # Solution from http://stackoverflow.com/questions/26598109/preserve-custom-attributes-when-pickling-subclass-of-numpy-array
-        pickled_state = super(arrayunit, self).__reduce__()
+        pickled_state = super().__reduce__()
         new_state = pickled_state[2] + (self.unit,)
         return (pickled_state[0], pickled_state[1], new_state)
 
     def __setstate__(self, state):
         self._unit = state[-1]
-        super(arrayunit, self).__setstate__(state[0:-1])
+        super().__setstate__(state[0:-1])
 
     def __array_finalize__(self, obj):
         if obj is None:
@@ -62,27 +61,27 @@ class arrayunit(np.ndarray):
         self._unit = getattr(obj, '_unit', None)
 
     def __array_wrap__(self, out_arr, context=None):
-        ret_arr = np.ndarray.__array_wrap__(self, out_arr, context)
+        ret_arr = super().__array_wrap__(out_arr, context)
         return np.array(ret_arr) # Cast as regular array
 
     def __str__(self):
         if self._unit is not None:
-            return np.ndarray.__str__(self) + ' ' + self.unit
+            return super().__str__() + ' ' + self.unit
         else:
-            return np.ndarray.__str__(self)
+            return super().__str__()
 
     def __format__(self, spec):
         if not spec:
-            return format(np.ndarray.__str__(self), spec)
+            return format(super().__str__(), spec)
         elif spec[-1].lower() in ['f', 'e', 'g', 'n']:
             return format(float(self), spec)
         elif spec[-1] in ['d']:
             return format(int(self), spec)
         else:
-            return format(np.ndarray.__str__(self), spec)
+            return format(super().__str__(), spec)
 
     def __eq__(self, other):
-        if not np.ndarray.__eq__(self, other):
+        if not super().__eq__(other):
             return False
         return self.unit == getattr(other, 'unit', self.unit)
 

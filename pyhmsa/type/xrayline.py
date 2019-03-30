@@ -24,7 +24,7 @@ class xrayline(str):
         value = value.replace(u"\u03b6", 'z')
         value = value.replace(u"\u03b7", 'n')
 
-        obj = str.__new__(cls, value)
+        obj = super().__new__(cls, value)
 
         if notation not in _NOTATIONS:
             raise ValueError("Unknown x-ray line notation: %s" % notation)

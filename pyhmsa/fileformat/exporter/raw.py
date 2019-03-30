@@ -94,7 +94,7 @@ class ExporterRAW(_Exporter):
         return _ExporterRAWThread(datafile, dirpath)
 
     def validate(self, datafile):
-        _Exporter.validate(self, datafile)
+        super().validate(datafile)
 
         identifiers = set(datafile.data.findkeys(AnalysisList2D)) | \
             set(datafile.data.findkeys(ImageRaster2D)) | \

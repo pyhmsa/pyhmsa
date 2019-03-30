@@ -18,7 +18,7 @@ from pyhmsa.fileformat.importer.raw import ImporterRAW
 class TestExporterRAW(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.testdata = os.path.join(os.path.dirname(__file__),
                                      '..', '..', 'testdata', 'importer', 'raw')

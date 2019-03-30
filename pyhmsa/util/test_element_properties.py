@@ -15,7 +15,7 @@ from pyhmsa.util.element_properties import \
 class Test_ElementPropertiesDatabase(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)

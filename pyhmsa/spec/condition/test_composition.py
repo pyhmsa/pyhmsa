@@ -22,7 +22,7 @@ from pyhmsa.spec.condition.composition import CompositionElemental
 class TestCompositionElemental(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.comp = CompositionElemental('atoms', {11: 3})
         self.comp[13] = 1

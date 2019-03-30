@@ -22,7 +22,7 @@ from pyhmsa.spec.condition.detector import \
 class TestPulseHeightAnalyser(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.pha = PulseHeightAnalyser(1750, 32, 0.5, 4.5, PHA_MODE_DIFFERENTIAL)
 
@@ -69,7 +69,7 @@ class TestPulseHeightAnalyser(unittest.TestCase):
 class TestWindowLayer(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.layer = WindowLayer("Al", (100.0, 'nm'))
 
@@ -98,7 +98,7 @@ class TestWindowLayer(unittest.TestCase):
 class TestWindow(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.window = Window()
         self.window.append_layer('Al', 0.5)
@@ -130,7 +130,7 @@ class TestWindow(unittest.TestCase):
 class Test_Detector(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.det = _Detector()
 
@@ -234,7 +234,7 @@ class Test_Detector(unittest.TestCase):
 class TestDetectorCamera(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.det = DetectorCamera(512, 400)
 
@@ -284,7 +284,7 @@ class TestDetectorCamera(unittest.TestCase):
 class TestDetectorSpectrometer(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
         self.det = DetectorSpectrometer(4096, calibration)
@@ -337,7 +337,7 @@ class TestDetectorSpectrometer(unittest.TestCase):
 class TestDetectorSpectrometerCL(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
         self.det = DetectorSpectrometerCL(4096, calibration)
@@ -362,7 +362,7 @@ class TestDetectorSpectrometerCL(unittest.TestCase):
 class TestDetectorSpectrometerWDS(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
         self.det = DetectorSpectrometerWDS(4096, calibration,
@@ -435,7 +435,7 @@ class TestDetectorSpectrometerWDS(unittest.TestCase):
 class TestDetectorSpectrometerXEDS(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         calibration = CalibrationConstant('Energy', 'eV', -237.098251)
         self.det = DetectorSpectrometerXEDS(4096, calibration)

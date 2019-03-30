@@ -34,7 +34,7 @@ from pyhmsa.spec.condition.detector import XEDS_TECHNOLOGY_SDD, SIGNAL_TYPE_EDS
 class TestDataFileReader(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         testdatadir = os.path.join(os.path.dirname(__file__), '..', 'testdata')
         self.filepath = os.path.join(testdatadir, 'breccia_eds.xml')
@@ -204,7 +204,7 @@ class TestDataFileReader(unittest.TestCase):
 class TestDataFileWriter(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.datafile = DataFile()
         self.datafile.header.title = 'Breccia - EDS sum spectrum'

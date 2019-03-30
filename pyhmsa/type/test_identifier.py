@@ -16,7 +16,7 @@ from pyhmsa.type.identifier import \
 class TestModule(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
     def tearDown(self):
         unittest.TestCase.tearDown(self)
@@ -41,7 +41,7 @@ class TestModule(unittest.TestCase):
 class Test_IdentifierDict(unittest.TestCase):
 
     def setUp(self):
-        unittest.TestCase.setUp(self)
+        super().setUp()
 
         self.d = _IdentifierDict()
 

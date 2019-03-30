@@ -32,7 +32,7 @@ class _Composition(_Condition):
 
         :arg unit: unit in which the composition is defined (required)
         """
-        _Condition.__init__(self)
+        super().__init__()
 
         if unit not in _COMPOSITION_UNITS: # FIXME
             raise ValueError('Invalid unit for composition')
@@ -58,7 +58,7 @@ class CompositionElemental(_BaseCompositionElemental):
 
         :arg unit: unit in which the composition is defined (required)
         """
-        _Composition.__init__(self, unit)
+        super().__init__(unit)
 
         self._data = {}
 
