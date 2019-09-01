@@ -39,7 +39,7 @@ def generate_uid():
 
     # Tick count
     # Note: GetTickCount() not available in Python
-    sha1.update(str(time.clock()).encode('ascii'))
+    sha1.update(str(time.perf_counter()).encode('ascii'))
 
     # Counter from registry (incremented here)
     # Only on Windows
