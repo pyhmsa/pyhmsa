@@ -3,7 +3,7 @@ Condition and datum identifier
 """
 
 # Standard library modules.
-from collections import MutableMapping, Mapping, KeysView, ValuesView, ItemsView
+from collections.abc import MutableMapping, Mapping, KeysView, ValuesView, ItemsView
 import fnmatch
 import inspect
 import copy

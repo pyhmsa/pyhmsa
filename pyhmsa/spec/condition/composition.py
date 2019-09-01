@@ -4,7 +4,7 @@ Composition condition
 
 # Standard library modules.
 from abc import ABCMeta
-from collections import MutableMapping
+from collections.abc import MutableMapping
 
 # Third party modules.
 import numpy as np

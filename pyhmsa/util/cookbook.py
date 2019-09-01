@@ -3,7 +3,7 @@ Utility functions taken from Python Cookbook
 """
 
 # Standard library modules.
-from collections import Iterable
+from collections.abc import Iterable
 
 # Third party modules.
 

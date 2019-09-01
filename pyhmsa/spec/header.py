@@ -3,7 +3,7 @@ Header element
 """
 
 # Standard library modules.
-from collections import MutableMapping
+from collections.abc import MutableMapping
 from abc import ABCMeta
 import datetime
 import threading
